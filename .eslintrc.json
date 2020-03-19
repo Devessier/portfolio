@@ -15,9 +15,5 @@
             "files": ["**/*.svelte"],
             "processor": "svelte3/svelte3"
         }
-    ],
-    "rules": {
-        "prettier/prettier": "error",
-        "svelte3/lint-template": 2
-    }
+    ]
 }
