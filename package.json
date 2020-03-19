@@ -1,25 +1,26 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "portfolio",
+  "description": "My portfolio built using Sapper, Svelte & TailwindCSS",
   "version": "0.0.1",
   "scripts": {
+    "watch:tailwind": "postcss static/tailwind.css -o static/index.css -w",
+    "build:tailwind": "NODE_ENV=production postcss static/tailwind.css -o static/index.css",
     "dev": "sapper dev",
-    "build": "sapper build --legacy",
-    "export": "sapper export --legacy",
+    "build": "npm run build:tailwind && sapper build --legacy",
+    "export": "npm run build:tailwind && sapper export --legacy",
     "start": "node __sapper__/build",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "test": "run-p --race dev cy:run"
+    "test": "run-p --race dev cy:run",
+    "format": "prettier-eslint --write \"$PWD/src/**/*.{js,svelte,json,html}\""
   },
   "dependencies": {
+    "@fullhuman/postcss-purgecss": "^2.1.0",
     "compression": "^1.7.1",
     "polka": "next",
     "sirv": "^0.4.0"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5",
-    "sapper": "^0.27.0",
-    "svelte": "^3.0.0",
     "@babel/core": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.0.0",
@@ -28,9 +29,26 @@
     "@rollup/plugin-commonjs": "^11.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
     "@rollup/plugin-replace": "^2.2.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-svelte3": "^2.7.3",
+    "husky": "^4.2.3",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^7.1.0",
+    "prettier": "^1.19.1",
+    "prettier-eslint-cli": "^5.0.0",
+    "prettier-plugin-svelte": "^0.7.0",
     "rollup": "^1.20.0",
     "rollup-plugin-babel": "^4.0.2",
     "rollup-plugin-svelte": "^5.0.1",
-    "rollup-plugin-terser": "^4.0.4"
+    "rollup-plugin-terser": "^4.0.4",
+    "sapper": "^0.27.0",
+    "svelte": "^3.0.0",
+    "tailwindcss": "^1.2.0"
+  },
+
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format"
+    }
   }
 }
