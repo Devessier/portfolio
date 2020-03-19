@@ -20,10 +20,10 @@
 </script>
 
 <style>
-    @import url('https://fonts.googleapis.com/css?family=Courgette&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Geo&display=swap&text=Devessier');
 
     .main-link-font {
-        font-family: 'Courgette', cursive;
+        font-family: 'Geo', sans-serif;
     }
 </style>
 
