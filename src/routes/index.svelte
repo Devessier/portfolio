@@ -1,4 +1,5 @@
 <script>
+    import Page from '../components/Page.svelte';
     import GithubIcon from '../components/GithubIcon.svelte';
 </script>
 
@@ -6,7 +7,7 @@
     <title>Accueil</title>
 </svelte:head>
 
-<div class="mt-10">
+<Page className="mt-10">
     <h1 class="text-2xl font-bold uppercase">Baptiste Devessier</h1>
 
     <p class="mt-4 font-medium text-lg">Développeur Web, Paris</p>
@@ -21,4 +22,4 @@
             </a>
         </li>
     </ul>
-</div>
+</Page>
