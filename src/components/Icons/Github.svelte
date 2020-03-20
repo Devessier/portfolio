@@ -1,13 +1,16 @@
+<script>
+    let className;
+    export { className as class };
+</script>
+
 <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     stroke="currentColor"
     stroke-width="2"
     fill="none"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="css-i6dzq1">
+    class={className}>
     <path
         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35
         6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91

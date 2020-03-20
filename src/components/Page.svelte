@@ -1,7 +1,9 @@
 <script>
     import { fade } from 'svelte/transition';
 
-    export let className = '';
+    let className = '';
+
+    export { className as class };
 
     /**
      * Using a delay of the same duration in the `in` hook makes it possible

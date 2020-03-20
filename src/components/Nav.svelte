@@ -5,7 +5,7 @@
     import tailwindConfig from '../../tailwind.js';
 
     import NavLink from './NavLink.svelte';
-    import MenuIcon from './MenuIcon.svelte';
+    import { MenuIcon } from './Icons';
 
     export let segment;
 
