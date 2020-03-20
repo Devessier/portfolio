@@ -130,8 +130,9 @@
                     <a
                         href={link}
                         {title}
-                        class="block m-3 transition-transform duration-300
-                        ease-in-out transform hover:-translate-y-2">
+                        class="block m-3 transition-transform origin-bottom
+                        duration-300 ease-in-out transform hover:-translate-y-2
+                        hover:scale-110">
                         <svelte:component this={icon} class="w-10 h-10" />
                     </a>
                 </li>
