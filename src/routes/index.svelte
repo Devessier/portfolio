@@ -112,8 +112,8 @@
             <li>
                 <a
                     href="https://github.com/Devessier"
-                    class="p-2 text-red-500 border border-gray-200 rounded-full block
- "
+                    class="block p-2 text-red-500 border border-gray-200
+                    rounded-full"
                     title="Github">
                     <GithubIcon class="w-6 h-6" />
                 </a>
@@ -130,9 +130,9 @@
                     <a
                         href={link}
                         {title}
-                        class="block m-3 transition-transform origin-bottom
-  duration-300 ease-in-out transform hover:-translate-y-2
- hover:scale-110">
+                        class="block m-3 transition-transform duration-300
+                        ease-in-out origin-bottom transform hover:-translate-y-2
+                        hover:scale-110">
                         <svelte:component this={icon} class="w-10 h-10" />
                     </a>
                 </li>

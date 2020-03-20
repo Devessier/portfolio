@@ -79,8 +79,8 @@
 
     {#if showNavBar}
         <div
-            class="absolute inset-0 block px-10 pt-20 text-red-500 bg-white md:hidden z-10
- "
+            class="absolute inset-0 block px-10 pt-20 text-red-500 bg-white
+            md:hidden z-10"
             transition:fade={{ duration: 200 }}>
             {#each links as { href, text }}
                 <NavLink
@@ -93,5 +93,4 @@
             {/each}
         </div>
     {/if}
-
 </nav>
