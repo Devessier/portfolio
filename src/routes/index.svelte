@@ -6,7 +6,7 @@
     <title>Accueil</title>
 </svelte:head>
 
-<div class="px-16 mt-10">
+<div class="mt-10">
     <h1 class="text-2xl font-bold uppercase">Baptiste Devessier</h1>
 
     <p class="mt-4 font-medium text-lg">Développeur Web, Paris</p>

@@ -1,6 +1,10 @@
 <script>
     export let href;
     export let active = false;
+
+    let className;
+
+    export { className as class };
 </script>
 
 <style type="text/postcss">
@@ -34,6 +38,6 @@
     }
 </style>
 
-<a {href} class:active-link={active} class="">
+<a {href} class:active-link={active} class={className} on:click>
     <slot />
 </a>

@@ -28,7 +28,12 @@
     <body class="font-sans">
         <!-- The application will be rendered inside this element,
 	     because `src/client.js` references it -->
-        <div id="sapper" class="min-h-screen flex flex-col">%sapper.html%</div>
+        <div
+            id="sapper"
+            class="min-h-screen flex flex-col px-4 sm:px-6 md:px-10 lg:px-16"
+        >
+            %sapper.html%
+        </div>
 
         <!-- Sapper creates a <script> tag containing `src/client.js`
 	     and anything else it needs to hydrate the app and
