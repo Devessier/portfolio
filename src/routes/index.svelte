@@ -121,20 +121,20 @@
         </ul>
     </div>
 
-    <!-- <hr class="w-3/4 mx-auto my-4" /> -->
-
     <div class="mt-16">
         <p class="text-lg italic">J'aime coder avec …</p>
 
         <ul class="flex items-center justify-center flex-wrap mt-6">
             {#each loves as { title, link, icon }}
-                <a
-                    href={link}
-                    {title}
-                    class="block m-3 transition-transform duration-300
-                    ease-in-out transform hover:-translate-y-2">
-                    <svelte:component this={icon} class="w-10 h-10" />
-                </a>
+                <li>
+                    <a
+                        href={link}
+                        {title}
+                        class="block m-3 transition-transform duration-300
+                        ease-in-out transform hover:-translate-y-2">
+                        <svelte:component this={icon} class="w-10 h-10" />
+                    </a>
+                </li>
             {/each}
         </ul>
     </div>
