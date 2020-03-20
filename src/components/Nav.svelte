@@ -1,6 +1,7 @@
 <script>
     import { fade } from 'svelte/transition';
     import resolveConfig from 'tailwindcss/resolveConfig';
+
     import tailwindConfig from '../../tailwind.js';
 
     import NavLink from './NavLink.svelte';
@@ -66,7 +67,7 @@
 
         <div class="flex md:hidden items-center z-20">
             <button on:click={toggle}>
-                <MenuIcon width="30" height="30" />
+                <MenuIcon width="30" height="30" opened={showNavBar} />
             </button>
         </div>
     </div>
@@ -76,12 +77,12 @@
             class="absolute inset-0 bg-white text-red-500 block md:hidden z-10
             pt-20 px-10"
             transition:fade={{ duration: 200 }}>
-            {#each links as { href, text }, index}
+            {#each links as { href, text }}
                 <NavLink
                     {href}
                     active={segment === href}
                     on:click={() => (showNavBar = false)}
-                    class="font-semibold">
+                    class="font-bold">
                     {text}
                 </NavLink>
             {/each}
