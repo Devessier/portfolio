@@ -8,7 +8,7 @@ const purgecss = require("@fullhuman/postcss-purgecss")({
 
 module.exports = {
   plugins: [
-    tailwindcss("./tailwind.js"),
+    tailwindcss("./tailwind.config.js"),
     require('postcss-nested'),
 
     // only needed if you want to purge

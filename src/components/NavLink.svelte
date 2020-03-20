@@ -38,6 +38,6 @@
     }
 </style>
 
-<a {href} class:active-link={active} class={className} on:click>
+<a {href} rel="prefetch" class:active-link={active} class={className} on:click>
     <slot />
 </a>

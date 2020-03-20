@@ -2,7 +2,7 @@
     import { fade } from 'svelte/transition';
     import resolveConfig from 'tailwindcss/resolveConfig';
 
-    import tailwindConfig from '../../tailwind.js';
+    import tailwindConfig from '../../tailwind.config.js';
 
     import NavLink from './NavLink.svelte';
     import { MenuIcon } from './Icons';
@@ -52,9 +52,14 @@
 
 <nav class="py-6">
     <div class="flex items-center justify-between">
-        <a href="." class="main-link-font text-2xl tracking-wider">Devessier</a>
+        <a
+            href="."
+            rel="prefetch"
+            class="text-2xl tracking-wider main-link-font">
+            Devessier
+        </a>
 
-        <div class="hidden md:flex items-center">
+        <div class="items-center hidden md:flex">
             {#each links as { href, text }, index}
                 <NavLink
                     {href}
@@ -65,7 +70,7 @@
             {/each}
         </div>
 
-        <div class="flex md:hidden items-center z-20">
+        <div class="z-20 flex items-center md:hidden">
             <button on:click={toggle}>
                 <MenuIcon width="30" height="30" opened={showNavBar} />
             </button>
@@ -74,8 +79,8 @@
 
     {#if showNavBar}
         <div
-            class="absolute inset-0 bg-white text-red-500 block md:hidden z-10
-            pt-20 px-10"
+            class="absolute inset-0 block px-10 pt-20 text-red-500 bg-white md:hidden z-10
+ "
             transition:fade={{ duration: 200 }}>
             {#each links as { href, text }}
                 <NavLink
@@ -86,7 +91,6 @@
                     {text}
                 </NavLink>
             {/each}
-
         </div>
     {/if}
 

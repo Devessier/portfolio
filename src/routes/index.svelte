@@ -106,14 +106,14 @@
     <div>
         <h1 class="text-2xl font-bold uppercase">Baptiste Devessier</h1>
 
-        <p class="mt-4 font-medium text-lg">Développeur Web, Paris</p>
+        <p class="mt-4 text-lg font-medium">Développeur Web, Paris</p>
 
         <ul class="flex items-center mt-3">
             <li>
                 <a
                     href="https://github.com/Devessier"
-                    class="text-red-500 p-2 border border-gray-200 block
-                    rounded-full"
+                    class="p-2 text-red-500 border border-gray-200 rounded-full block
+ "
                     title="Github">
                     <GithubIcon class="w-6 h-6" />
                 </a>
@@ -124,15 +124,15 @@
     <div class="mt-16">
         <p class="text-lg italic">J'aime coder avec …</p>
 
-        <ul class="flex items-center justify-center flex-wrap mt-6">
+        <ul class="flex flex-wrap items-center justify-center mt-6">
             {#each loves as { title, link, icon }}
                 <li>
                     <a
                         href={link}
                         {title}
                         class="block m-3 transition-transform origin-bottom
-                        duration-300 ease-in-out transform hover:-translate-y-2
-                        hover:scale-110">
+  duration-300 ease-in-out transform hover:-translate-y-2
+ hover:scale-110">
                         <svelte:component this={icon} class="w-10 h-10" />
                     </a>
                 </li>
