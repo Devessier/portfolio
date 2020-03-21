@@ -4,6 +4,11 @@
 
     const events = [
         {
+            title: 'Développeur dans votre entreprise ?',
+            description: 'Je veux porter mes compétences toujours plus haut',
+            date: 'dès maintenant',
+        },
+        {
             title: 'École 42',
             description: 'Formation C/Unix, Web',
             date: "2018 - aujourd'hui",
