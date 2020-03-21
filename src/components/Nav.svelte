@@ -46,6 +46,15 @@
     .main-link-font {
         font-family: 'Geo', sans-serif;
     }
+
+    .menu-btn-active {
+        top: 32.25px;
+        right: 1rem;
+
+        @screen sm {
+            right: 1.5rem;
+        }
+    }
 </style>
 
 <svelte:window on:resize={handleWindowResize} />
@@ -70,7 +79,8 @@
             {/each}
         </div>
 
-        <div class="z-20 flex items-center md:hidden">
+        <div
+            class="z-20 flex items-center md:hidden {showNavBar ? 'fixed menu-btn-active' : ''}">
             <button on:click={toggle}>
                 <MenuIcon width="30" height="30" opened={showNavBar} />
             </button>
@@ -79,7 +89,7 @@
 
     {#if showNavBar}
         <div
-            class="absolute inset-0 block px-10 pt-20 text-red-500 bg-white
+            class="fixed inset-0 block px-10 pt-20 text-red-500 bg-white
             md:hidden z-10"
             transition:fade={{ duration: 200 }}>
             {#each links as { href, text }}

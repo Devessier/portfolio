@@ -7,4 +7,4 @@
 <img
     src="/polka-logo.png"
     alt="Polka logo"
-    class={`object-contain ${className}`} />
+    class="object-contain {className}" />
