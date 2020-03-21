@@ -4,6 +4,7 @@
         HtmlIcon,
         CssIcon,
         GithubIcon,
+        MailIcon,
         TailwindIcon,
         VueIcon,
         NuxtIcon,
@@ -17,6 +18,19 @@
         JavaScriptIcon,
         GolangIcon,
     } from '../components/Icons';
+
+    const communicationMeans = [
+        {
+            href: 'https://github.com/Devessier',
+            title: 'Mon profil Github',
+            icon: GithubIcon,
+        },
+        {
+            href: 'contact',
+            title: 'Me contacter',
+            icon: MailIcon,
+        },
+    ];
 
     const loves = [
         {
@@ -111,15 +125,20 @@
         </p>
 
         <ul class="flex items-center mt-3">
-            <li>
-                <a
-                    href="https://github.com/Devessier"
-                    class="block p-2 text-red-500 border border-gray-200
-                    rounded-full"
-                    title="Github">
-                    <GithubIcon class="w-6 h-6" />
-                </a>
-            </li>
+            {#each communicationMeans as { href, title, icon }, index}
+                <li>
+                    <a
+                        rel="prefetch"
+                        {href}
+                        class="block p-2 text-red-500 border border-gray-200
+                        rounded-full {index < communicationMeans.length - 1 ? 'mr-2' : ''}"
+                        {title}>
+                        <svelte:component
+                            this={icon}
+                            class="w-6 h-6 stroke-current" />
+                    </a>
+                </li>
+            {/each}
         </ul>
     </div>
 
