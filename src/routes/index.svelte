@@ -106,7 +106,9 @@
     <div>
         <h1 class="text-2xl font-bold uppercase">Baptiste Devessier</h1>
 
-        <p class="mt-4 text-lg font-medium">Développeur Web, Paris</p>
+        <p class="mt-4 text-lg font-medium">
+            Développeur Web Full Stack, Paris
+        </p>
 
         <ul class="flex items-center mt-3">
             <li>
