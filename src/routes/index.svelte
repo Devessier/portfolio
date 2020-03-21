@@ -121,7 +121,7 @@
         </ul>
     </div>
 
-    <div class="mt-16">
+    <div class="mt-16 mb-6">
         <p class="text-lg italic">J'aime coder avec …</p>
 
         <ul class="flex flex-wrap items-center justify-center mt-6">
@@ -139,5 +139,4 @@
             {/each}
         </ul>
     </div>
-
 </Page>
