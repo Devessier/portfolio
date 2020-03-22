@@ -1,8 +1,8 @@
 <script>
-    import Page from '../components/Page.svelte';
-    import Timeline from '../components/Timeline.svelte';
+    import Page from '../components/Page.svelte'
+    import Timeline from '../components/Timeline.svelte'
 
-    import { freshNavigation } from '../store';
+    import { freshNavigation } from '../store'
 
     const events = [
         {
@@ -37,7 +37,7 @@
         {
             title: 'Développement de la startup ArtisansFiables',
             description:
-                "Je développe pour mon père l'intégralité du produit de cette legaltech qui sortira très prochainement",
+                "Je développe l'intégralité du produit de cette legaltech qui sortira très prochainement, et dans laquelle je suis associé",
             date: "Février 2019 - aujourd'hui",
         },
         {
@@ -83,10 +83,10 @@
         {
             title: 'Découverte de la programmation',
             description:
-                "Mes parents m'offrent un MacBook Air pour développer des applications iOS en Objective-C",
+                "Mes parents m'offrent un MacBook Air et des manuels d'apprentissage en noir et blanc pour développer des applications iOS en Objective-C",
             date: 'Avril 2013',
         },
-    ];
+    ]
 </script>
 
 <svelte:head>
