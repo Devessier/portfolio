@@ -1,14 +1,25 @@
 <script>
-    import { fade } from 'svelte/transition';
+    import { onMount } from 'svelte';
 
+    export let skipWaiting = false;
     export let events = [];
 
     let className;
 
     export { className as class };
 
-    const FADE_DURATION = 200;
-    const FADE_INTERVAL = 100;
+    const FADE_INTERVAL = 50;
+    let loaded = false;
+
+    $: initialDelay = skipWaiting ? 0 : 400;
+
+    onMount(() => {
+        loaded = true;
+    });
+
+    function handleAnimationEnd({ target: { classList } }) {
+        classList.remove('fadeIn');
+    }
 </script>
 
 <style>
@@ -21,19 +32,40 @@
             grid-template-columns: max-content 1fr;
         }
     }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fadeIn {
+        opacity: 0;
+
+        animation-name: fadeIn;
+        animation-duration: 300ms;
+        animation-fill-mode: forwards;
+    }
 </style>
 
 <ul class={className}>
     {#each events as { title, description, date }, index}
         <p
-            class="text-red-500 font-semibold text-left md:text-right"
-            in:fade={{ duration: FADE_DURATION, delay: FADE_INTERVAL * index }}>
+            class="text-red-500 font-semibold text-left md:text-right {loaded ? 'fadeIn' : 'opacity-0'}"
+            style="animation-delay: {FADE_INTERVAL * index + initialDelay}ms"
+            on:animationend={handleAnimationEnd}>
             {date}
         </p>
 
         <div
-            class="ml-0 md:ml-4 mb-6"
-            in:fade={{ duration: FADE_DURATION, delay: FADE_INTERVAL * index }}>
+            class="ml-0 md:ml-4 mb-6 {loaded ? 'fadeIn' : 'opacity-0'}"
+            style="animation-delay: {FADE_INTERVAL * index + initialDelay}ms"
+            on:animationend={handleAnimationEnd}>
             <slot name="event" {title} {description} />
         </div>
     {/each}

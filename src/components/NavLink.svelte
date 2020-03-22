@@ -12,7 +12,7 @@
         @apply relative py-2 overflow-x-hidden block tracking-widest font-medium;
 
         &::after {
-            @apply absolute w-full h-2 inset-x-0 bottom-0 transition duration-300 transform ease-in-out -translate-x-full;
+            @apply absolute w-full h-2 inset-x-0 bottom-0 transition duration-300 transform ease-in-out -translate-x-full bg-white;
 
             content: '';
         }
