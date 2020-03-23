@@ -6,7 +6,7 @@
 
     const events = [
         {
-            title: 'Développeur dans votre entreprise ?',
+            title: 'Développeur disponible pour vos projets',
             description: 'Je veux porter mes compétences au plus haut',
             date: 'dès maintenant',
         },
