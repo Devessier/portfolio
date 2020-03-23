@@ -1,5 +1,5 @@
 <script>
-    import Page from '../components/Page.svelte';
+    import Page from '../components/Page.svelte'
     import {
         HtmlIcon,
         CssIcon,
@@ -17,7 +17,7 @@
         TypeScriptIcon,
         JavaScriptIcon,
         GolangIcon,
-    } from '../components/Icons';
+    } from '../components/Icons'
 
     const communicationMeans = [
         {
@@ -30,9 +30,9 @@
             title: 'Me contacter',
             icon: MailIcon,
         },
-    ];
+    ]
 
-    const loves = [
+    const skills = [
         {
             title: 'HTML',
             link: 'https://html.spec.whatwg.org/multipage/',
@@ -66,7 +66,7 @@
             icon: VuetifyIcon,
         },
         {
-            title: 'Nuxt',
+            title: 'Nuxt.js',
             link: 'https://nuxtjs.org',
             icon: NuxtIcon,
         },
@@ -109,7 +109,31 @@
             link: 'https://go.dev/',
             icon: GolangIcon,
         },
-    ];
+    ]
+
+    function generatePaddingClasses(number) {
+        const classes = [
+            'p-4 md:p-4',
+            'p-3 md:p-4',
+            'p-4 md:p-4',
+            'p-3 md:p-4',
+            'p-4 md:p-4',
+        ]
+
+        return classes[number % classes.length]
+    }
+
+    function generateSizeClasses(number) {
+        const classes = [
+            'w-12 md:w-16 h-12 md:h-16',
+            'w-6 md:w-10 h-6 md:h-10',
+            'w-12 md:w-16 h-12 md:h-16',
+            'w-10 md:w-12 h-10 md:h-12',
+            'w-12 md:w-16 h-12 md:h-16',
+        ]
+
+        return classes[number % classes.length]
+    }
 </script>
 
 <svelte:head>
@@ -118,13 +142,15 @@
 
 <Page class="mt-10">
     <div>
-        <h1 class="text-2xl font-bold uppercase">Baptiste Devessier</h1>
+        <h1 class="text-4xl font-bold uppercase">Baptiste Devessier</h1>
 
-        <p class="mt-4 text-lg font-medium">
-            Développeur Web Full Stack, Paris
+        <p class="mt-5 text-2xl font-medium">
+            Développeur
+            <span class="bg-red-300 ">Web Full Stack</span>
+            <span class="-ml-1">, Paris</span>
         </p>
 
-        <ul class="flex items-center mt-3">
+        <ul class="flex items-center mt-8">
             {#each communicationMeans as { href, title, icon }, index}
                 <li>
                     <a
@@ -135,26 +161,32 @@
                         {title}>
                         <svelte:component
                             this={icon}
-                            class="w-6 h-6 stroke-current" />
+                            class="w-8 h-8 stroke-current" />
                     </a>
                 </li>
             {/each}
         </ul>
     </div>
 
-    <div class="mt-16 mb-6">
-        <p class="text-lg italic">J'aime coder avec …</p>
+    <div class="mt-12 mb-6">
+        <p class="text-2xl font-bold uppercase mb-10 text-center">
+            Mes compétences
+        </p>
 
-        <ul class="flex flex-wrap items-center justify-center mt-6">
-            {#each loves as { title, link, icon }}
-                <li>
+        <ul
+            class="flex justify-center items-center flex-wrap mb-6 w-full
+            md:w-5/6 lg:w-4/5 xl:w-8/12 mx-auto">
+            {#each skills as { title, link, icon }, index}
+                <li class="mb-2 md:mb-4 mx-2 sm:mx-4 md:mx-8">
                     <a
                         href={link}
                         {title}
-                        class="block m-3 transition-transform duration-300
-                        ease-in-out origin-bottom transform hover:-translate-y-2
-                        hover:scale-110">
-                        <svelte:component this={icon} class="w-10 h-10" />
+                        class="block transition-transform duration-300 ease-out
+                        origin-center transform shadow-xl rounded-full flex
+                        items-center justify-center hover:scale-110 {generatePaddingClasses(index)}">
+                        <svelte:component
+                            this={icon}
+                            class={generateSizeClasses(index)} />
                     </a>
                 </li>
             {/each}
