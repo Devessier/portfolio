@@ -117,7 +117,7 @@
             'p-3 md:p-4',
             'p-4 md:p-4',
             'p-3 md:p-4',
-            'p-4 md:p-4',
+            'p-3 md:p-4',
         ]
 
         return classes[number % classes.length]
@@ -129,7 +129,7 @@
             'w-6 md:w-10 h-6 md:h-10',
             'w-12 md:w-16 h-12 md:h-16',
             'w-10 md:w-12 h-10 md:h-12',
-            'w-12 md:w-16 h-12 md:h-16',
+            'w-6 md:w-10 h-6 md:h-10',
         ]
 
         return classes[number % classes.length]
