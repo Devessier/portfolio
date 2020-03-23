@@ -1,16 +1,16 @@
 <script>
-    import { fade } from 'svelte/transition';
-    import resolveConfig from 'tailwindcss/resolveConfig';
+    import { fade } from 'svelte/transition'
+    import resolveConfig from 'tailwindcss/resolveConfig'
 
-    import tailwindConfig from '../../tailwind.config.js';
+    import tailwindConfig from '../../tailwind.config.js'
 
-    import NavLink from './NavLink.svelte';
-    import { MenuIcon } from './Icons';
+    import NavLink from './NavLink.svelte'
+    import { MenuIcon } from './Icons'
 
-    export let segment;
+    export let segment
 
-    const fullConfig = resolveConfig(tailwindConfig) || '768px';
-    const BREAKPOINT = Number(fullConfig.theme.screens.md.replace('px', ''));
+    const fullConfig = resolveConfig(tailwindConfig) || '768px'
+    const BREAKPOINT = Number(fullConfig.theme.screens.md.replace('px', ''))
 
     const links = [
         {
@@ -25,24 +25,22 @@
             href: 'contact',
             text: 'Contact',
         },
-    ];
+    ]
 
-    let showNavBar = false;
+    let showNavBar = false
 
     function toggle() {
-        showNavBar = !showNavBar;
+        showNavBar = !showNavBar
     }
 
     function handleWindowResize({ target: { innerWidth } }) {
         if (BREAKPOINT <= innerWidth && showNavBar) {
-            showNavBar = false;
+            showNavBar = false
         }
     }
 </script>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Geo&display=swap&text=Devessier');
-
     .main-link-font {
         font-family: 'Geo', sans-serif;
     }
