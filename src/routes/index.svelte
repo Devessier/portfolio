@@ -159,6 +159,8 @@
                         class="block p-2 text-red-500 border border-gray-200
                         rounded-full {index < communicationMeans.length - 1 ? 'mr-2' : ''}"
                         {title}>
+                        <span class="sr-only">{title}</span>
+
                         <svelte:component
                             this={icon}
                             class="w-8 h-8 stroke-current" />
@@ -184,6 +186,8 @@
                         class="block transition-transform duration-300 ease-out
                         origin-center transform shadow-xl rounded-full flex
                         items-center justify-center hover:scale-110 {generatePaddingClasses(index)}">
+                        <span class="sr-only">{title}</span>
+
                         <svelte:component
                             this={icon}
                             class={generateSizeClasses(index)} />
