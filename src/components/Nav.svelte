@@ -78,7 +78,7 @@
         </div>
 
         <div
-            class="z-20 flex items-center md:hidden {showNavBar ? 'fixed menu-btn-active' : ''}">
+            class="z-30 flex items-center md:hidden {showNavBar ? 'fixed menu-btn-active' : ''}">
             <button on:click={toggle}>
                 <span class="sr-only">
                     {showNavBar ? 'Fermer le menu' : 'Ouvrir le menu'}
@@ -92,7 +92,7 @@
     {#if showNavBar}
         <div
             class="fixed inset-0 block px-10 pt-20 text-red-500 bg-white
-            md:hidden z-10"
+            md:hidden z-20"
             transition:fade={{ duration: 200 }}>
             {#each links as { href, text }}
                 <NavLink
