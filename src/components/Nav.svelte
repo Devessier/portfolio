@@ -80,6 +80,10 @@
         <div
             class="z-20 flex items-center md:hidden {showNavBar ? 'fixed menu-btn-active' : ''}">
             <button on:click={toggle}>
+                <span class="sr-only">
+                    {showNavBar ? 'Fermer le menu' : 'Ouvrir le menu'}
+                </span>
+
                 <MenuIcon width="30" height="30" opened={showNavBar} />
             </button>
         </div>

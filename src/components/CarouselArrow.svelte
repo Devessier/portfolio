@@ -11,6 +11,10 @@
     <button
         on:click
         class="flex items-center justify-center p-1 bg-red-400 rounded-full mx-3">
+        <span class="sr-only">
+            {direction === 'left' ? 'Image précédente' : 'Image suivante'}
+        </span>
+
         {#if direction === 'left'}
             <svg
                 class="h-4 w-4 stroke-current text-white"
