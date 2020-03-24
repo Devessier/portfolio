@@ -15,3 +15,4 @@ export { default as PolkaIcon } from './Polka.svelte';
 export { default as TypeScriptIcon } from './TypeScript.svelte';
 export { default as JavaScriptIcon } from './JavaScript.svelte';
 export { default as GolangIcon } from './Golang.svelte';
+export { default as LinkIcon } from './Link.svelte';
