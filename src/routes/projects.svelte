@@ -199,11 +199,22 @@
                     <Carousel
                         items={pictures}
                         let:item={{ src, alt }}
+                        let:index
+                        let:zoom
                         class="mb-4">
                         <img
                             {src}
                             {alt}
-                            class="w-full object-cover object-center" />
+                            class="w-full object-cover object-center
+                            cursor-pointer"
+                            on:click={() => zoom(index)} />
+
+                        <img
+                            slot="zoom"
+                            let:item={{ src, alt }}
+                            class="w-full object-cover"
+                            {src}
+                            {alt} />
                     </Carousel>
 
                     <p class="mb-4">
