@@ -4,9 +4,38 @@
     import TextArea from '../components/TextArea.svelte'
     import { LocationMarkerIcon, AtIcon } from '../components/Icons'
 
+    const FORM_NAME = 'contact'
+
     let name = ''
     let email = ''
     let message = ''
+
+    function encodeRequestBody(body) {
+        return Object.entries(body)
+            .map(
+                ([key, value]) =>
+                    `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            )
+            .join('&')
+    }
+
+    async function handleSubmit(event) {
+        await fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: encodeRequestBody({
+                'form-name': FORM_NAME,
+                name,
+                email,
+                message,
+            }),
+        })
+            .then((res) => res.text())
+            .then(console.log)
+            .catch(console.error)
+    }
 </script>
 
 <svelte:head>
@@ -37,9 +66,10 @@
     </div>
 
     <form
-        name="contact"
+        method="POST"
+        name={FORM_NAME}
         class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2"
-        netlify>
+        on:submit|preventDefault={handleSubmit}>
         <Input
             name="name"
             autocomplete="name"
