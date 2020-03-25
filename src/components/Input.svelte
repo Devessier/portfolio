@@ -4,6 +4,7 @@
     export let autocomplete = 'off'
     export let label
     export let placeholder
+    export let type
 
     let className = ''
     export { className as class }
@@ -16,6 +17,7 @@
         {name}
         {placeholder}
         {autocomplete}
+        {type}
         bind:value
         class="text-sm p-2 border-2 rounded focus:shadow border-gray-300
         placeholder-gray-500 focus:border-red-400 focus:outline-none

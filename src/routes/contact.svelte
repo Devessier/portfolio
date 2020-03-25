@@ -37,19 +37,22 @@
     </div>
 
     <form
+        name="contact"
         class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2"
-        on:submit|preventDefault>
+        netlify>
         <Input
             name="name"
             autocomplete="name"
             label="Nom"
             placeholder="Tom Delorme"
+            type="text"
             bind:value={name} />
         <Input
             name="email"
             autocomplete="email"
             label="Adresse mail"
             placeholder="tom.delorme@gmail.com"
+            type="email"
             bind:value={email} />
 
         <TextArea
