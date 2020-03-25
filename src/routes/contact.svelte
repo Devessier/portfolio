@@ -45,7 +45,6 @@
             autocomplete="name"
             label="Nom"
             placeholder="Tom Delorme"
-            type="text"
             bind:value={name} />
         <Input
             name="email"
