@@ -15,6 +15,10 @@
             @apply absolute w-full h-2 inset-x-0 bottom-0 transition duration-300 transform ease-in-out -translate-x-full bg-white;
 
             content: '';
+
+            @screen md {
+                @apply w-2/5;
+            }
         }
 
         &:hover {
