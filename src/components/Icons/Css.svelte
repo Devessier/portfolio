@@ -3,17 +3,7 @@
     export { className as class }
 </script>
 
-<svg
-    class={className}
-    enable-background="new 0 0 32 32"
-    height="32px"
-    id="Layer_1"
-    version="1.0"
-    viewBox="0 0 32 32"
-    width="32px"
-    xml:space="preserve"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg class={className} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
     <g>
         <polygon
             fill="#1F62AE"

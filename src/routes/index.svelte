@@ -57,7 +57,7 @@
 </style>
 
 <svelte:head>
-    <title>Accueil</title>
+    <title>Baptiste Devessier | Accueil</title>
 </svelte:head>
 
 <Page class="mt-10">

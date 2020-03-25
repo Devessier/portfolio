@@ -90,7 +90,7 @@
 </script>
 
 <svelte:head>
-    <title>Parcours</title>
+    <title>Baptiste Devessier | Parcours</title>
 </svelte:head>
 
 <Page class="mt-10">

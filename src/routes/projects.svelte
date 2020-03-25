@@ -179,7 +179,7 @@
 </style>
 
 <svelte:head>
-    <title>Projets</title>
+    <title>Baptiste Devessier | Projets</title>
 </svelte:head>
 
 <Page class="mt-10">
