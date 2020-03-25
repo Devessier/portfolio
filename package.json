@@ -53,7 +53,7 @@
         }
     },
     "lint-staged": {
-        "*.{js,svelte}": "eslint --fix",
+        "*.{js}": "eslint --fix",
         "*.{js,svelte,json,html}": "prettier --write"
     }
 }

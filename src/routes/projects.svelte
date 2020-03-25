@@ -167,7 +167,7 @@
     ]
 </script>
 
-<style type="text/postcss">
+<style lang="postcss">
     h2 {
         &::after {
             @apply absolute inset-x-0 h-1 bg-red-400 w-2/5;

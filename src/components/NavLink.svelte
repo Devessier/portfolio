@@ -1,13 +1,13 @@
 <script>
-    export let href;
-    export let active = false;
+    export let href
+    export let active = false
 
-    let className;
+    let className
 
-    export { className as class };
+    export { className as class }
 </script>
 
-<style type="text/postcss">
+<style lang="postcss">
     a {
         @apply relative py-2 overflow-x-hidden block tracking-widest font-medium;
 

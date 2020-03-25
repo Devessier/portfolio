@@ -7,50 +7,40 @@
     import { onMount, onDestroy, createEventDispatcher } from 'svelte'
     import { fade } from 'svelte/transition'
 
+    import { nodeContainsTarget } from '../utils.js'
     import { XIcon } from './Icons'
 
     const dispatch = createEventDispatcher()
+    const id = counter
 
-    let overlayRef
-    let ref
     let modal
+    let slotContainer
 
     onMount(() => {
-        const zIndex = generateZIndex(counter)
-
-        if (counter === 0) {
-            console.log('create')
-
-            overlay = document.createElement('div')
-            overlay.className = 'fixed z-30 inset-0'
-
+        // Only one overlay is necessary
+        if (id === 0) {
             document.body.appendChild(overlay)
-
-            overlay.appendChild(overlayRef)
         }
 
-        modal = document.createElement('div')
-        modal.className = `fixed top-0 left-0 h-full w-full ${zIndex}`
         document.body.appendChild(modal)
-        modal.appendChild(ref)
 
         // Prevent scrolling
         document.body.classList.add('overflow-y-hidden')
 
         counter++
-    })
 
-    onDestroy(() => {
-        document.body.removeChild(modal)
+        return () => {
+            if (id === 0) {
+                document.body.removeChild(overlay)
+            }
 
-        if (counter === 1) {
-            document.body.removeChild(overlay)
+            document.body.removeChild(modal)
 
-            // Enable scrolling
+            // Reactivate scrolling
             document.body.classList.remove('overflow-y-hidden')
-        }
 
-        counter--
+            counter--
+        }
     })
 
     function generateZIndex(count) {
@@ -76,32 +66,47 @@
                 break
         }
     }
+
+    function handleOverlayClick(event) {
+        if (!nodeContainsTarget(slotContainer, event.target)) {
+            dispatch('close')
+        }
+    }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="hidden">
-    <div
-        bind:this={overlayRef}
-        transition:fade={{ duration: 100 }}
-        class="absolute inset-0"
-        style="opacity: 0.7; background-color: rgb(33, 33, 33)" />
+    {#if id === 0}
+        <div class="fixed z-30 inset-0" bind:this={overlay}>
+            <div
+                transition:fade={{ duration: 100 }}
+                class="absolute inset-0"
+                style="opacity: 0.7; background-color: rgb(33, 33, 33)" />
+        </div>
+    {/if}
 
     <div
-        bind:this={ref}
-        class="flex justify-center items-center h-full w-full relative md:px-20"
-        aria-modal="true"
-        transition:fade={{ duration: 200 }}
-        on:click={event => dispatch('overlay:click', event)}>
-        <button
-            class="absolute top-0 left-0 flex justify-center items-center m-4
-            p-2 rounded-full"
-            on:click={() => dispatch('close')}>
-            <span class="sr-only">Fermer</span>
+        class="fixed top-0 left-0 h-full w-full {generateZIndex(id)}"
+        bind:this={modal}>
+        <div
+            class="flex justify-center items-center h-full w-full relative
+            md:px-20"
+            aria-modal="true"
+            transition:fade={{ duration: 200 }}
+            on:click={handleOverlayClick}>
+            <button
+                class="absolute top-0 left-0 flex justify-center items-center
+                m-4 p-2 rounded-full"
+                on:click={() => dispatch('close')}>
+                <span class="sr-only">Fermer</span>
 
-            <XIcon class="w-6 h-6 text-white stroke-current" />
-        </button>
+                <XIcon class="w-6 h-6 text-white stroke-current" />
+            </button>
 
-        <slot />
+            <div bind:this={slotContainer}>
+                <slot />
+            </div>
+        </div>
     </div>
 </div>

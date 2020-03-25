@@ -1,7 +1,7 @@
 <script>
-    let className;
+    let className
 
-    export { className as class };
+    export { className as class }
 </script>
 
 <img

@@ -1,7 +1,7 @@
 <script>
-    let className;
+    let className
 
-    export { className as class };
+    export { className as class }
 </script>
 
 <svg viewBox="0 0 256 288" xmlns="http://www.w3.org/2000/svg" class={className}>

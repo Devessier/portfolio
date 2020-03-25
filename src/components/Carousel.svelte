@@ -1,14 +1,12 @@
 <script>
     import CarouselArrow from './CarouselArrow.svelte'
     import Modal from './Modal.svelte'
-    import { nodeContainsTarget } from '../utils.js'
 
     let className = ''
     export { className as class }
 
     export let items = []
 
-    let zoomedImageRef
     let index = 0
     let zoomImageIndex = -1
 
@@ -35,12 +33,6 @@
     function close() {
         zoomImageIndex = -1
     }
-
-    function handleOverlayClick({ detail: event }) {
-        if (!nodeContainsTarget(zoomedImageRef, event.target)) {
-            close()
-        }
-    }
 </script>
 
 <div class="overflow-x-hidden relative {className}">
@@ -49,10 +41,8 @@
     {/if}
 
     {#if zoomImageIndex !== -1}
-        <Modal on:close={close} on:overlay:click={handleOverlayClick}>
-            <div bind:this={zoomedImageRef}>
-                <slot name="zoom" item={items[zoomImageIndex]} />
-            </div>
+        <Modal on:close={close}>
+            <slot name="zoom" item={items[zoomImageIndex]} />
         </Modal>
     {/if}
 

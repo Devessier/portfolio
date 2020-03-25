@@ -1,6 +1,6 @@
 <script>
-    let className;
-    export { className as class };
+    let className
+    export { className as class }
 </script>
 
 <svg class={className} viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">

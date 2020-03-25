@@ -1,20 +1,20 @@
 <script>
-    import { stores } from '@sapper/app';
+    import { stores } from '@sapper/app'
 
-    import { freshNavigation } from '../store';
-    import Nav from '../components/Nav.svelte';
+    import { freshNavigation } from '../store'
+    import Nav from '../components/Nav.svelte'
 
-    const { page } = stores();
+    const { page } = stores()
 
-    export let segment;
+    export let segment
 
     page.subscribe(() => {
-        freshNavigation.update(value => {
-            if (value === undefined) return true;
+        freshNavigation.update((value) => {
+            if (value === undefined) return true
 
-            return false;
-        });
-    });
+            return false
+        })
+    })
 </script>
 
 <Nav {segment} />

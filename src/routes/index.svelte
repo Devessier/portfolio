@@ -46,7 +46,7 @@
     ]
 </script>
 
-<style type="text/postcss">
+<style lang="postcss">
     .skills {
         columns: 1;
 
