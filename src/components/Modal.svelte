@@ -90,18 +90,18 @@
         class="fixed top-0 left-0 h-full w-full {generateZIndex(id)}"
         bind:this={modal}>
         <div
-            class="flex justify-center items-center h-full w-full relative
-            md:px-20"
+            class="flex justify-center items-center h-full w-full relative px-0
+            sm:px-20 overflow-auto"
             aria-modal="true"
             transition:fade={{ duration: 200 }}
             on:click={handleOverlayClick}>
             <button
-                class="absolute top-0 left-0 flex justify-center items-center
-                m-4 p-2 rounded-full"
+                class="fixed top-0 left-0 flex justify-center items-center m-4
+                p-1 rounded-full bg-gray-300"
                 on:click={() => dispatch('close')}>
                 <span class="sr-only">Fermer</span>
 
-                <XIcon class="w-6 h-6 text-white stroke-current" />
+                <XIcon class="w-6 h-6 text-gray-900 stroke-current" />
             </button>
 
             <div bind:this={slotContainer}>
