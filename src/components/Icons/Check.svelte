@@ -17,7 +17,7 @@
     aria-label={ariaLabel}>
     <path
         in:draw={{ delay: 200, duration: transition ? duration : 0, easing: quintIn }}
-        d="M6 18L18 6M6 6L18 18"
+        d="M5 13L9 17L19 7"
         stroke-width="2"
         stroke-linejoin="round" />
 </svg>

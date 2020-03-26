@@ -4,6 +4,7 @@
     import TextField from '../components/TextField.svelte'
     import TextArea from '../components/TextArea.svelte'
     import { LocationMarkerIcon, AtIcon } from '../components/Icons'
+    import FormButton from '../components/FormButton.svelte'
     import { notEmpty, emailValid } from '../utils.js'
 
     const FORM_NAME = 'contact'
@@ -11,6 +12,9 @@
     let name = ''
     let email = ''
     let message = ''
+    let isLoading = false
+    let done = false
+    let error
 
     function encodeRequestBody(body) {
         return Object.entries(body)
@@ -22,27 +26,36 @@
     }
 
     async function handleSubmit(event) {
-        const body = encodeRequestBody({
-            'form-name': FORM_NAME,
-            name,
-            email,
-            message,
-        })
+        isLoading = true
 
-        console.log('body =', body)
+        try {
+            await fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: encodeRequestBody({
+                    'form-name': FORM_NAME,
+                    name,
+                    email,
+                    message,
+                }),
+            })
 
-        return
+            error = false
+            done = true
+        } catch (e) {
+            done = false
+            error = true
 
-        await fetch('/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body,
-        })
-            .then(res => res.text())
-            .then(console.log)
-            .catch(console.error)
+            setTimeout(() => {
+                error = false
+            }, 3000)
+        } finally {
+            setTimeout(() => {
+                isLoading = false
+            }, 1000)
+        }
     }
 </script>
 
@@ -107,13 +120,7 @@
             rules={[notEmpty]} />
 
         <div class="sm:col-span-2">
-            <button
-                type="submit"
-                disabled={!isValid}
-                class="px-4 py-2 rounded shadow focus:outline-none
-                transition-colors duration-150 {!isValid ? 'bg-gray-300 text-gray-800 cursor-not-allowed' : 'bg-red-500 hover:bg-red-400 focus:bg-red-400 text-white cursor-pointer'}">
-                Envoyer
-            </button>
+            <FormButton {isValid} {isLoading} {done} {error} />
         </div>
     </Form>
 </Page>
