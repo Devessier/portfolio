@@ -3,6 +3,7 @@
 </script>
 
 <script>
+    import { getContext } from 'svelte'
     import { slide } from 'svelte/transition'
     import { cubicInOut } from 'svelte/easing'
 
@@ -10,15 +11,23 @@
     export let label
     export let rules = []
     export let lazy = true
-    export let isValid = lazy === true
 
     let className = ''
     export { className as class }
 
+    const inputs = getContext('inputs')
     const id = `input-${counter++}`
 
     let initialized = false
     let state = true
+    let isValid = lazy === true
+
+    if (inputs !== undefined) {
+        inputs.update(id, {
+            validate,
+            isValid,
+        })
+    }
 
     $: {
         if (initialized === false) {
@@ -31,6 +40,22 @@
         }
     }
     $: isValid = state === true
+
+    $: {
+        if (inputs !== undefined) {
+            inputs.update(id, {
+                validate,
+                isValid,
+            })
+        }
+    }
+
+    function validate() {
+        const result = checkRules(rules, value)
+        state = result
+
+        return result
+    }
 
     function checkRules(rules, value) {
         for (const fn of rules) {

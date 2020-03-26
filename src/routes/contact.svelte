@@ -1,5 +1,6 @@
 <script>
     import Page from '../components/Page.svelte'
+    import Form from '../components/Form.svelte'
     import TextField from '../components/TextField.svelte'
     import TextArea from '../components/TextArea.svelte'
     import { LocationMarkerIcon, AtIcon } from '../components/Icons'
@@ -8,14 +9,8 @@
     const FORM_NAME = 'contact'
 
     let name = ''
-    let isNameValid = true
     let email = ''
-    let isEmailValid = true
     let message = ''
-    let isMessageValid = true
-
-    $: disabled = !(isNameValid && isEmailValid && isMessageValid)
-    $: console.log('validations', isNameValid, isEmailValid, isMessageValid)
 
     function encodeRequestBody(body) {
         return Object.entries(body)
@@ -78,18 +73,18 @@
         </div>
     </div>
 
-    <form
+    <Form
         method="POST"
         name={FORM_NAME}
         class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2"
-        on:submit|preventDefault={handleSubmit}>
+        on:submit={handleSubmit}
+        let:isValid>
         <TextField
             name="name"
             autocomplete="name"
             label="Nom"
             placeholder="Tom Delorme"
             bind:value={name}
-            bind:isValid={isNameValid}
             required
             rules={[notEmpty]} />
         <TextField
@@ -99,7 +94,6 @@
             placeholder="tom.delorme@gmail.com"
             type="email"
             bind:value={email}
-            bind:isValid={isEmailValid}
             required
             rules={[notEmpty, emailValid]} />
 
@@ -109,18 +103,17 @@
             placeholder="Bonjour Baptiste, …"
             bind:value={message}
             class="sm:col-span-2"
-            bind:isValid={isMessageValid}
             required
             rules={[notEmpty]} />
 
         <div class="sm:col-span-2">
             <button
                 type="submit"
-                {disabled}
+                disabled={!isValid}
                 class="px-4 py-2 rounded shadow focus:outline-none
-                transition-colors duration-150 {disabled ? 'bg-gray-300 text-gray-800 cursor-not-allowed' : 'bg-red-500 hover:bg-red-400 focus:bg-red-400 text-white cursor-pointer'}">
+                transition-colors duration-150 {!isValid ? 'bg-gray-300 text-gray-800 cursor-not-allowed' : 'bg-red-500 hover:bg-red-400 focus:bg-red-400 text-white cursor-pointer'}">
                 Envoyer
             </button>
         </div>
-    </form>
+    </Form>
 </Page>

@@ -10,7 +10,6 @@
     export let rules = []
     export let required = false
     export let lazy = true
-    export let isValid = lazy === true
 
     let className = ''
     export { className as class }
@@ -29,7 +28,6 @@
 
 <Input
     {lazy}
-    bind:isValid
     {rules}
     {value}
     {label}
