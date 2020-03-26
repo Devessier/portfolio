@@ -79,7 +79,7 @@
     <slot
         {id}
         {isValid}
-        baseClass="text-sm p-2 border-2 rounded focus:shadow
+        baseClass="appearance-none text-sm p-2 border-2 rounded focus:shadow
         placeholder-gray-500 focus:outline-none transition-colors duration-100
         mt-1 {isValid ? 'border-gray-300 focus:border-gray-400' : 'border-red-400 focus:border-red-500'}" />
 
