@@ -50,7 +50,7 @@
     .skills {
         columns: 1;
 
-        @screen md {
+        @screen sm {
             columns: 2;
         }
     }
