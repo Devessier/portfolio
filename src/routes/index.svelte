@@ -60,7 +60,7 @@
     <title>Baptiste Devessier | Accueil</title>
 </svelte:head>
 
-<Page class="mt-10">
+<Page class="pb-6">
     <div>
         <h1 class="text-4xl font-bold uppercase">Baptiste Devessier</h1>
 
@@ -90,9 +90,7 @@
         </ul>
     </div>
 
-    <div class="mt-16 mb-6">
-        <!-- <h2 class="text-2xl font-bold uppercase mb-10">Mes compétences</h2> -->
-
+    <div class="mt-16">
         {#each categories as [title, skills]}
             <div
                 class="grid grid-cols-1 md:grid-cols-3 pt-4 mb-4 border-t-2

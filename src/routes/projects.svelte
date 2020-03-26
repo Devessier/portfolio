@@ -182,7 +182,7 @@
     <title>Baptiste Devessier | Projets</title>
 </svelte:head>
 
-<Page class="mt-10">
+<Page class="pb-8">
     <h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
 
     <section class="grid grid-cols-1 md:grid-cols-2 ">

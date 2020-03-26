@@ -63,7 +63,7 @@
     <title>Baptiste Devessier | Contact</title>
 </svelte:head>
 
-<Page class="mt-4 sm:mt-10 mb-6 grid grid-cols-1 md:grid-cols-2">
+<Page class="pb-8 grid grid-cols-1 md:grid-cols-2">
     <div>
         <h1 class="text-4xl mb-6 sm:mb-12">Contactez-moi</h1>
 

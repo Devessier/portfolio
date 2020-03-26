@@ -1,9 +1,9 @@
 <script>
-    import { fade } from 'svelte/transition';
+    import { fade } from 'svelte/transition'
 
-    let className = '';
+    let className = ''
 
-    export { className as class };
+    export { className as class }
 
     /**
      * Using a delay of the same duration in the `in` hook makes it possible
@@ -12,12 +12,12 @@
      *
      * It's the equivalent of `mode="out-in"` in VUe.js land.
      */
-    const TRANSITION_DURATION = 400;
+    const TRANSITION_DURATION = 400
 </script>
 
 <div
     in:fade={{ delay: TRANSITION_DURATION, duration: TRANSITION_DURATION }}
     out:fade={{ duration: TRANSITION_DURATION }}
-    class="absolute w-full {className}">
+    class="absolute w-full mt-2 lg:mt-10 {className}">
     <slot />
 </div>

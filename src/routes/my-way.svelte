@@ -93,7 +93,7 @@
     <title>Baptiste Devessier | Parcours</title>
 </svelte:head>
 
-<Page class="mt-10">
+<Page class="pb-6">
     <h1 class="text-2xl font-bold uppercase">Parcours</h1>
 
     <Timeline
