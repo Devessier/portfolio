@@ -1,14 +1,21 @@
 <script>
     import Page from '../components/Page.svelte'
-    import Input from '../components/Input.svelte'
+    import TextField from '../components/TextField.svelte'
     import TextArea from '../components/TextArea.svelte'
     import { LocationMarkerIcon, AtIcon } from '../components/Icons'
+    import { notEmpty, emailValid } from '../utils.js'
 
     const FORM_NAME = 'contact'
 
     let name = ''
+    let isNameValid = true
     let email = ''
+    let isEmailValid = true
     let message = ''
+    let isMessageValid = true
+
+    $: disabled = !(isNameValid && isEmailValid && isMessageValid)
+    $: console.log('validations', isNameValid, isEmailValid, isMessageValid)
 
     function encodeRequestBody(body) {
         return Object.entries(body)
@@ -20,19 +27,25 @@
     }
 
     async function handleSubmit(event) {
+        const body = encodeRequestBody({
+            'form-name': FORM_NAME,
+            name,
+            email,
+            message,
+        })
+
+        console.log('body =', body)
+
+        return
+
         await fetch('/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: encodeRequestBody({
-                'form-name': FORM_NAME,
-                name,
-                email,
-                message,
-            }),
+            body,
         })
-            .then((res) => res.text())
+            .then(res => res.text())
             .then(console.log)
             .catch(console.error)
     }
@@ -70,33 +83,42 @@
         name={FORM_NAME}
         class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2"
         on:submit|preventDefault={handleSubmit}>
-        <Input
+        <TextField
             name="name"
             autocomplete="name"
             label="Nom"
             placeholder="Tom Delorme"
-            bind:value={name} />
-        <Input
+            bind:value={name}
+            bind:isValid={isNameValid}
+            required
+            rules={[notEmpty]} />
+        <TextField
             name="email"
             autocomplete="email"
             label="Adresse mail"
             placeholder="tom.delorme@gmail.com"
             type="email"
-            bind:value={email} />
+            bind:value={email}
+            bind:isValid={isEmailValid}
+            required
+            rules={[notEmpty, emailValid]} />
 
         <TextArea
             name="message"
             label="Message"
             placeholder="Bonjour Baptiste, …"
             bind:value={message}
-            class="sm:col-span-2" />
+            class="sm:col-span-2"
+            bind:isValid={isMessageValid}
+            required
+            rules={[notEmpty]} />
 
         <div class="sm:col-span-2">
             <button
                 type="submit"
-                class="px-4 py-2 rounded shadow bg-red-500 hover:bg-red-400
-                focus:bg-red-400 focus:outline-none text-white transition-colors
-                duration-150">
+                {disabled}
+                class="px-4 py-2 rounded shadow focus:outline-none
+                transition-colors duration-150 {disabled ? 'bg-gray-300 text-gray-800 cursor-not-allowed' : 'bg-red-500 hover:bg-red-400 focus:bg-red-400 text-white cursor-pointer'}">
                 Envoyer
             </button>
         </div>
