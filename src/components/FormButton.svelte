@@ -121,7 +121,7 @@
     style="animation-delay: {shakeDelay}ms"
     on:animationend={() => (shake = false)}>
     <span class={hideText ? 'opacity-0' : 'opacity-100'} aria-hidden={hideText}>
-        Succès
+        Envoyer
     </span>
 
     {#if icon !== undefined}
