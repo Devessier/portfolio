@@ -72,7 +72,7 @@
                 class="w-6 h-6 stroke-current text-red-500 mr-2"
                 aria-hidden="true" />
 
-            <span>Seine-et-Marne, France</span>
+            <span>Paris, France</span>
         </div>
 
         <div class="flex mb-4 md:mb-0">
