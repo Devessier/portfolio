@@ -8,30 +8,35 @@
         {
             title: 'Développeur disponible pour vos projets',
             description: 'Je veux porter mes compétences au plus haut',
-            date: 'dès maintenant',
+            date: 'et en même temps',
         },
         {
-            title: 'Découverte de Svelte et Sapper',
+            title: 'École 42',
+            description: 'Élève assidu et passionné depuis le début',
+            date: "Novembre 2018 - aujourd'hui",
+        },
+        {
+            title: 'Svelte et Sapper',
             description:
-                "Après avoir entendu à maintes reprises parler de Svelte, l'étoile montante des frameworks UX, je décide de me former dessus en réalisant ce portfolio avec et en y joignant Sapper, le Nuxt.js de Svelte",
+                'Je me forme sur Svelte, le framework UX qui grimpe, par la réalisation de ce portfolio et en y joignant Sapper, le Nuxt.js de Svelte',
             date: 'Mars 2020',
         },
         {
             title: 'Abonnement à FrontendMasters',
             description:
-                "Je décide de m'abonner à FrontendMasters afin d'avoir accès à des cours et des workshops de qualité et en ligne, pour me former continûment aux technologies modernes qui m'intéressent",
+                "Je m'abonne à FrontendMasters afin d'avoir accès à des cours et des workshops de qualité et en ligne, pour me former continûment aux technologies de demain qui m'intéressent",
             date: 'Février 2020',
         },
         {
-            title: 'Découverte de Nuxt.js',
+            title: 'Nuxt.js',
             description:
                 "Je me forme à Nuxt.js par soucis de référencement naturel et d'expérience utilisateur",
             date: 'Septembre 2019',
         },
         {
-            title: 'Découverte de TailwindCSS',
+            title: 'TailwindCSS',
             description:
-                "Je me mets à aimer le CSS mais ne souhaite plus tout écrire à la main. J'adopte immédiatement TailwindCSS",
+                "Pour améliorer la qualité de mon code et ma rapidité d'exécution, j'adopte TailwindCSS",
             date: 'Avril 2019',
         },
         {
@@ -41,38 +46,38 @@
             date: "Février 2019 - aujourd'hui",
         },
         {
-            title: 'École 42',
-            description: 'Cursus C/Unix & Web par projets concrets',
-            date: "Novembre 2018 - aujourd'hui",
+            title: 'Intégration École 42',
+            description: "Réussite de la piscine d'août 2018",
+            date: 'Novembre 2018',
         },
         {
-            title: 'Bac Général Spécialité Scientifique - Mention Bien',
+            title:
+                'Bac Général Scientifique Spécialité Mathématiques - Mention Bien',
             description: 'Lycée Maurice Rondeau, Bussy Saint Georges',
             date: '2018',
         },
         {
-            title:
-                'Découverte de GraphQL, de RabbitMQ, des microservices et de Golang',
+            title: 'GraphQL, de RabbitMQ, des microservices et de Golang',
             description:
-                "Je fais communiquer mon front et mon back avec GraphQL. Je découvre l'architecture en microservices et fais interagir ceux-ci grâce à RabbitMQ. J'en code certains en Go",
+                "Je fais communiquer mon front et mon back avec GraphQL. Je me forme sur l'architecture en microservices et fais interagir ceux-ci grâce à RabbitMQ. J'en code certains en Go",
             date: 'Février 2018',
         },
         {
-            title: 'Découverte du framework UX Vue.js et de Node.js',
+            title: 'Framework UX Vue.js et de Node.js',
             description:
-                'Je pousse mon usage du JavaScript et aime de plus en plus le langage. Je découvre les API REST et le Client Side Rendering',
+                "J'améliore mes connaissances en JavaScript, qui devient mon langage favori. Je découvre les API REST et le Client Side Rendering. Je participe à des évènements NodeSchool sur Paris",
             date: 'Avril 2017',
         },
         {
-            title: 'Découverte du framework PHP Laravel',
+            title: 'Framework PHP Laravel',
             description:
-                'Pour gagner en rapidité et en efficacité je décide de me former à Laravel',
+                'Pour gagner en rapidité et en efficacité je me forme en ligne à Laravel',
             date: 'Fin 2016',
         },
         {
-            title: 'Découverte du JavaScript et du PHP',
+            title: 'JavaScript et du PHP',
             description:
-                'Je découvre le JavaScript et le PHP en me formant sur Internet',
+                'Je me forme en ligne pour maîtriser le JavaScript et le PHP',
             date: 'Décembre 2015',
         },
         {
@@ -83,7 +88,7 @@
         {
             title: 'Découverte de la programmation',
             description:
-                "Mes parents m'offrent un MacBook Air et des manuels d'apprentissage en noir et blanc pour développer des applications iOS en Objective-C",
+                "Mes parents m'offrent un MacBook Air et des manuels d'apprentissage pour développer des applications iOS en Objective-C",
             date: 'Avril 2013',
         },
     ]
