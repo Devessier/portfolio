@@ -3,7 +3,7 @@ const fs = require('fs')
 const sharp = require('sharp')
 const rimraf = require('rimraf')
 
-const IN_DIRECTORY = join(__dirname, 'static/_img')
+const IN_DIRECTORY = join(__dirname, 'img')
 const OUT_DIRECTORY = join(__dirname, 'static/img')
 
 function getName(path) {
