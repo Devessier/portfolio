@@ -42,7 +42,16 @@
                 'RabbitMQ',
             ],
         ],
-        ['Outils', ['Git', 'Docker', 'Bash / ZSH / Fish', 'macOS']],
+        [
+            'Outils',
+            [
+                'Git',
+                'Docker',
+                'Bash / Zsh / Fish',
+                'macOS',
+                'Visual Studio Code',
+            ],
+        ],
     ]
 </script>
 
