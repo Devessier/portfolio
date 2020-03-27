@@ -9,6 +9,7 @@
 
     let index = 0
     let zoomImageIndex = -1
+    let container
 
     $: showArrows = items.length > 1
     $: showLeftArrow = showArrows && index > 0
@@ -35,7 +36,7 @@
     }
 </script>
 
-<div class="overflow-x-hidden relative {className}">
+<div bind:this={container} class="overflow-x-hidden relative {className}">
     {#if showLeftArrow}
         <CarouselArrow on:click={dec} direction="left" />
     {/if}
@@ -48,10 +49,10 @@
 
     <div
         class="grid grid-flow-col transition-transform transform duration-200
-        ease-in-out"
+        ease-in-out relative"
         style="grid-auto-columns: 100%; transform: translateX({-index * 100}%)">
         {#each items as item, index}
-            <slot {item} {index} {zoom} />
+            <slot {item} {index} {zoom} {container} />
         {/each}
     </div>
 

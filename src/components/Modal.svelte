@@ -97,14 +97,14 @@
             on:click={handleOverlayClick}>
             <button
                 class="fixed top-0 left-0 flex justify-center items-center m-4
-                p-1 rounded-full bg-gray-300"
+                p-1 rounded-full bg-gray-300 z-10"
                 on:click={() => dispatch('close')}>
                 <span class="sr-only">Fermer</span>
 
                 <XIcon class="w-6 h-6 text-gray-900 stroke-current" />
             </button>
 
-            <div bind:this={slotContainer}>
+            <div bind:this={slotContainer} class="w-full">
                 <slot />
             </div>
         </div>

@@ -2,22 +2,26 @@
     import Page from '../components/Page.svelte'
     import Carousel from '../components/Carousel.svelte'
     import { GithubIcon, LinkIcon } from '../components/Icons'
+    import Image from '../components/Image.svelte'
 
     const projects = [
         {
             title: 'ArtisansFiables',
             pictures: [
                 {
-                    src: '/artisans-fiables-dashboard.png',
+                    src: 'artisans-fiables-dashboard',
                     alt: "Dashboard d'ArtisansFiables",
+                    ratio: 58,
                 },
                 {
-                    src: '/artisansfiables-verify-artisan-list.png',
+                    src: 'artisansfiables-verify-artisan-list',
                     alt: "Recherche d'artisan",
+                    ratio: 58,
                 },
                 {
-                    src: '/artisansfiables-artisan-profile.png',
+                    src: 'artisansfiables-artisan-profile',
                     alt: "Vérification de la fiabilité d'un artisan",
+                    ratio: 58,
                 },
             ],
             intro: 'Startup.',
@@ -41,12 +45,14 @@
             title: 'ThunderTube',
             pictures: [
                 {
-                    src: '/hypertube-home.jpg',
+                    src: 'hypertube-home',
                     alt: 'Liste des films',
+                    ratio: 58,
                 },
                 {
-                    src: '/hypertube-movie.jpg',
+                    src: 'hypertube-movie',
                     alt: "Fiche d'un film",
+                    ratio: 58,
                 },
             ],
             intro: 'Projet 42.',
@@ -70,12 +76,14 @@
             title: 'Vladivodico',
             pictures: [
                 {
-                    src: '/vladivodico-home.png',
+                    src: 'vladivodico-home',
                     alt: "Page d'accueil du dictionnaire",
+                    ratio: 58,
                 },
                 {
-                    src: '/vladivodico-word.png',
+                    src: 'vladivodico-word',
                     alt: "Fiche d'un mot",
+                    ratio: 58,
                 },
             ],
             intro: 'Projet perso.',
@@ -99,16 +107,19 @@
             title: 'ft_select',
             pictures: [
                 {
-                    src: '/ft-select-list.png',
+                    src: 'ft-select-list',
                     alt: 'Navigation à travers les fichiers du dossier courant',
+                    ratio: 62.5,
                 },
                 {
-                    src: '/ft-select-search.png',
+                    src: 'ft-select-search',
                     alt: 'Recherche instantanée',
+                    ratio: 62.5,
                 },
                 {
-                    src: '/ft-select-result.png',
+                    src: 'ft-select-result',
                     alt: 'Résultats de la commande',
+                    ratio: 62.5,
                 },
             ],
             intro: 'Projet 42.',
@@ -127,8 +138,9 @@
             title: 'minishell',
             pictures: [
                 {
-                    src: '/minishell.png',
+                    src: 'minishell',
                     alt: 'Aperçu des commandes supportées par le shell',
+                    ratio: 62.5,
                 },
             ],
             intro: 'Projet 42.',
@@ -147,9 +159,10 @@
             title: 'ft_ls',
             pictures: [
                 {
-                    src: '/ft-ls.png',
+                    src: 'ft-ls',
                     alt:
                         'Aperçu des options gérées par mon implémentation de la commande ls',
+                    ratio: 62.5,
                 },
             ],
             intro: 'Projet 42.',
@@ -198,23 +211,27 @@
 
                     <Carousel
                         items={pictures}
-                        let:item={{ src, alt }}
+                        let:item={{ src, alt, ratio }}
                         let:index
                         let:zoom
+                        let:container
                         class="mb-4">
-                        <img
+                        <Image
                             {src}
                             {alt}
-                            class="w-full object-cover object-center
-                            cursor-pointer"
+                            {ratio}
+                            root={container}
+                            class="cursor-pointer"
                             on:click={() => zoom(index)} />
 
-                        <img
-                            slot="zoom"
-                            let:item={{ src, alt }}
-                            class="w-full object-cover"
-                            {src}
-                            {alt} />
+                        <div slot="zoom" class="w-full">
+                            <Image
+                                let:item={{ src, alt }}
+                                {src}
+                                {alt}
+                                {ratio}
+                                root={container} />
+                        </div>
                     </Carousel>
 
                     <p class="mb-4">
