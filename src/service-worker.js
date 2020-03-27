@@ -8,6 +8,8 @@ const to_cache = shell.concat(
     files.filter((file) => {
         if (!(file.endsWith('.webp') || file.endsWith('.jpeg'))) return true
 
+        if (file.startsWith('_')) return false
+
         const SUBSTRINGS_TO_BAN = ['480', '640', '768', '1024', '1280', 'full']
 
         return !SUBSTRINGS_TO_BAN.some((substring) => file.includes(substring))
