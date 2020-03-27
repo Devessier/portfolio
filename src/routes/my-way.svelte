@@ -7,12 +7,12 @@
     const events = [
         {
             title: 'Développeur disponible pour vos projets',
-            description: 'Je veux porter mes compétences au plus haut',
+            description: 'Développeur Web Full Stack en disponibilité',
             date: 'et en même temps',
         },
         {
             title: 'École 42',
-            description: 'Élève assidu et passionné depuis le début',
+            description: 'Élève assidu et passionné',
             date: "Novembre 2018 - aujourd'hui",
         },
         {
@@ -22,9 +22,9 @@
             date: 'Mars 2020',
         },
         {
-            title: 'Abonnement à FrontendMasters',
+            title: 'FrontendMasters',
             description:
-                "Je m'abonne à FrontendMasters afin d'avoir accès à des cours et des workshops de qualité et en ligne, pour me former continûment aux technologies de demain qui m'intéressent",
+                "Je m'abonne à FrontendMasters afin d'avoir accès à des cours et des workshops de qualité et en ligne, pour me former continûment aux technologies de demain",
             date: 'Février 2020',
         },
         {
