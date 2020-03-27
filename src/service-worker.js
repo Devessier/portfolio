@@ -6,9 +6,9 @@ const ASSETS = `cache${timestamp}`
 // `files` is an array of everything in the `static` directory
 const to_cache = shell.concat(
     files.filter((file) => {
-        if (!(file.endsWith('.webp') || file.endsWith('.jpeg'))) return true
-
         if (file.startsWith('_')) return false
+
+        if (!(file.endsWith('.webp') || file.endsWith('.jpeg'))) return true
 
         const SUBSTRINGS_TO_BAN = ['480', '640', '768', '1024', '1280', 'full']
 
@@ -68,7 +68,7 @@ self.addEventListener('fetch', (event) => {
     // app, but if it's right for yours then uncomment this section
     if (
         url.origin === self.origin &&
-        routes.find((route) => route.pattern.test(url.pathname))
+        routes.some((route) => route.pattern.test(url.pathname))
     ) {
         event.respondWith(caches.match('/service-worker-index.html'))
         return
