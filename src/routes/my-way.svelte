@@ -8,7 +8,7 @@
         {
             title: 'Développeur disponible pour vos projets',
             description: 'Développeur Web Full Stack en disponibilité',
-            date: 'et en même temps',
+            date: 'et en même temps …',
         },
         {
             title: 'École 42',
