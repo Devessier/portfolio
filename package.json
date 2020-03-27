@@ -3,8 +3,8 @@
     "description": "My portfolio built using Sapper, Svelte & TailwindCSS",
     "version": "0.0.1",
     "scripts": {
-        "watch:tailwind": "postcss static/tailwind.css -o static/index.css -w",
-        "build:tailwind": "NODE_ENV=production postcss static/tailwind.css -o static/index.css",
+        "watch:tailwind": "postcss src/tailwind.css -o static/index.css -w",
+        "build:tailwind": "NODE_ENV=production postcss src/tailwind.css -o static/index.css",
         "dev": "sapper dev",
         "build": "npm run build:tailwind && sapper build --legacy",
         "export": "npm run build:tailwind && sapper export --legacy",
