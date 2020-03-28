@@ -15,7 +15,7 @@
 <svelte:head>
     <title>{title}</title>
 
-    <description>{description}</description>
+    <meta name="description" content={description} />
 
     {#each scripts as script}
         {@html script}
