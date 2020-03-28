@@ -78,37 +78,6 @@
             ],
         },
         {
-            title: 'Vladivodico',
-            pictures: [
-                {
-                    src: 'vladivodico-home',
-                    alt: "Page d'accueil du dictionnaire",
-                    ratio: 58,
-                },
-                {
-                    src: 'vladivodico-word',
-                    alt: "Fiche d'un mot",
-                    ratio: 58,
-                },
-            ],
-            intro: 'Projet perso.',
-            description:
-                "Proof of concept initiée d'application de prise de notes offline-first avec transitions native-like. Les termes et leurs définitions sont stockés dans IndexedDB et l'application est accessible et fonctionnelle hors-ligne. Le site a été codé avec Nuxt.js et TailwindCSS",
-            date: 'Septembre 2019',
-            links: [
-                {
-                    title: 'Voir le projet sur Github',
-                    href: 'https://github.com/Devessier/vladivodico',
-                    icon: GithubIcon,
-                },
-                {
-                    title: 'Aller sur le site',
-                    href: 'https://dico.vladivodico.app/',
-                    icon: LinkIcon,
-                },
-            ],
-        },
-        {
             title: 'ft_select',
             pictures: [
                 {
@@ -150,7 +119,7 @@
             ],
             intro: 'Projet 42.',
             description:
-                "Shell écrit en C, le plus proche de la norme POSIX possible. Toutes les commandes et une partie des fonctionnalités d'un shell lambda sont supportées. Projet passionnant qui m'a permis d'apprendre beaucoup de choses sur les systèmes Unix et sur le C",
+                "Shell écrit en C, le plus proche de la norme POSIX possible. Toutes les commandes et une partie des fonctionnalités d'un shell lambda sont supportées. Projet passionnant permettant l'apprentissage des systèmes Unix et du C",
             date: 'Janvier-Mars 2019',
             links: [
                 {
