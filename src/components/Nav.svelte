@@ -91,8 +91,8 @@
 
     {#if showNavBar}
         <div
-            class="fixed inset-0 block px-10 pt-20 text-red-500 bg-white
-            md:hidden z-20"
+            class="fixed inset-0 block px-10 pt-20 bg-white md:hidden z-20 flex
+            flex-col items-start"
             transition:fade={{ duration: 200 }}>
             {#each links as { href, text }}
                 <NavLink

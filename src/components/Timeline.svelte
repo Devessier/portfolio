@@ -1,29 +1,29 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount } from 'svelte'
 
-    export let skipWaiting = false;
-    export let events = [];
+    export let skipWaiting = false
+    export let events = []
 
-    let className;
+    let className
 
-    export { className as class };
+    export { className as class }
 
-    const FADE_INTERVAL = 50;
-    let loaded = false;
+    const FADE_INTERVAL = 50
+    let loaded = false
 
-    $: initialDelay = skipWaiting ? 0 : 400;
+    $: initialDelay = skipWaiting ? 0 : 400
 
     onMount(() => {
-        loaded = true;
-    });
+        loaded = true
+    })
 
     function handleAnimationEnd({ target: { classList } }) {
-        classList.remove('fadeIn');
+        classList.remove('fadeIn')
     }
 </script>
 
 <style>
-    ul {
+    .timeline {
         @apply grid;
 
         grid-template-columns: 1fr;
@@ -53,10 +53,10 @@
     }
 </style>
 
-<ul class={className}>
+<div class="timeline {className}">
     {#each events as { title, description, date }, index}
         <p
-            class="text-red-500 font-semibold text-left md:text-right {loaded ? 'fadeIn' : 'opacity-0'}"
+            class="text-red-700 font-semibold text-left md:text-right {loaded ? 'fadeIn' : 'opacity-0'}"
             style="animation-delay: {FADE_INTERVAL * index + initialDelay}ms"
             on:animationend={handleAnimationEnd}>
             {date}
@@ -69,4 +69,4 @@
             <slot name="event" {title} {description} />
         </div>
     {/each}
-</ul>
+</div>

@@ -38,7 +38,7 @@
         },
         [STATUSES.ERROR]: {
             disabled: true,
-            class: 'bg-red-500 focus:bg-red-400 text-white cursor-default',
+            class: 'bg-red-700 focus:bg-red-600 text-white cursor-default',
             hideText: true,
             icon: XIcon,
             text: 'En erreur',
@@ -46,7 +46,7 @@
         [STATUSES.DEFAULT]: {
             disabled: false,
             class:
-                'bg-red-500 hover:bg-red-400 focus:bg-red-400 text-white cursor-pointer',
+                'bg-red-700 hover:bg-red-600 focus:bg-red-600 text-white cursor-pointer',
             hideText: false,
             text: 'Envoyer',
         },

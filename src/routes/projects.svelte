@@ -235,7 +235,7 @@
                     </Carousel>
 
                     <p class="mb-4">
-                        <span class="text-red-500 uppercase font-semibold">
+                        <span class="text-red-700 uppercase font-semibold">
                             {intro}
                         </span>
                         {@html description}
