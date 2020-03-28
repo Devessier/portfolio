@@ -14,11 +14,18 @@
         />
         <link rel="stylesheet" href="index.css" />
         <link rel="preconnect" href="https://rsms.me/" crossorigin />
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+        <link
+            rel="preload"
+            as="style"
+            href="https://rsms.me/inter/inter.css"
+            onload="this.onload=null;this.rel='stylesheet'"
+        />
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
         <link
+            rel="preload"
+            as="style"
             href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap"
-            rel="stylesheet"
+            onload="this.onload=null;this.rel='stylesheet'"
         />
         <link
             rel="apple-touch-icon"
