@@ -2,6 +2,10 @@
     import Page from '../components/Page.svelte'
     import { GithubIcon, MailIcon } from '../components/Icons'
 
+    const title = 'Baptiste Devessier | Accueil'
+    const description = 'Développeur Web Full Stack sur Paris'
+    const schemas = []
+
     const communicationMeans = [
         {
             href: 'https://github.com/Devessier',
@@ -65,11 +69,7 @@
     }
 </style>
 
-<svelte:head>
-    <title>Baptiste Devessier | Accueil</title>
-</svelte:head>
-
-<Page class="pb-6">
+<Page class="pb-6" {title} {description} {schemas}>
     <div>
         <h1 class="text-4xl font-bold uppercase">Baptiste Devessier</h1>
 

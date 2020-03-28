@@ -1,8 +1,12 @@
 <script>
     import { fade } from 'svelte/transition'
 
-    let className = ''
+    import SEO from './SEO.svelte'
 
+    export let title = ''
+    export let description = ''
+    export let schemas = []
+    let className = ''
     export { className as class }
 
     /**
@@ -14,6 +18,8 @@
      */
     const TRANSITION_DURATION = 400
 </script>
+
+<SEO {title} {description} {schemas} />
 
 <div
     in:fade={{ delay: TRANSITION_DURATION, duration: TRANSITION_DURATION }}

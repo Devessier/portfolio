@@ -4,6 +4,11 @@
     import { GithubIcon, LinkIcon } from '../components/Icons'
     import Image from '../components/Image.svelte'
 
+    const title = 'Baptiste Devessier | Projets'
+    const description =
+        'Mes projets 42, ma startup ArtisansFiables et mes projets personnels'
+    const schemas = []
+
     const projects = [
         {
             title: 'ArtisansFiables',
@@ -191,11 +196,7 @@
     }
 </style>
 
-<svelte:head>
-    <title>Baptiste Devessier | Projets</title>
-</svelte:head>
-
-<Page class="pb-8">
+<Page class="pb-8" {title} {description} {schemas}>
     <h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
 
     <section class="grid grid-cols-1 md:grid-cols-2 ">

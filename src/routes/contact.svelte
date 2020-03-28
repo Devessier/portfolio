@@ -7,6 +7,11 @@
     import FormButton from '../components/FormButton.svelte'
     import { notEmpty, emailValid } from '../utils.js'
 
+    const title = 'Baptiste Devessier | Contact'
+    const description =
+        'Contactez-moi pour que nous travaillions ensemble sur vos projets'
+    const schemas = []
+
     const FORM_NAME = 'contact'
 
     let name = ''
@@ -59,11 +64,11 @@
     }
 </script>
 
-<svelte:head>
-    <title>Baptiste Devessier | Contact</title>
-</svelte:head>
-
-<Page class="pb-8 grid grid-cols-1 md:grid-cols-2">
+<Page
+    class="pb-8 grid grid-cols-1 md:grid-cols-2"
+    {title}
+    {description}
+    {schemas}>
     <div>
         <h1 class="text-4xl mb-6 sm:mb-12">Contactez-moi</h1>
 
