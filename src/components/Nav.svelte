@@ -1,16 +1,13 @@
 <script>
     import { fade } from 'svelte/transition'
-    import resolveConfig from 'tailwindcss/resolveConfig'
-
-    import tailwindConfig from '../../tailwind.config.js'
 
     import NavLink from './NavLink.svelte'
     import { MenuIcon, LogoIcon } from './Icons'
 
     export let segment
 
-    const fullConfig = resolveConfig(tailwindConfig) || '768px'
-    const BREAKPOINT = Number(fullConfig.theme.screens.md.replace('px', ''))
+    // Should be changed if the default configuration of TailwindCSS is not used anymore.
+    const BREAKPOINT = 768
 
     const links = [
         {
