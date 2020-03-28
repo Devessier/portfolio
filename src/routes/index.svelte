@@ -1,6 +1,6 @@
 <script>
     import Page from '../components/Page.svelte'
-    import { GithubIcon, MailIcon } from '../components/Icons'
+    import { GithubIcon, MailIcon, TildIcon } from '../components/Icons'
 
     const title = 'Baptiste Devessier | Accueil'
     const description = 'Développeur Web Full Stack sur Paris'
@@ -60,6 +60,10 @@
 </script>
 
 <style lang="postcss">
+    h1 {
+        font-family: 'Comfortaa', cursive;
+    }
+
     .skills {
         columns: 1;
 
@@ -71,7 +75,15 @@
 
 <Page class="pb-6" {title} {description} {schemas}>
     <div>
-        <h1 class="text-4xl font-bold uppercase">Baptiste Devessier</h1>
+        <h1 class="text-4xl font-bold lowercase flex items-center flex-wrap">
+            Baptiste
+            <TildIcon
+                class="w-5 h-4 relative"
+                preserveAspectRatio="none"
+                style="top: 2px"
+                aria-hidden="true" />
+            Devessier
+        </h1>
 
         <p class="mt-5 text-2xl font-medium">
             Développeur

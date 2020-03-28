@@ -5,7 +5,7 @@
     import tailwindConfig from '../../tailwind.config.js'
 
     import NavLink from './NavLink.svelte'
-    import { MenuIcon } from './Icons'
+    import { MenuIcon, LogoIcon } from './Icons'
 
     export let segment
 
@@ -41,10 +41,6 @@
 </script>
 
 <style>
-    .main-link-font {
-        font-family: 'Geo', sans-serif;
-    }
-
     .menu-btn-active {
         top: 32.25px;
         right: 1rem;
@@ -63,7 +59,7 @@
             href="."
             rel="prefetch"
             class="text-2xl tracking-wider main-link-font">
-            Devessier
+            <LogoIcon class="w-20 h-20" title="bd" />
         </a>
 
         <div class="items-center hidden md:flex">
