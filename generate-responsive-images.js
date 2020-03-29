@@ -24,11 +24,6 @@ fs.readdirSync(IN_DIRECTORY).forEach((path) => {
             formats: ['jpeg'],
         },
         {
-            size: 480,
-            id: '480',
-            formats: ['jpeg', 'webp'],
-        },
-        {
             size: 640,
             id: '640',
             formats: ['jpeg', 'webp'],
@@ -44,8 +39,18 @@ fs.readdirSync(IN_DIRECTORY).forEach((path) => {
             formats: ['jpeg', 'webp'],
         },
         {
-            size: 1280,
-            id: '1280',
+            size: 1366,
+            id: '1366',
+            formats: ['jpeg', 'webp'],
+        },
+        {
+            size: 1600,
+            id: '1600',
+            formats: ['jpeg', 'webp'],
+        },
+        {
+            size: 1920,
+            id: '1920',
             formats: ['jpeg', 'webp'],
         },
         {

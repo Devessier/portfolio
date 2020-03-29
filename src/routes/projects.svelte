@@ -14,19 +14,19 @@
             title: 'ArtisansFiables',
             pictures: [
                 {
-                    src: 'artisans-fiables-dashboard',
+                    src: 'artisansfiables-dashboard',
                     alt: "Dashboard d'ArtisansFiables",
-                    ratio: 58,
+                    ratio: 58.3705,
                 },
                 {
-                    src: 'artisansfiables-verify-artisan-list',
-                    alt: "Recherche d'artisan",
-                    ratio: 58,
-                },
-                {
-                    src: 'artisansfiables-artisan-profile',
+                    src: 'artisansfiables-verify-artisan',
                     alt: "Vérification de la fiabilité d'un artisan",
-                    ratio: 58,
+                    ratio: 58.3705,
+                },
+                {
+                    src: 'artisansfiables-quote-request',
+                    alt: 'Demande de devis pour la réalisation de travaux',
+                    ratio: 58.3705,
                 },
             ],
             intro: 'Startup.',
@@ -52,12 +52,12 @@
                 {
                     src: 'hypertube-home',
                     alt: 'Liste des films',
-                    ratio: 58,
+                    ratio: 58.3705,
                 },
                 {
                     src: 'hypertube-movie',
                     alt: "Fiche d'un film",
-                    ratio: 58,
+                    ratio: 58.3705,
                 },
             ],
             intro: 'Projet 42.',
@@ -81,18 +81,8 @@
             title: 'ft_select',
             pictures: [
                 {
-                    src: 'ft-select-list',
-                    alt: 'Navigation à travers les fichiers du dossier courant',
-                    ratio: 62.5,
-                },
-                {
-                    src: 'ft-select-search',
-                    alt: 'Recherche instantanée',
-                    ratio: 62.5,
-                },
-                {
-                    src: 'ft-select-result',
-                    alt: 'Résultats de la commande',
+                    src: 'ft-select',
+                    alt: 'Navigation à travers les fichiers du dossier srcs',
                     ratio: 62.5,
                 },
             ],
