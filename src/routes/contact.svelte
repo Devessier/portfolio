@@ -70,7 +70,7 @@
     {description}
     {schemas}>
     <div>
-        <h1 class="text-4xl mb-6 sm:mb-12">Contactez-moi</h1>
+        <h1 class="text-4xl mb-6 sm:mb-12">Contact</h1>
 
         <div class="flex mb-3">
             <LocationMarkerIcon
