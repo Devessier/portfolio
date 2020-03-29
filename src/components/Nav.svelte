@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from 'svelte'
     import { fade } from 'svelte/transition'
 
     import NavLink from './NavLink.svelte'
@@ -24,7 +25,22 @@
         },
     ]
 
+    let mounted = false
+    onMount(() => {
+        mounted = true
+    })
+
     let showNavBar = false
+
+    $: {
+        if (mounted) {
+            if (showNavBar) {
+                document.body.classList.add('overflow-hidden')
+            } else {
+                document.body.classList.remove('overflow-hidden')
+            }
+        }
+    }
 
     function toggle() {
         showNavBar = !showNavBar
@@ -36,17 +52,6 @@
         }
     }
 </script>
-
-<style>
-    .menu-btn-active {
-        top: 32.25px;
-        right: 1rem;
-
-        @screen sm {
-            right: 1.5rem;
-        }
-    }
-</style>
 
 <svelte:window on:resize={handleWindowResize} />
 
@@ -70,8 +75,7 @@
             {/each}
         </div>
 
-        <div
-            class="z-30 flex items-center md:hidden {showNavBar ? 'fixed menu-btn-active' : ''}">
+        <div class="z-30 flex items-center md:hidden">
             <button on:click={toggle}>
                 <span class="sr-only">
                     {showNavBar ? 'Fermer le menu' : 'Ouvrir le menu'}
