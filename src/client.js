@@ -43,6 +43,7 @@ function setupServiceWorker() {
                             action: () => window.location.reload(),
                         },
                     ],
+                    timeout: 0,
                 })
             }
         })
