@@ -1,4 +1,5 @@
 import { timestamp, files, shell, routes } from '@sapper/service-worker'
+
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching'
 import { registerRoute, NavigationRoute } from 'workbox-routing'
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
@@ -39,7 +40,7 @@ registerRoute(
 )
 // Cache our fonts webfont files with a cache first strategy for 1 year.
 registerRoute(
-    /^https:\/\/(?:fonts\.gstatic\.com)|(?:rsms.me\/inter\/font-files)/,
+    /^https:\/\/(?:fonts\.gstatic\.com)|(?:rsms\.me\/inter\/font-files)/,
     new CacheFirst({
         cacheName: 'fonts-webfonts',
         plugins: [
