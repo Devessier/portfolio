@@ -1,5 +1,6 @@
 import { timestamp, files, shell, routes } from '@sapper/service-worker'
 
+import { skipWaiting, clientsClaim } from 'workbox-core'
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching'
 import { registerRoute, NavigationRoute } from 'workbox-routing'
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies'
@@ -17,6 +18,9 @@ const toCache = shell.concat(
         return !SUBSTRINGS_TO_BAN.some((substring) => file.includes(substring))
     })
 )
+
+skipWaiting()
+clientsClaim()
 
 precacheAndRoute(
     toCache.map((resource) => {

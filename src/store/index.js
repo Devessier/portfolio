@@ -21,3 +21,34 @@ export function createFormStore() {
         ),
     }
 }
+
+function createToastStore() {
+    const { subscribe, update } = writable([])
+
+    let id = 0
+
+    return {
+        subscribe,
+        trigger({ title, text, buttons, timeout = 5000 }) {
+            const toastId = id++
+
+            update((toasts) => [
+                ...toasts,
+                { id: toastId, title, text, buttons },
+            ])
+
+            if (timeout > 0) {
+                setTimeout(() => {
+                    this.dismiss(toastId)
+                }, timeout)
+            }
+        },
+        dismiss(id) {
+            update((toasts) =>
+                toasts.filter(({ id: notificationId }) => notificationId !== id)
+            )
+        },
+    }
+}
+
+export const toasts = createToastStore()

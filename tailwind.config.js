@@ -43,6 +43,10 @@ module.exports = {
             auto: 'auto',
         },
     },
-    variants: {},
+    variants: {
+        textColor: ['responsive', 'hover', 'focus', 'first'],
+        borderWidth: ['responsive', 'first', 'last'],
+        borderRadius: ['responsive', 'first', 'last'],
+    },
     plugins: [],
 }
