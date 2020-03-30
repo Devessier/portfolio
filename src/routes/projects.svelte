@@ -7,12 +7,12 @@
     const title = 'Baptiste Devessier | Projets'
     const description =
         'Mes projets 42, ma startup ArtisansFiables et mes projets personnels'
-    const canonical = 'https://baptiste.devessier.fr/projects'
+    const canonical = 'https://baptiste.devessier.fr/projects/'
     const schemas = []
     const facebook = [
         {
             name: 'og:url',
-            content: 'https://baptiste.devessier.fr/projects',
+            content: 'https://baptiste.devessier.fr/projects/',
         },
         {
             name: 'og:title',

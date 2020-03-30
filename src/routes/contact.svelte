@@ -10,12 +10,12 @@
     const title = 'Baptiste Devessier | Contact'
     const description =
         'Contactez-moi pour que nous travaillions ensemble sur vos projets'
-    const canonical = 'https://baptiste.devessier.fr/contact'
+    const canonical = 'https://baptiste.devessier.fr/contact/'
     const schemas = []
     const facebook = [
         {
             name: 'og:url',
-            content: 'https://baptiste.devessier.fr/contact',
+            content: 'https://baptiste.devessier.fr/contact/',
         },
         {
             name: 'og:title',

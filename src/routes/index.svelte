@@ -4,12 +4,12 @@
 
     const title = 'Baptiste Devessier | Accueil'
     const description = 'Développeur Web Full Stack sur Paris'
-    const canonical = 'https://baptiste.devessier.fr'
+    const canonical = 'https://baptiste.devessier.fr/'
     const schemas = []
     const facebook = [
         {
             name: 'og:url',
-            content: 'https://baptiste.devessier.fr',
+            content: 'https://baptiste.devessier.fr/',
         },
         {
             name: 'og:title',

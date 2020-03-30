@@ -7,12 +7,12 @@
     const title = 'Baptiste Devessier | Parcours'
     const description =
         'Mon parcours pour devenir développeur Web Full Stack en JavaScript, TypeScript, Vue.js, Nuxt.js, TailwindCSS, Svelte, Sapper, Node.js'
-    const canonical = 'https://baptiste.devessier.fr/my-way'
+    const canonical = 'https://baptiste.devessier.fr/my-way/'
     const schemas = []
     const facebook = [
         {
             name: 'og:url',
-            content: 'https://baptiste.devessier.fr/my-way',
+            content: 'https://baptiste.devessier.fr/my-way/',
         },
         {
             name: 'og:title',
