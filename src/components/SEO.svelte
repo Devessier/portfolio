@@ -1,9 +1,10 @@
 <script>
-    export let title = ''
-    export let description = ''
+    export let title
+    export let description
+    export let canonical
     export let schemas = []
-    export let facebook = []
-    export let twitter = []
+    export let facebook
+    export let twitter
 
     $: scripts = schemas.map(
         schema => `
@@ -18,6 +19,7 @@
     <title>{title}</title>
 
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
 
     {#each facebook as { name, content }}
         <meta property={name} {content} />

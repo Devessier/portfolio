@@ -7,6 +7,7 @@
     const title = 'Baptiste Devessier | Parcours'
     const description =
         'Mon parcours pour devenir développeur Web Full Stack en JavaScript, TypeScript, Vue.js, Nuxt.js, TailwindCSS, Svelte, Sapper, Node.js'
+    const canonical = 'https://baptiste.devessier.fr/my-way'
     const schemas = []
     const facebook = [
         {
@@ -114,7 +115,14 @@
     ]
 </script>
 
-<Page class="pb-6" {title} {description} {schemas} {facebook} {twitter}>
+<Page
+    class="pb-6"
+    {title}
+    {description}
+    {canonical}
+    {schemas}
+    {facebook}
+    {twitter}>
     <h1 class="text-2xl font-bold uppercase">Parcours</h1>
 
     <Timeline

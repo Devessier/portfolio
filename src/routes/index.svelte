@@ -4,6 +4,7 @@
 
     const title = 'Baptiste Devessier | Accueil'
     const description = 'Développeur Web Full Stack sur Paris'
+    const canonical = 'https://baptiste.devessier.fr'
     const schemas = []
     const facebook = [
         {
@@ -88,7 +89,14 @@
     }
 </style>
 
-<Page class="pb-6" {title} {description} {schemas} {facebook} {twitter}>
+<Page
+    class="pb-6"
+    {title}
+    {description}
+    {canonical}
+    {schemas}
+    {facebook}
+    {twitter}>
     <div>
         <h1 class="text-4xl font-bold lowercase flex items-center flex-wrap">
             Baptiste

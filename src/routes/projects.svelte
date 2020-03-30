@@ -7,6 +7,7 @@
     const title = 'Baptiste Devessier | Projets'
     const description =
         'Mes projets 42, ma startup ArtisansFiables et mes projets personnels'
+    const canonical = 'https://baptiste.devessier.fr/projects'
     const schemas = []
     const facebook = [
         {
@@ -170,7 +171,14 @@
     }
 </style>
 
-<Page class="pb-8" {title} {description} {schemas} {facebook} {twitter}>
+<Page
+    class="pb-8"
+    {title}
+    {description}
+    {canonical}
+    {schemas}
+    {facebook}
+    {twitter}>
     <h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
 
     <section class="grid grid-cols-1 md:grid-cols-2 ">

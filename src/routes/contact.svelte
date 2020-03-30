@@ -10,6 +10,7 @@
     const title = 'Baptiste Devessier | Contact'
     const description =
         'Contactez-moi pour que nous travaillions ensemble sur vos projets'
+    const canonical = 'https://baptiste.devessier.fr/contact'
     const schemas = []
     const facebook = [
         {
@@ -83,6 +84,7 @@
     class="pb-8 grid grid-cols-1 md:grid-cols-2"
     {title}
     {description}
+    {canonical}
     {schemas}
     {facebook}
     {twitter}>
