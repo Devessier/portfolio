@@ -19,7 +19,7 @@
 
 <div
     transition:fade={{ duration: 200 }}
-    class="flex items-stretch bg-white m-4 shadow-xl rounded border
+    class="flex items-stretch bg-white m-6 shadow-xl rounded border
     border-gray-300 text-sm md:max-w-md">
     <div class="flex-grow p-3">
         <div class="font-medium mb-1">{title}</div>
