@@ -11,6 +11,21 @@
     const description =
         'Contactez-moi pour que nous travaillions ensemble sur vos projets'
     const schemas = []
+    const facebook = [
+        {
+            name: 'og:url',
+            content: 'https://baptiste.devessier.fr/contact',
+        },
+        {
+            name: 'og:title',
+            content: title,
+        },
+        {
+            name: 'og:description',
+            content: description,
+        },
+    ]
+    const twitter = []
 
     const FORM_NAME = 'contact'
 
@@ -68,7 +83,9 @@
     class="pb-8 grid grid-cols-1 md:grid-cols-2"
     {title}
     {description}
-    {schemas}>
+    {schemas}
+    {facebook}
+    {twitter}>
     <div>
         <h1 class="text-4xl mb-6 sm:mb-12">Contact</h1>
 

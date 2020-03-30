@@ -5,6 +5,21 @@
     const title = 'Baptiste Devessier | Accueil'
     const description = 'Développeur Web Full Stack sur Paris'
     const schemas = []
+    const facebook = [
+        {
+            name: 'og:url',
+            content: 'https://baptiste.devessier.fr',
+        },
+        {
+            name: 'og:title',
+            content: title,
+        },
+        {
+            name: 'og:description',
+            content: description,
+        },
+    ]
+    const twitter = []
 
     const communicationMeans = [
         {
@@ -73,7 +88,7 @@
     }
 </style>
 
-<Page class="pb-6" {title} {description} {schemas}>
+<Page class="pb-6" {title} {description} {schemas} {facebook} {twitter}>
     <div>
         <h1 class="text-4xl font-bold lowercase flex items-center flex-wrap">
             Baptiste

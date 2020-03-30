@@ -8,6 +8,21 @@
     const description =
         'Mes projets 42, ma startup ArtisansFiables et mes projets personnels'
     const schemas = []
+    const facebook = [
+        {
+            name: 'og:url',
+            content: 'https://baptiste.devessier.fr/projects',
+        },
+        {
+            name: 'og:title',
+            content: title,
+        },
+        {
+            name: 'og:description',
+            content: description,
+        },
+    ]
+    const twitter = []
 
     const projects = [
         {
@@ -155,7 +170,7 @@
     }
 </style>
 
-<Page class="pb-8" {title} {description} {schemas}>
+<Page class="pb-8" {title} {description} {schemas} {facebook} {twitter}>
     <h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
 
     <section class="grid grid-cols-1 md:grid-cols-2 ">

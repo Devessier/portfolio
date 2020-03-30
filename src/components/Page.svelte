@@ -8,6 +8,8 @@
     export let schemas = []
     let className = ''
     export { className as class }
+    export let facebook = []
+    export let twitter = []
 
     /**
      * Using a delay of the same duration in the `in` hook makes it possible
@@ -19,7 +21,7 @@
     const TRANSITION_DURATION = 400
 </script>
 
-<SEO {title} {description} {schemas} />
+<SEO {title} {description} {schemas} {facebook} {twitter} />
 
 <div
     in:fade={{ delay: TRANSITION_DURATION, duration: TRANSITION_DURATION }}

@@ -2,6 +2,8 @@
     export let title = ''
     export let description = ''
     export let schemas = []
+    export let facebook = []
+    export let twitter = []
 
     $: scripts = schemas.map(
         schema => `
@@ -16,6 +18,13 @@
     <title>{title}</title>
 
     <meta name="description" content={description} />
+
+    {#each facebook as { name, content }}
+        <meta property={name} {content} />
+    {/each}
+    {#each twitter as { name, content }}
+        <meta {name} {content} />
+    {/each}
 
     {#each scripts as script}
         {@html script}

@@ -8,6 +8,21 @@
     const description =
         'Mon parcours pour devenir développeur Web Full Stack en JavaScript, TypeScript, Vue.js, Nuxt.js, TailwindCSS, Svelte, Sapper, Node.js'
     const schemas = []
+    const facebook = [
+        {
+            name: 'og:url',
+            content: 'https://baptiste.devessier.fr/my-way',
+        },
+        {
+            name: 'og:title',
+            content: title,
+        },
+        {
+            name: 'og:description',
+            content: description,
+        },
+    ]
+    const twitter = []
 
     const events = [
         {
@@ -99,7 +114,7 @@
     ]
 </script>
 
-<Page class="pb-6" {title} {description} {schemas}>
+<Page class="pb-6" {title} {description} {schemas} {facebook} {twitter}>
     <h1 class="text-2xl font-bold uppercase">Parcours</h1>
 
     <Timeline
