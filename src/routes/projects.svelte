@@ -35,11 +35,6 @@
                     ratio: 58.3705,
                 },
                 {
-                    src: 'artisansfiables-verify-artisan',
-                    alt: "Vérification de la fiabilité d'un artisan",
-                    ratio: 58.3705,
-                },
-                {
                     src: 'artisansfiables-quote-request',
                     alt: 'Demande de devis pour la réalisation de travaux',
                     ratio: 58.3705,
