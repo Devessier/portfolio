@@ -1,6 +1,11 @@
 <script>
     import Page from '../components/Page.svelte'
-    import { GithubIcon, MailIcon, TildIcon } from '../components/Icons'
+    import {
+        GithubIcon,
+        MailIcon,
+        TildIcon,
+        BriefcaseIcon,
+    } from '../components/Icons'
 
     const title = 'Baptiste Devessier | Accueil'
     const description = 'Développeur Web Full Stack sur Paris'
@@ -23,6 +28,11 @@
     const twitter = []
 
     const communicationMeans = [
+        {
+            href: '/cv.pdf',
+            title: 'CV',
+            icon: BriefcaseIcon,
+        },
         {
             href: 'https://github.com/Devessier',
             title: 'Mon profil Github',
