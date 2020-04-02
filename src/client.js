@@ -20,7 +20,7 @@ async function load() {
 
     console.log('> client-side app has been started')
 
-    await resolveAfter(200)
+    await resolveAfter(500)
 
     await sapper.prefetchRoutes()
 
