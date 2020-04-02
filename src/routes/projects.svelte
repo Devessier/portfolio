@@ -30,13 +30,21 @@
             title: 'ArtisansFiables',
             pictures: [
                 {
-                    src: 'artisansfiables-dashboard',
-                    alt: "Dashboard d'ArtisansFiables",
+                    src: 'artisansfiables-quote-requests',
+                    alt:
+                        'Demande de devis reçues par un artisan via la plateforme ArtisansFiables',
                     ratio: 58.3705,
                 },
                 {
-                    src: 'artisansfiables-quote-request',
-                    alt: 'Demande de devis pour la réalisation de travaux',
+                    src: 'artisansfiables-cloud',
+                    alt:
+                        'Cloud pour les artisans via la plateforme ArtisansFiables',
+                    ratio: 58.3705,
+                },
+                {
+                    src: 'artisansfiables-reliable-artisan',
+                    alt:
+                        'Demande de devis pour la réalisation de travaux via la plateforme ArtisansFiables',
                     ratio: 58.3705,
                 },
             ],
@@ -198,6 +206,7 @@
                             {src}
                             {alt}
                             {ratio}
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             root={container}
                             class="cursor-pointer"
                             on:click={() => zoom(index)} />

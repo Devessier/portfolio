@@ -9,6 +9,7 @@
     export let src
     export let alt
     export let ratio = 60
+    export let sizes = undefined
     let className = ''
     export { className as class }
 
@@ -187,8 +188,8 @@
 
             {#if mustLoad}
                 <picture>
-                    <source type="image/webp" srcset={webpSrcset} />
-                    <source {srcset} />
+                    <source type="image/webp" srcset={webpSrcset} {sizes} />
+                    <source type="image/jpeg" {srcset} {sizes} />
                     <img
                         src={fallbackSrc}
                         use:load
