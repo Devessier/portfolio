@@ -57,6 +57,7 @@
                 'Sass / SCSS / PostCSS',
                 'Vuetify',
                 'GraphQL',
+                'Jamstack',
             ],
         ],
         [
@@ -70,11 +71,13 @@
                 'PostgreSQL',
                 'Redis',
                 'RabbitMQ',
+                'Scraping, Puppeteer, Cheerio',
             ],
         ],
         [
             'Outils',
             [
+                'Prettier / ESLint / TSLint',
                 'Git',
                 'Docker',
                 'Bash / Zsh / Fish',
