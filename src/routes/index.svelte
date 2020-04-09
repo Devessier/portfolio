@@ -77,7 +77,7 @@
         [
             'Outils',
             [
-                'Prettier / ESLint / TSLint',
+                'Prettier / ESLint',
                 'Git',
                 'Docker',
                 'Bash / Zsh / Fish',
