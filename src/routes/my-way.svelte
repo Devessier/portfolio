@@ -78,13 +78,13 @@
             date: '2018',
         },
         {
-            title: 'GraphQL, de RabbitMQ, des microservices et de Golang',
+            title: 'GraphQL, RabbitMQ, microservices et Golang',
             description:
                 "Je fais communiquer mon front et mon back avec GraphQL. Je me forme sur l'architecture en microservices et fais interagir ceux-ci grâce à RabbitMQ. J'en code certains en Go",
             date: 'Février 2018',
         },
         {
-            title: 'Framework UX Vue.js et de Node.js',
+            title: 'Framework UX Vue.js et Node.js',
             description:
                 "J'améliore mes connaissances en JavaScript, qui devient mon langage favori. Je découvre les API REST et le Client Side Rendering. Je participe à des évènements NodeSchool sur Paris",
             date: 'Avril 2017',
@@ -96,7 +96,7 @@
             date: 'Fin 2016',
         },
         {
-            title: 'JavaScript et du PHP',
+            title: 'JavaScript et PHP',
             description:
                 'Je me forme en ligne pour maîtriser le JavaScript et le PHP',
             date: 'Décembre 2015',
