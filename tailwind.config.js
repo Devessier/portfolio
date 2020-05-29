@@ -49,4 +49,7 @@ module.exports = {
         borderRadius: ['responsive', 'first', 'last'],
     },
     plugins: [],
+    purge: {
+        enabled: false,
+    },
 }

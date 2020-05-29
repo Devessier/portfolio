@@ -73,6 +73,7 @@ export default {
                 }),
         ],
 
+        preserveEntrySignatures: false,
         onwarn,
     },
 
@@ -100,6 +101,7 @@ export default {
         ),
 
         onwarn,
+        preserveEntrySignatures: 'strict',
     },
 
     serviceworker: {
