@@ -37,11 +37,21 @@
             date: "Novembre 2018 - aujourd'hui",
         },
         {
+            title: 'Découverte de Vue 3, de la Composition API et de XState',
+            description: `
+                Je découvre Vue 3, la Composition API et XState au cours d'un projet 42.
+                L'introduction de la Composition API dans le développement d'applications Vue.js
+                facilite grandement la modularisation de la logique.
+                Grâce à XState je sais clairement dans quel état mon code se trouve et je me prémunis des race conditions.
+            `,
+            date: 'Novembre 2020',
+        },
+        {
             title: 'Stage de Développement Web Full Stack chez Cleed',
             description: `
                 Dans le cadre de mes études à 42 j'effectue un stage de 6 mois au sein de la startup Cleed.
                 J'ai l'occasion de redévelopper entièrement deux sites avec Nuxt.js et Vuetify,
-                en prenant en compte les contraintes du référencement naturel.
+                en prenant en compte les contraintes de référencement naturel.
             `,
             date: 'Avril 2020 - Octobre 2020',
         },
