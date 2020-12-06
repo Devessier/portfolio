@@ -184,9 +184,10 @@
     {twitter}>
     <h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
 
-    <section class="grid grid-cols-1 md:grid-cols-2 ">
-        {#each projects as { title, pictures, intro, description, date, links }, index}
-            <div class="flex py-2 {index % 2 === 0 ? 'md:pr-2' : 'md:pl-2'}">
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {#each projects as { title, pictures, intro, description, links }, index}
+            <div
+                class="flex {index % 2 === 0 ? '' : 'transform md:translate-y-16 lg:translate-y-20 xl:translate-y-24'}">
                 <article
                     class="flex flex-col flex-grow p-4 border border-gray-300">
                     <header class="mb-6">
