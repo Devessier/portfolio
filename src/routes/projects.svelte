@@ -66,6 +66,61 @@
             ],
         },
         {
+            title: 'RedTetris',
+            pictures: [
+                {
+                    src: 'red-tetris-home',
+                    alt: 'RedTetris',
+                    ratio: 52.3958,
+                },
+                {
+                    src: 'red-tetris-games',
+                    alt: 'RedTetris',
+                    ratio: 52.3958,
+                },
+                {
+                    src: 'red-tetris-waiting-room',
+                    alt: 'RedTetris',
+                    ratio: 52.3958,
+                },
+                {
+                    src: 'red-tetris-solo',
+                    alt: 'RedTetris',
+                    ratio: 52.3958,
+                },
+                {
+                    src: 'red-tetris-game-over',
+                    alt: 'RedTetris',
+                    ratio: 52.3958,
+                },
+                {
+                    src: 'red-tetris-multiplayer',
+                    alt: 'RedTetris',
+                    ratio: 52.3958,
+                },
+            ],
+            intro: 'Projet 42.',
+            description: `
+                Un jeu Tetris multijoueurs construit avec Vue 3, la Composition API, TailwindCSS, XState, Node.js et Socket.io.
+                Toute la logique côté client est implémentée dans une State Machine XState,
+                ce qui permet de savoir à n'importe quel moment dans quel état on se trouve.
+                Ce projet m'a permis de découvrir Vue 3 et la Composition API, dont je vais avoir du mal à me passer.
+            `,
+            date: 'Février-Mars 2020',
+            links: [
+                {
+                    title: 'Voir le projet sur Github',
+                    href: 'https://github.com/Claude-42/red-tetris',
+                    icon: GithubIcon,
+                },
+                {
+                    title: 'Aller sur le site',
+                    href: 'https://claude-red-tetris.netlify.app',
+                    icon: LinkIcon,
+                },
+            ],
+        },
+        {
             title: 'ThunderTube',
             pictures: [
                 {
@@ -184,10 +239,10 @@
     {twitter}>
     <h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
 
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-0 md:pb-12">
         {#each projects as { title, pictures, intro, description, links }, index}
             <div
-                class="flex {index % 2 === 0 ? '' : 'transform md:translate-y-16 lg:translate-y-20 xl:translate-y-24'}">
+                class="flex {index % 2 === 0 ? '' : 'transform md:translate-y-12'}">
                 <article
                     class="flex flex-col flex-grow p-4 border border-gray-300">
                     <header class="mb-6">
