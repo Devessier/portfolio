@@ -61,7 +61,7 @@
             href="."
             rel="prefetch"
             class="text-2xl tracking-wider main-link-font">
-            <LogoIcon class="w-20 h-20" title="bd" />
+            <LogoIcon class="w-20 h-20" title="Accueil" />
         </a>
 
         <div class="items-center hidden md:flex">
