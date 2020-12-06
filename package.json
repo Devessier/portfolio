@@ -56,7 +56,7 @@
         "sharp": "^0.25.3",
         "svelte": "^3.23.0",
         "svelte-preprocess": "^3.7.4",
-        "tailwindcss": "^1.4.6"
+        "tailwindcss": "^1.9.6"
     },
     "husky": {
         "hooks": {
