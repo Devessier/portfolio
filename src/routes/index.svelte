@@ -53,6 +53,7 @@
                 'JavaScript, ES6',
                 'Vue.js, Nuxt.js, Composition API',
                 'Svelte, Sapper',
+                'XState',
                 'TailwindCSS',
                 'Sass / SCSS / PostCSS',
                 'Vuetify',
