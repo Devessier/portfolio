@@ -51,7 +51,7 @@
             [
                 'HTML, CSS',
                 'JavaScript, ES6',
-                'Vue.js, Nuxt.js',
+                'Vue.js, Nuxt.js, Composition API',
                 'Svelte, Sapper',
                 'TailwindCSS',
                 'Sass / SCSS / PostCSS',
