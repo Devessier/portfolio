@@ -10,16 +10,12 @@
     export let segment
 
     page.subscribe(() => {
-        freshNavigation.update(value => {
+        freshNavigation.update((value) => {
             if (value === undefined) return true
 
             return false
         })
     })
-
-    function reloadPage() {
-        window.location.reload()
-    }
 </script>
 
 <Nav {segment} />
