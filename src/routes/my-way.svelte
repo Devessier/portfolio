@@ -37,6 +37,15 @@
             date: "Novembre 2018 - aujourd'hui",
         },
         {
+            title: 'Stage de Développement Web Full Stack chez Cleed',
+            description: `
+                Dans le cadre de mes études à 42 j'effectue un stage de 6 mois au sein de la startup Cleed.
+                J'ai l'occasion de redévelopper entièrement deux sites avec Nuxt.js et Vuetify,
+                en prenant en compte les contraintes du référencement naturel.
+            `,
+            date: 'Avril 2020 - Octobre 2020',
+        },
+        {
             title: 'Svelte et Sapper',
             description:
                 'Je me forme sur Svelte, le framework UX qui grimpe, par la réalisation de ce portfolio et en y joignant Sapper, le Nuxt.js de Svelte',
