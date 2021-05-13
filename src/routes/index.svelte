@@ -1,166 +1,59 @@
-<script>
-    import Page from '../components/Page.svelte'
-    import {
-        GithubIcon,
-        MailIcon,
-        TildIcon,
-        BriefcaseIcon,
-    } from '../components/Icons'
-
-    const title = 'Baptiste Devessier | Accueil'
-    const description = 'Développeur Web Full Stack sur Paris'
-    const canonical = 'https://baptiste.devessier.fr/'
-    const schemas = []
-    const facebook = [
-        {
-            name: 'og:url',
-            content: 'https://baptiste.devessier.fr/',
-        },
-        {
-            name: 'og:title',
-            content: title,
-        },
-        {
-            name: 'og:description',
-            content: description,
-        },
-    ]
-    const twitter = []
-
-    const communicationMeans = [
-        {
-            href: '/cv.pdf',
-            title: 'CV',
-            icon: BriefcaseIcon,
-        },
-        {
-            href: 'https://github.com/Devessier',
-            title: 'Mon profil Github',
-            icon: GithubIcon,
-        },
-        {
-            href: 'contact',
-            title: 'Me contacter',
-            icon: MailIcon,
-        },
-    ]
-
-    const categories = [
-        [
-            'Front-end',
-            [
-                'HTML, CSS',
-                'JavaScript, ES6',
-                'Vue.js, Nuxt.js, Composition API',
-                'Svelte, Sapper',
-                'XState',
-                'TailwindCSS',
-                'Sass / SCSS / PostCSS',
-                'Vuetify',
-                'GraphQL',
-                'Jamstack',
-            ],
-        ],
-        [
-            'Back-end',
-            [
-                'Node.js',
-                'TypeScript',
-                'GraphQL',
-                'Polka',
-                'Golang',
-                'PostgreSQL',
-                'Redis',
-                'RabbitMQ',
-                'Scraping, Puppeteer, Cheerio',
-            ],
-        ],
-        [
-            'Outils',
-            [
-                'Prettier / ESLint',
-                'Git',
-                'Docker',
-                'Bash / Zsh / Fish',
-                'macOS',
-                'Visual Studio Code',
-            ],
-        ],
-    ]
+<script context="module" lang="ts">
+	export const prerender = true;
 </script>
 
-<style lang="postcss">
-    h1 {
-        font-family: 'Comfortaa', cursive;
-    }
+<script lang="ts">
+	import Counter from '$lib/Counter/index.svelte';
+</script>
 
-    .skills {
-        columns: 1;
+<svelte:head>
+	<title>Home</title>
+</svelte:head>
 
-        @screen sm {
-            columns: 2;
-        }
-    }
+<section>
+	<h1>
+		<div class="welcome">
+			<picture>
+				<source srcset="svelte-welcome.webp" type="image/webp" />
+				<img src="svelte-welcome.png" alt="Welcome" />
+			</picture>
+		</div>
+
+		to your new<br />SvelteKit app
+	</h1>
+
+	<h2>
+		try editing <strong>src/routes/index.svelte</strong>
+	</h2>
+
+	<Counter />
+</section>
+
+<style>
+	section {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		flex: 1;
+	}
+
+	h1 {
+		width: 100%;
+	}
+
+	.welcome {
+		position: relative;
+		width: 100%;
+		height: 0;
+		padding: 0 0 calc(100% * 495 / 2048) 0;
+	}
+
+	.welcome img {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		display: block;
+	}
 </style>
-
-<Page
-    class="pb-6"
-    {title}
-    {description}
-    {canonical}
-    {schemas}
-    {facebook}
-    {twitter}>
-    <div>
-        <h1 class="text-4xl font-bold lowercase flex items-center flex-wrap">
-            Baptiste
-            <TildIcon
-                class="w-5 h-4 relative"
-                preserveAspectRatio="none"
-                style="top: 2px"
-                aria-hidden="true" />
-            Devessier
-        </h1>
-
-        <p class="mt-5 text-2xl font-medium">
-            Développeur
-            <span class="bg-red-300 ">Web Full Stack</span>
-            <span class="-ml-1">, Paris</span>
-        </p>
-
-        <ul class="flex items-center mt-8">
-            {#each communicationMeans as { href, title, icon }, index}
-                <li>
-                    <a
-                        rel="prefetch"
-                        {href}
-                        class="block p-2 text-red-500 border border-gray-200
-                        rounded-full {index < communicationMeans.length - 1 ? 'mr-2' : ''}"
-                        {title}>
-                        <span class="sr-only">{title}</span>
-
-                        <svelte:component
-                            this={icon}
-                            class="w-8 h-8 stroke-current" />
-                    </a>
-                </li>
-            {/each}
-        </ul>
-    </div>
-
-    <div class="mt-16">
-        {#each categories as [title, skills]}
-            <div
-                class="grid grid-cols-1 md:grid-cols-3 pt-4 mb-4 border-t-2
-                border-red-500">
-                <h3 class="text-2xl mb-4">{title}</h3>
-
-                <ul class="md:col-span-2 skills">
-                    {#each skills as skill}
-                        <li class="text-lg mb-2">— {skill}</li>
-                    {/each}
-                </ul>
-            </div>
-        {/each}
-    </div>
-</Page>
