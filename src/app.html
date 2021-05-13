@@ -5,9 +5,26 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
+		<link rel="preconnect" href="https://rsms.me/" crossorigin />
+		<link rel="preload" as="style" href="https://rsms.me/inter/inter.css" />
+		<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+
+		<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+		<link
+			rel="preload"
+			as="style"
+			href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap"
+		/>
+
 		%svelte.head%
 	</head>
-	<body>
-		<div id="svelte">%svelte.body%</div>
+	<body class="font-sans">
+		<div id="svelte" class="flex flex-col min-h-screen px-4 sm:px-6 md:px-10 lg:px-16">
+			%svelte.body%
+		</div>
 	</body>
 </html>

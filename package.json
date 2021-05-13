@@ -23,6 +23,7 @@
 		"lint-staged": "^11.0.0",
 		"postcss": "^8.2.10",
 		"postcss-load-config": "^3.0.1",
+		"postcss-nested": "^5.0.5",
 		"prettier": "~2.2.1",
 		"prettier-plugin-svelte": "^2.2.0",
 		"svelte": "^3.34.0",
@@ -37,16 +38,17 @@
 		"@lukeed/uuid": "^2.0.0",
 		"cookie": "^0.4.1"
 	},
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged",
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+		}
+	},
 	"lint-staged": {
-		"*.{html,js,svelte,ts}": [
+		"*.{js,svelte,ts}": [
 			"prettier --write",
 			"eslint --fix"
-		]
+		],
+		"*.html": "prettier --write"
 	}
 }
