@@ -106,3 +106,7 @@ button:focus:not(:focus-visible) {
 		font-size: 2.4rem;
 	}
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
