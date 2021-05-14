@@ -5,15 +5,14 @@
 	import Nav from '$lib/Nav/Nav.svelte';
 	import ToastContainer from '$lib/Toasts/ToastContainer.svelte';
 
-	export let segment: string;
+	$: segment = $page.path;
 
-	page.subscribe(() => {
+	$: $page,
 		freshNavigation.update((value) => {
 			if (value === undefined) return true;
 
 			return false;
 		});
-	});
 </script>
 
 <Nav {segment} />

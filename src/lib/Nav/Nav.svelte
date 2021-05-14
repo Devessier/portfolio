@@ -12,15 +12,15 @@
 
 	const links = [
 		{
-			href: 'my-way',
+			href: '/my-way',
 			text: 'Parcours'
 		},
 		{
-			href: 'projects',
+			href: '/projects',
 			text: 'Projets'
 		},
 		{
-			href: 'contact',
+			href: '/contact',
 			text: 'Contact'
 		}
 	];
