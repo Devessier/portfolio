@@ -26,6 +26,8 @@
 		"postcss-nested": "^5.0.5",
 		"prettier": "~2.2.1",
 		"prettier-plugin-svelte": "^2.2.0",
+		"rimraf": "^3.0.2",
+		"sharp": "^0.28.2",
 		"svelte": "^3.34.0",
 		"svelte-preprocess": "^4.7.1",
 		"tailwindcss": "^2.1.1",
