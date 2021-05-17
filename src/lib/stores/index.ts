@@ -40,7 +40,7 @@ function createToastStore() {
 				}, timeout);
 			}
 		},
-		dismiss(id) {
+		dismiss(id: number) {
 			update((toasts) => toasts.filter(({ id: notificationId }) => notificationId !== id));
 		}
 	};
