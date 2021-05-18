@@ -122,7 +122,7 @@
 				class="grid grid-cols-1 md:grid-cols-3 pt-4 mb-4 border-t-2
                 border-red-500"
 			>
-				<h3 class="text-2xl mb-4">{title}</h3>
+				<h2 class="text-2xl mb-4">{title}</h2>
 
 				<ul class="md:col-span-2 skills">
 					{#each skills as skill}
