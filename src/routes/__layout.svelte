@@ -1,9 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { onMount } from 'svelte';
-	import { Workbox } from 'workbox-window';
 	import { page } from '$app/stores';
-	import { prefetchRoutes } from '$app/navigation';
 	import { freshNavigation, toasts } from '$lib/stores';
 	import { IS_PRODUCTION } from '$lib/env';
 	import Nav from '$lib/Nav/Nav.svelte';
@@ -18,16 +16,10 @@
 			return false;
 		});
 
-	function resolveAfter(ms: number) {
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(undefined);
-			}, ms);
-		});
-	}
-
-	function setupServiceWorker() {
+	async function setupServiceWorker() {
 		if ('serviceWorker' in navigator) {
+			const { Workbox } = await import('workbox-window');
+
 			const wb = new Workbox('/service-worker.js');
 
 			wb.addEventListener('installed', (event) => {
@@ -51,14 +43,10 @@
 		}
 	}
 
-	async function load() {
+	function load() {
 		if (IS_PRODUCTION) {
 			setupServiceWorker();
 		}
-
-		await resolveAfter(500);
-
-		await prefetchRoutes();
 	}
 
 	onMount(load);
