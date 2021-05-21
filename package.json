@@ -45,7 +45,8 @@
 	"type": "module",
 	"dependencies": {
 		"@lukeed/uuid": "^2.0.0",
-		"cookie": "^0.4.1"
+		"cookie": "^0.4.1",
+		"tailwindcss-scroll-snap": "^1.1.0"
 	},
 	"husky": {
 		"hooks": {
