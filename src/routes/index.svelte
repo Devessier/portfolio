@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { URL } from '$lib/env';
+	import { APP_URL } from '$lib/env';
 	import Page from '$lib/Page/Page.svelte';
 	import { GithubIcon, MailIcon, TildIcon, BriefcaseIcon } from '$lib/Icons';
 
@@ -25,7 +25,7 @@
 
 	const communicationMeans = [
 		{
-			href: `${URL}/cv.pdf`,
+			href: `${APP_URL}/cv.pdf`,
 			title: 'CV',
 			icon: BriefcaseIcon
 		},
