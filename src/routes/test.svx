@@ -1,0 +1,7 @@
+<script lang="ts">
+    const customText: string = 'eheh'
+</script>
+
+Hi **eheh**
+
+{customText}
