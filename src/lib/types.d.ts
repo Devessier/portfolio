@@ -5,3 +5,11 @@
 export interface Locals {
 	userid: string;
 }
+
+export type WritingPreview = {
+	title: string;
+	slug: string;
+	description: string;
+	datetime: string;
+	tags: string[];
+};

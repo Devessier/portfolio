@@ -1,7 +1,7 @@
 ---
 title: Generate and put in context or compute from context externally XState
 description: Lorem ipsum dolor sit amet, consectetur adipisicing elit. In delectus, aliquid beatae officia placeat iusto sint cumque corporis deserunt magnam ad voluptatibus, culpa obcaecati accusamus, quidem recusandae. Qui, nulla error!
-datetime: 23/01/2000
+datetime: '2021-05-23T15:57:47.980Z'
 tags: [Front-end, Temporal]
 
 customText: eheh
