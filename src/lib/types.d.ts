@@ -14,7 +14,16 @@ export type WritingPreview = {
 	tags: string[];
 };
 
-interface Tag {
+export interface Tag {
 	title: string;
 	slug: string;
+}
+
+export interface ArticlePreview {
+	title: string;
+	description: string;
+	datetime: string;
+	formattedDatetime: string;
+	slug: string;
+	tags: Tag[];
 }

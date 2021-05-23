@@ -21,6 +21,7 @@
 
 		return {
 			props: {
+				tag,
 				prettyTagName,
 				articles: articles as WritingPreview[]
 			}
@@ -29,20 +30,10 @@
 </script>
 
 <script lang="ts">
+	import BlogPostsList from '$lib/BlogPostsList.svelte';
 	import Page from '$lib/Page/Page.svelte';
-	import { formatDate } from '$lib/format-date';
-	import type { Tag } from '$lib/types';
-	import slugify from 'slugify';
 
-	interface ArticlePreview {
-		title: string;
-		description: string;
-		datetime: string;
-		formattedDatetime: string;
-		slug: string;
-		tags: Tag[];
-	}
-
+	export let tag: string;
 	export let prettyTagName: string;
 	export let articles: WritingPreview[];
 
@@ -67,62 +58,14 @@
 		}
 	];
 	const twitter = [];
-
-	let formattedArticles: ArticlePreview[];
-	$: formattedArticles = articles.map((article) => ({
-		...article,
-		formattedDatetime: formatDate(article.datetime),
-		tags: article.tags.map((tag) => ({
-			title: tag,
-			slug: slugify(tag, {
-				lower: true
-			})
-		}))
-	}));
 </script>
 
 <Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
-	<h1 class="text-5xl font-cursive">Writing about {prettyTagName}</h1>
+	<BlogPostsList {articles}>
+		<svelte:fragment slot="title">
+			Writing about {prettyTagName ?? tag}
+		</svelte:fragment>
 
-	<div class="mt-12">
-		{#if articles.length > 0}
-			<ul class="grid grid-cols-1 gap-y-16">
-				{#each formattedArticles as { title, description, slug, datetime, formattedDatetime, tags }}
-					<li class="flex flex-col max-w-prose">
-						<time {datetime} class="text-red-700 italic font-medium text-sm">
-							{formattedDatetime}
-						</time>
-
-						<a href={`/writing/${slug}`} class="mt-2">
-							<h2 class="text-2xl leading-8 font-semibold hover:underline">
-								{title}
-							</h2>
-						</a>
-
-						<p class="mt-4 text-gray-600 leading-7">
-							{description}
-						</p>
-
-						<div class="mt-4">
-							{#each tags as { title, slug }, index}
-								<a
-									href="/tags/{slug}"
-									class="border-gray-300 border text-gray-600 bg-white hover:bg-gray-50 transition-colors duration-100 ease-out font-normal text-xs px-3 py-1 rounded-2xl flex-shrink-0 {index ===
-									0
-										? 'ml-0'
-										: 'ml-2'}"
-								>
-									{title}
-								</a>
-							{/each}
-						</div>
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<div class="flex flex-col items-center mt-6">
-				<p class="text-xl font-medium">I have not begun writing about this topic yet.</p>
-			</div>
-		{/if}
-	</div>
+		<svelte:fragment slot="empty">I have not begun writing about this topic yet.</svelte:fragment>
+	</BlogPostsList>
 </Page>
