@@ -17,7 +17,7 @@
 	 * to wait until the outgoing element is asbent before allowing
 	 * the incoming element to enter.
 	 *
-	 * It's the equivalent of `mode="out-in"` in VUe.js land.
+	 * It's the equivalent of `mode="out-in"` in Vue.js land.
 	 */
 	const TRANSITION_DURATION = 400;
 </script>

@@ -45,6 +45,7 @@
 	"type": "module",
 	"dependencies": {
 		"@lukeed/uuid": "^2.0.0",
+		"@tailwindcss/typography": "^0.4.0",
 		"cookie": "^0.4.1",
 		"slugify": "^1.5.3",
 		"tailwindcss-scroll-snap": "^1.1.0",

@@ -116,13 +116,14 @@
 
 <script lang="ts">
 	import Page from '$lib/Page/Page.svelte';
-	import { page } from '$app/stores';
 	import slugify from 'slugify';
 
 	export let articles: ArticlePreview[];
 
 	const title = 'Baptiste Devessier - Writing';
+	// TODO: to be defined
 	const description = 'Développeur Web Full Stack sur Paris';
+	// TODO: to be defined
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
 	const facebook = [
@@ -149,7 +150,7 @@
 		{#if articles.length > 0}
 			<ul class="grid grid-cols-1 gap-y-16">
 				{#each articles as { title, description, slug, date, formattedDate, tags }}
-					<li class="flex flex-col max-w-[70ch]">
+					<li class="flex flex-col max-w-prose">
 						<time datetime={date} class="text-red-700 italic font-medium text-sm">
 							{formattedDate}
 						</time>
