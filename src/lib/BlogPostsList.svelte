@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AppBadge from '$lib/AppBadge.svelte';
 	import { formatDate } from '$lib/format-date';
 	import type { WritingPreview, ArticlePreview } from '$lib/types';
 	import slugify from 'slugify';
@@ -43,15 +44,9 @@
 
 					<div class="mt-4">
 						{#each tags as { title, slug }, index}
-							<a
-								href="/tags/{slug}"
-								class="border-gray-300 border text-gray-600 bg-white hover:bg-gray-50 transition-colors duration-100 ease-out font-normal text-xs px-3 py-1 rounded-2xl flex-shrink-0 {index ===
-								0
-									? 'ml-0'
-									: 'ml-2'}"
-							>
+							<AppBadge href="/tags/{slug}" class={index === 0 ? 'ml-0' : 'ml-2'}>
 								{title}
-							</a>
+							</AppBadge>
 						{/each}
 					</div>
 				</li>

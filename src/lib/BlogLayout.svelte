@@ -1,5 +1,6 @@
 <script>
 	import Page from '$lib/Page/Page.svelte';
+	import AppBadge from '$lib/AppBadge.svelte';
 	import { formatDate } from '$lib/format-date';
 	import slugify from 'slugify';
 
@@ -42,12 +43,9 @@
 	<div class="max-w-prose text-lg mx-auto">
 		<div class="flex items-center justify-center flex-wrap mb-2">
 			{#each formattedTags as { title, slug }}
-				<a
-					href="/tags/{slug}"
-					class="border-gray-300 mb-2 border text-gray-600 bg-white hover:bg-gray-50 transition-colors duration-100 ease-out font-normal text-xs px-3 py-1 rounded-2xl flex-shrink-0 mx-1"
-				>
+				<AppBadge href="/tags/{slug}">
 					{title}
-				</a>
+				</AppBadge>
 			{/each}
 		</div>
 
