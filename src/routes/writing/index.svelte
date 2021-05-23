@@ -2,12 +2,13 @@
 	import type { Load } from '@sveltejs/kit';
 	import type { WritingPreview } from '$lib/types';
 
-	export const load: Load = async () => {
-		const url = new URL('/writing.json', import.meta.env.VITE_APP_URL).toString();
-		const response = await fetch(url);
+	export const load: Load = async ({ fetch }) => {
+		const response = await fetch('/writing.json');
+
 		if (response.ok === false) {
 			return {
-				error: new Error('error occured while getting writings list')
+				error: new Error('error occured while getting writings list'),
+				status: 500
 			};
 		}
 
@@ -23,6 +24,7 @@
 
 <script lang="ts">
 	import Page from '$lib/Page/Page.svelte';
+	import { formatDate } from '$lib/format-date';
 	import slugify from 'slugify';
 
 	interface Tag {
@@ -63,16 +65,6 @@
 	];
 	const twitter = [];
 
-	function formatDate(datetime: string): string {
-		const date = new Date(datetime);
-
-		return new Intl.DateTimeFormat('en-US', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric'
-		}).format(date);
-	}
-
 	let formattedArticles: ArticlePreview[];
 	$: formattedArticles = articles.map((article) => ({
 		...article,
@@ -104,11 +96,11 @@
 							</h2>
 						</a>
 
-						<p class="mt-6 text-gray-600 leading-7">
+						<p class="mt-4 text-gray-600 leading-7">
 							{description}
 						</p>
 
-						<div class="mt-2">
+						<div class="mt-4">
 							{#each tags as { title, slug }, index}
 								<a
 									href="/tags/{slug}"

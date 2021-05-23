@@ -1,13 +1,12 @@
 <script>
 	import Page from '$lib/Page/Page.svelte';
+	import { formatDate } from '$lib/format-date';
 	import slugify from 'slugify';
 
 	export let title;
 	export let description;
 	export let datetime;
 	export let tags;
-
-	$: console.log($$props);
 
 	// TODO: to be defined
 	const canonical = 'https://baptiste.devessier.fr/';
@@ -35,6 +34,8 @@
 			lower: true
 		})
 	}));
+
+	$: formattedDate = formatDate(datetime);
 </script>
 
 <Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
@@ -49,6 +50,10 @@
 				</a>
 			{/each}
 		</div>
+
+		<time {datetime} class="block mb-4 text-red-700 text-center italic font-medium text-sm">
+			{formattedDate}
+		</time>
 
 		<h1
 			class="text-3xl text-center font-cursive leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
