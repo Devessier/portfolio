@@ -13,7 +13,9 @@ const config = {
 			postcss: true
 		}),
 
-		mdsvex()
+		mdsvex({
+			layout: './src/lib/BlogLayout.svelte'
+		})
 	],
 
 	kit: {
