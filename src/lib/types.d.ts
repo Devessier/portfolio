@@ -13,3 +13,8 @@ export type WritingPreview = {
 	datetime: string;
 	tags: string[];
 };
+
+interface Tag {
+	title: string;
+	slug: string;
+}

@@ -25,12 +25,8 @@
 <script lang="ts">
 	import Page from '$lib/Page/Page.svelte';
 	import { formatDate } from '$lib/format-date';
+	import type { Tag } from '$lib/types';
 	import slugify from 'slugify';
-
-	interface Tag {
-		title: string;
-		slug: string;
-	}
 
 	interface ArticlePreview {
 		title: string;
