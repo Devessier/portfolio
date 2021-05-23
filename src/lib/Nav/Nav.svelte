@@ -20,6 +20,10 @@
 			text: 'Projets'
 		},
 		{
+			href: '/writing',
+			text: 'Writing'
+		},
+		{
 			href: '/contact',
 			text: 'Contact'
 		}
