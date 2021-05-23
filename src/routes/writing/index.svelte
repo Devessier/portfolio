@@ -25,29 +25,17 @@
 <script lang="ts">
 	import Page from '$lib/Page/Page.svelte';
 	import BlogPostsList from '$lib/BlogPostsList.svelte';
-	import type { Tag } from '$lib/types';
-
-	interface ArticlePreview {
-		title: string;
-		description: string;
-		datetime: string;
-		formattedDatetime: string;
-		slug: string;
-		tags: Tag[];
-	}
 
 	export let articles: WritingPreview[];
 
 	const title = 'Baptiste Devessier - Writing';
-	// TODO: to be defined
 	const description = 'Développeur Web Full Stack sur Paris';
-	// TODO: to be defined
-	const canonical = 'https://baptiste.devessier.fr/';
+	const canonical = 'https://baptiste.devessier.fr/writing/';
 	const schemas = [];
 	const facebook = [
 		{
 			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/'
+			content: canonical
 		},
 		{
 			name: 'og:title',

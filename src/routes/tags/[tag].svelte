@@ -37,16 +37,14 @@
 	export let prettyTagName: string;
 	export let articles: WritingPreview[];
 
-	const title = 'Baptiste Devessier - Writing';
-	// TODO: to be defined
+	$: title = `Baptiste Devessier - Writing about ${prettyTagName}`;
 	const description = 'Développeur Web Full Stack sur Paris';
-	// TODO: to be defined
-	const canonical = 'https://baptiste.devessier.fr/';
+	$: canonical = `https://baptiste.devessier.fr/tags/${tag}/`;
 	const schemas = [];
-	const facebook = [
+	$: facebook = [
 		{
 			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/'
+			content: canonical
 		},
 		{
 			name: 'og:title',
