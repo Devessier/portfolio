@@ -53,6 +53,6 @@
 	<BlogPostsList {articles}>
 		<svelte:fragment slot="title">Writing</svelte:fragment>
 
-		<svelte:fragment slot="empty">I have not begun writing yet.</svelte:fragment>
+		<svelte:fragment slot="empty">I have not started writing yet.</svelte:fragment>
 	</BlogPostsList>
 </Page>

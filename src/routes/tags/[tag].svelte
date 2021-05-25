@@ -64,6 +64,6 @@
 			Writing about {prettyTagName ?? tag}
 		</svelte:fragment>
 
-		<svelte:fragment slot="empty">I have not begun writing about this topic yet.</svelte:fragment>
+		<svelte:fragment slot="empty">I have not started writing about this topic yet.</svelte:fragment>
 	</BlogPostsList>
 </Page>
