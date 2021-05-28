@@ -3,8 +3,8 @@
 	import Page from '$lib/Page/Page.svelte';
 	import { GithubIcon, MailIcon, TildIcon, BriefcaseIcon } from '$lib/Icons';
 
-	const title = 'Baptiste Devessier | Accueil';
-	const description = 'Développeur Web Full Stack sur Paris';
+	const title = 'Baptiste Devessier | Home';
+	const description = 'Full Stack Web Developer in Paris';
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
 	const facebook = [
@@ -31,12 +31,12 @@
 		},
 		{
 			href: 'https://github.com/Devessier',
-			title: 'Mon profil Github',
+			title: 'My Github profile',
 			icon: GithubIcon
 		},
 		{
 			href: 'contact',
-			title: 'Me contacter',
+			title: 'Contact me',
 			icon: MailIcon
 		}
 	];
@@ -46,13 +46,11 @@
 			'Front-end',
 			[
 				'HTML, CSS',
-				'JavaScript, ES6',
+				'JavaScript, TypeScript',
 				'Vue.js, Nuxt.js, Composition API',
-				'Svelte, Sapper',
+				'Svelte, SvelteKit',
 				'XState',
-				'TailwindCSS',
-				'Sass / SCSS / PostCSS',
-				'Vuetify',
+				'TailwindCSS, Vuetify',
 				'GraphQL',
 				'Jamstack'
 			]
@@ -60,21 +58,16 @@
 		[
 			'Back-end',
 			[
-				'Node.js',
-				'TypeScript',
+				'Node.js, TypeScript',
+				'AdonisJS',
 				'GraphQL',
-				'Polka',
 				'Golang',
 				'PostgreSQL',
-				'Redis',
 				'RabbitMQ',
 				'Scraping, Puppeteer, Cheerio'
 			]
 		],
-		[
-			'Outils',
-			['Prettier / ESLint', 'Git', 'Docker', 'Bash / Zsh / Fish', 'macOS', 'Visual Studio Code']
-		]
+		['Tools', ['Prettier, ESLint', 'Git', 'Docker', 'Fish', 'macOS', 'Visual Studio Code']]
 	];
 </script>
 
@@ -91,11 +84,7 @@
 			Devessier
 		</h1>
 
-		<p class="mt-5 text-2xl font-medium">
-			Développeur
-			<span class="bg-red-300 ">Web Full Stack</span>
-			<span class="-ml-1">, Paris</span>
-		</p>
+		<p class="mt-5 text-2xl font-medium">Full Stack Web Developer, Paris</p>
 
 		<ul class="flex items-center mt-8">
 			{#each communicationMeans as { href, title, icon }, index}
