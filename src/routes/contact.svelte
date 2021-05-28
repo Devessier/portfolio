@@ -7,7 +7,7 @@
 	import { LocationMarkerIcon, AtIcon } from '$lib/Icons';
 
 	const title = 'Baptiste Devessier | Contact';
-	const description = 'Contactez-moi pour que nous travaillions ensemble sur vos projets';
+	const description = 'Contact me so that we can meet to work on your projects';
 	const canonical = 'https://baptiste.devessier.fr/contact/';
 	const schemas = [];
 	const facebook = [
@@ -110,7 +110,7 @@
 		<TextField
 			name="name"
 			autocomplete="name"
-			label="Nom"
+			label="Name"
 			placeholder="Tom Delorme"
 			bind:value={name}
 			required
@@ -119,7 +119,7 @@
 		<TextField
 			name="email"
 			autocomplete="email"
-			label="Adresse mail"
+			label="Email address"
 			placeholder="tom.delorme@gmail.com"
 			type="email"
 			bind:value={email}
@@ -130,7 +130,7 @@
 		<TextArea
 			name="message"
 			label="Message"
-			placeholder="Bonjour Baptiste, …"
+			placeholder="Hi Baptiste, …"
 			bind:value={message}
 			class="sm:col-span-2"
 			required

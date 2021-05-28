@@ -21,33 +21,33 @@
 			class: 'bg-red-500 focus:bg-red-400 text-white cursor-wait',
 			hideText: true,
 			icon: Loader,
-			text: 'Chargement'
+			text: 'Loading'
 		},
 		[STATUSES.INVALID]: {
 			disabled: true,
 			class: 'bg-gray-300 text-gray-800 cursor-not-allowed',
 			hideText: false,
-			text: 'Formulaire invalide'
+			text: 'Invalid text fields'
 		},
 		[STATUSES.DONE]: {
 			disabled: true,
 			class: 'bg-green-400 text-white cursor-default',
 			hideText: true,
 			icon: CheckIcon,
-			text: 'Succès'
+			text: 'Success'
 		},
 		[STATUSES.ERROR]: {
 			disabled: true,
 			class: 'bg-red-700 focus:bg-red-600 text-white cursor-default',
 			hideText: true,
 			icon: XIcon,
-			text: 'En erreur'
+			text: 'Error'
 		},
 		[STATUSES.DEFAULT]: {
 			disabled: false,
 			class: 'bg-red-700 hover:bg-red-600 focus:bg-red-600 text-white cursor-pointer',
 			hideText: false,
-			text: 'Envoyer'
+			text: 'Send'
 		}
 	};
 
@@ -86,7 +86,7 @@
 	style="animation-delay: {shakeDelay}ms"
 	on:animationend={() => (shake = false)}
 >
-	<span class={hideText ? 'opacity-0' : 'opacity-100'} aria-hidden={hideText}> Envoyer </span>
+	<span class={hideText ? 'opacity-0' : 'opacity-100'} aria-hidden={hideText}> Send </span>
 
 	{#if icon !== undefined}
 		<div
