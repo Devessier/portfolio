@@ -32,7 +32,7 @@
 						{formattedDatetime}
 					</time>
 
-					<a href={`/writing/${slug}`} class="mt-2">
+					<a href={`/writing/${slug}`} sveltekit:prefetch class="mt-2">
 						<h2 class="text-2xl leading-8 font-semibold hover:underline">
 							{title}
 						</h2>
