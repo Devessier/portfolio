@@ -90,7 +90,7 @@
 			{#each communicationMeans as { href, title, icon }, index}
 				<li>
 					<a
-						rel="prefetch"
+						sveltekit:prefetch
 						{href}
 						class="block p-2 text-red-500 border border-gray-200
                         rounded-full {index < communicationMeans.length - 1 ? 'mr-2' : ''}"

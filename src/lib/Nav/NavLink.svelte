@@ -7,7 +7,7 @@
 	export { className as class };
 </script>
 
-<a {href} rel="prefetch" class:active-link={active} class={className} on:click>
+<a {href} sveltekit:prefetch class:active-link={active} class={className} on:click>
 	<slot />
 </a>
 

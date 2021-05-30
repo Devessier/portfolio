@@ -61,7 +61,7 @@
 
 <nav class="py-6">
 	<div class="flex items-center justify-between">
-		<a href="/" rel="prefetch" class="text-2xl tracking-wider main-link-font">
+		<a href="/" sveltekit:prefetch class="text-2xl tracking-wider main-link-font">
 			<LogoIcon class="w-20 h-20" title="Accueil" />
 		</a>
 
