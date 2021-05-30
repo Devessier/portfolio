@@ -9,7 +9,8 @@ const prog = sade('drone');
 prog.version('1.0.0');
 
 function generateBlogPostTemplate(blogPostName) {
-	return dedent`
+	return (
+		dedent`
 ---
 title: ${blogPostName}
 description: Blog post description
@@ -18,7 +19,8 @@ tags: ['Temporal']
 ---
 
 Hi from **${blogPostName}** article!
-	`;
+	` + '\n'
+	);
 }
 
 prog
