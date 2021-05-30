@@ -4,8 +4,8 @@
 	import { GithubIcon, LinkIcon } from '$lib/Icons';
 	import Image from '$lib/Image/Image.svelte';
 
-	const title = 'Baptiste Devessier | Projets';
-	const description = 'Mes projets 42, ma startup ArtisansFiables et mes projets personnels';
+	const title = 'Baptiste Devessier | Projects';
+	const description = 'My projects for 42 School, my startup ArtisansFiables and my side projects';
 	const canonical = 'https://baptiste.devessier.fr/projects/';
 	const schemas = [];
 	const facebook = [
@@ -30,32 +30,36 @@
 			pictures: [
 				{
 					src: 'artisansfiables-quote-requests',
-					alt: 'Demande de devis reçues par un artisan via la plateforme ArtisansFiables',
+					alt: 'Quote requests received by an artisan through ArtisansFiables platform',
 					ratio: 58.3705
 				},
 				{
 					src: 'artisansfiables-cloud',
-					alt: 'Cloud pour les artisans via la plateforme ArtisansFiables',
+					alt: 'Cloud for artisans users of ArtisansFiables',
 					ratio: 58.3705
 				},
 				{
 					src: 'artisansfiables-reliable-artisan',
-					alt: 'Demande de devis pour la réalisation de travaux via la plateforme ArtisansFiables',
+					alt: 'A quote request to carry out building work',
 					ratio: 58.3705
 				}
 			],
 			intro: 'Startup.',
-			description:
-				"Service totalement automatique de collecte des attestations légales des artisans. Le site permet aussi aux particuliers de trouver un artisan fiable pour réaliser leurs travaux, mais également de vérifier la fiabilité d'un artisan qu'ils connaissent. Le site est construit avec Nuxt.js, GraphQL & Apollo, Node.js, Golang, RabbitMQ, PostgreSQL, etc…",
-			date: "Février 2019 - aujourd'hui",
+			description: `
+				A service that automatically collects all the legal attestations of artisans.
+				Individuals can also find a reliable artisan to carry out their building work
+				or verify the reliability of an artisan they know.
+				The website is built with Nuxt.js, GraphQL, Apollo, Node.js, Golang, RabbitMQ, PostgreSQL, etc.
+			`,
+			date: 'February 2019 - today',
 			links: [
 				{
-					title: "Voir l'organisation Github",
+					title: 'See the organization on Github',
 					href: 'https://github.com/ArtisansFiables',
 					icon: GithubIcon
 				},
 				{
-					title: 'Aller sur le site',
+					title: 'Go to the website',
 					href: 'https://artisansfiables.fr',
 					icon: LinkIcon
 				}
@@ -97,20 +101,20 @@
 			],
 			intro: 'Projet 42.',
 			description: `
-                Un jeu Tetris multijoueurs construit avec Vue 3, la Composition API, TailwindCSS, XState, Node.js et Socket.io.
-                Toute la logique côté client est implémentée dans une State Machine XState,
-                ce qui permet de savoir à n'importe quel moment dans quel état on se trouve.
-                Ce projet m'a permis de découvrir Vue 3 et la Composition API, dont je vais avoir du mal à me passer.
+				A Tetris multiplayer game built with Vue 3, the Composition API, TailwindCSS, XState, Node.js and Socket.io.
+				All the front-end logic is represented by a XState State Machine.
+				Thanks to that we can know instantly in which logical state the application is.
+				During this project I discovered Vue 3 and the Composition API and I will not be able to help myself from using them.
             `,
-			date: 'Février-Mars 2020',
+			date: 'February-March 2021',
 			links: [
 				{
-					title: 'Voir le projet sur Github',
+					title: 'See the project on Github',
 					href: 'https://github.com/Claude-42/red-tetris',
 					icon: GithubIcon
 				},
 				{
-					title: 'Aller sur le site',
+					title: 'Go to the website',
 					href: 'https://claude-red-tetris.netlify.app',
 					icon: LinkIcon
 				}
@@ -121,92 +125,31 @@
 			pictures: [
 				{
 					src: 'hypertube-home',
-					alt: 'Liste des films',
+					alt: 'List of movies on ThunderTube',
 					ratio: 58.3705
 				},
 				{
 					src: 'hypertube-movie',
-					alt: "Fiche d'un film",
+					alt: 'Description of a movie on ThunderTube',
 					ratio: 58.3705
 				}
 			],
 			intro: 'Projet 42.',
-			description:
-				'Site de streaming moderne réalisé en groupe, construit avec Vue.js, TailwindCSS et Node.js. Nous nous sommes inspirés de Netflix et de Canal+ pour apporter une UX convenable. Organisation du repository avec un git workflow structuré',
-			date: 'Février-Mars 2020',
+			description: `
+				A modern streaming website built with Vue.js, TailwindCSS and Node.js.
+				We got inspiration from Netflix and Canal+ to bring a good UX.
+			`,
+			date: 'February-March 2020',
 			links: [
 				{
-					title: 'Voir le projet sur Github',
+					title: 'See the project on Github',
 					href: 'https://github.com/ThunderTube/HyperTube',
 					icon: GithubIcon
 				},
 				{
-					title: 'Aller sur le site',
+					title: 'Go to the website',
 					href: 'https://hypertube-app.herokuapp.com',
 					icon: LinkIcon
-				}
-			]
-		},
-		{
-			title: 'ft_select',
-			pictures: [
-				{
-					src: 'ft-select',
-					alt: 'Navigation à travers les fichiers du dossier srcs',
-					ratio: 62.5
-				}
-			],
-			intro: 'Projet 42.',
-			description:
-				'Interface graphique en ligne de commande permettant de sélectionner des éléments dans une liste. Ce programme peut être utilisé pour sélectionner les fichiers à supprimer grâce à une commande telle que <code>rm $(./ft_select *)</code> pour un shell POSIX, ou <code>rm (./ft_select *)</code> pour Fish. Projet écrit en C',
-			date: 'Mars 2019',
-			links: [
-				{
-					title: 'Voir le projet sur Github',
-					href: 'https://github.com/Devessier/ft_select',
-					icon: GithubIcon
-				}
-			]
-		},
-		{
-			title: 'minishell',
-			pictures: [
-				{
-					src: 'minishell',
-					alt: 'Aperçu des commandes supportées par le shell',
-					ratio: 62.5
-				}
-			],
-			intro: 'Projet 42.',
-			description:
-				"Shell écrit en C, le plus proche de la norme POSIX possible. Toutes les commandes et une partie des fonctionnalités d'un shell lambda sont supportées. Projet passionnant permettant l'apprentissage des systèmes Unix et du C",
-			date: 'Janvier-Mars 2019',
-			links: [
-				{
-					title: 'Voir le projet sur Github',
-					href: 'https://github.com/Devessier/minishell_improved',
-					icon: GithubIcon
-				}
-			]
-		},
-		{
-			title: 'ft_ls',
-			pictures: [
-				{
-					src: 'ft-ls',
-					alt: 'Aperçu des options gérées par mon implémentation de la commande ls',
-					ratio: 62.5
-				}
-			],
-			intro: 'Projet 42.',
-			description:
-				'Réimplémentation de la commande <code>ls</code> en C. Découverte de nombreux syscalls et fonctions de la libc',
-			date: 'Décembre 2018',
-			links: [
-				{
-					title: 'Voir le projet sur Github',
-					href: 'https://github.com/Devessier/ft_ls',
-					icon: GithubIcon
 				}
 			]
 		}
@@ -214,11 +157,11 @@
 </script>
 
 <Page class="pb-8" {title} {description} {canonical} {schemas} {facebook} {twitter}>
-	<h1 class="text-2xl font-bold uppercase mb-6">Projets</h1>
+	<h1 class="text-2xl font-bold uppercase mb-6">Projects</h1>
 
 	<section class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-0 md:pb-12">
-		{#each projects as { title, pictures, intro, description, links }, index}
-			<div class="flex {index % 2 === 0 ? '' : 'transform md:translate-y-12'}">
+		{#each projects as { title, pictures, intro, description, links }}
+			<div class="flex transform md:even:translate-y-12">
 				<article class="flex flex-col flex-grow p-4 border border-gray-300">
 					<header class="mb-6">
 						<h2 class="text-xl font-semibold inline-block relative">
@@ -258,13 +201,9 @@
 
 					<footer class="flex items-end flex-grow">
 						<ul class="flex items-center justify-start">
-							{#each links as { href, title, icon }, index}
-								<li {title} class={index !== links.length - 1 ? 'mr-2' : ''}>
-									<a
-										{href}
-										class="flex items-center justify-center
-                                        p-2 text-red-500"
-									>
+							{#each links as { href, title, icon }}
+								<li {title} class="mr-2 last:mr-0">
+									<a {href} class="flex items-center justify-center p-2 text-red-500">
 										<span class="sr-only">{title}</span>
 
 										<svelte:component this={icon} class="w-6 h-6 stroke-current" />

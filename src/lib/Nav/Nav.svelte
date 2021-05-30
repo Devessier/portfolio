@@ -17,7 +17,7 @@
 		},
 		{
 			href: '/projects',
-			text: 'Projets'
+			text: 'Projects'
 		},
 		{
 			href: '/writing',
