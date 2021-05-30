@@ -62,7 +62,7 @@
 			title: 'Svelte and Sapper',
 			description: `
 				I learn Svelte, a UX framework that becomes more and more famous, by realizing this portfolio
-				using it and Sapper, a Svelte meta-framework that eases development.
+				using it in conjunction with Sapper, a Svelte meta-framework that eases development.
 			`,
 			date: 'March 2020'
 		},
@@ -98,7 +98,7 @@
 		{
 			title: 'Joining 42 Paris School',
 			description: `
-				I succeed August 2018 Piscine.
+				I succeeded August 2018 Piscine.
 			`,
 			date: 'November 2018'
 		},
