@@ -9,13 +9,16 @@
 	export let datetime;
 	export let tags;
 
-	// TODO: to be defined
-	const canonical = 'https://baptiste.devessier.fr/';
+	$: sluggifiedTitle = slugify(title, {
+		lower: true
+	});
+
+	$: canonical = `https://baptiste.devessier.fr/writing/${sluggifiedTitle}/`;
 	const schemas = [];
-	const facebook = [
+	$: facebook = [
 		{
 			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/'
+			content: canonical
 		},
 		{
 			name: 'og:title',
