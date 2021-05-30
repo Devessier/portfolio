@@ -2,3 +2,16 @@
     command = "npm run build"
     publish = "build/"
     functions = "functions/"
+
+[dev]
+    framework = "#custom"
+    command = "npm run dev"
+    targetPort = 3000
+    port = 8888
+    publish = "dist/"
+
+[[redirects]]
+    from = "/my-way"
+    to = "/my-journey"
+    status = 301
+    force = true

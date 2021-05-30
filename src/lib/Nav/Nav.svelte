@@ -12,12 +12,16 @@
 
 	const links = [
 		{
-			href: '/my-way',
-			text: 'Parcours'
+			href: '/my-journey',
+			text: 'My journey'
 		},
 		{
 			href: '/projects',
-			text: 'Projets'
+			text: 'Projects'
+		},
+		{
+			href: '/writing',
+			text: 'Writing'
 		},
 		{
 			href: '/contact',
@@ -75,15 +79,14 @@
 					{showNavBar ? 'Fermer le menu' : 'Ouvrir le menu'}
 				</span>
 
-				<MenuIcon width="30" height="30" opened={showNavBar} />
+				<MenuIcon width={30} height={30} opened={showNavBar} />
 			</button>
 		</div>
 	</div>
 
 	{#if showNavBar}
 		<div
-			class="fixed inset-0 block px-10 pt-20 bg-white md:hidden z-20 flex
-            flex-col items-start"
+			class="fixed inset-0 px-10 pt-20 bg-white md:hidden z-20 flex flex-col items-start"
 			transition:fade={{ duration: 200 }}
 		>
 			{#each links as { href, text }}

@@ -6,9 +6,10 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['Inter var', ...defaultTheme.fontFamily.sans]
-			}
+				sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+				cursive: ['Comfortaa', 'cursive']
+			},
 		}
 	},
-	plugins: []
+	plugins: [require('tailwindcss-scroll-snap'), require('@tailwindcss/typography')]
 };
