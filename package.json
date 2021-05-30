@@ -1,5 +1,5 @@
 {
-	"name": "~TODO~",
+	"name": "portfolio",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "svelte-kit dev",
@@ -9,6 +9,7 @@
 		"format": "prettier --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
+		"@sveltejs/kit": "next",
 		"@commitlint/cli": "^12.1.4",
 		"@commitlint/config-conventional": "^12.1.4",
 		"@sveltejs/adapter-netlify": "^1.0.0-next.14",
