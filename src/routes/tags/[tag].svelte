@@ -37,7 +37,8 @@
 	export let prettyTagName: string;
 	export let articles: WritingPreview[];
 
-	$: title = `Baptiste Devessier - Writing about ${prettyTagName}`;
+	$: formattedTag = prettyTagName ?? tag;
+	$: title = `Baptiste Devessier | Writing about ${formattedTag}`;
 	const description = 'Développeur Web Full Stack sur Paris';
 	$: canonical = `https://baptiste.devessier.fr/tags/${tag}/`;
 	const schemas = [];
@@ -61,7 +62,7 @@
 <Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<BlogPostsList {articles}>
 		<svelte:fragment slot="title">
-			Writing about {prettyTagName ?? tag}
+			Writing about {formattedTag}
 		</svelte:fragment>
 
 		<svelte:fragment slot="empty">I have not started writing about this topic yet.</svelte:fragment>

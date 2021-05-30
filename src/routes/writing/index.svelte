@@ -28,7 +28,7 @@
 
 	export let articles: WritingPreview[];
 
-	const title = 'Baptiste Devessier - Writing';
+	const title = 'Baptiste Devessier | Writing';
 	const description = 'Développeur Web Full Stack sur Paris';
 	const canonical = 'https://baptiste.devessier.fr/writing/';
 	const schemas = [];
