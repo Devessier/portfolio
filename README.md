@@ -9,3 +9,11 @@ It's a PWA ([Progressive Web Application](https://web.dev/what-are-pwas/)) that 
 
 
 ![LightHouse results](https://raw.githubusercontent.com/Devessier/portfolio/master/lighthouse-results.png)
+
+This website is also my personal blog.
+
+I created a [tool to scaffold a new blog post](./drone.js). It can be run with the following command:
+
+```bash
+node drone generate-article 'The title of the blog post'
+```
