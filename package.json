@@ -32,6 +32,7 @@
 		"postcss-nested": "^5.0.5",
 		"prettier": "~2.2.1",
 		"prettier-plugin-svelte": "^2.2.0",
+		"rehype-slug": "^4.0.1",
 		"rimraf": "^3.0.2",
 		"sade": "^1.7.4",
 		"sharp": "^0.28.2",
@@ -54,6 +55,7 @@
 		"@lukeed/uuid": "^2.0.0",
 		"@tailwindcss/typography": "^0.4.0",
 		"cookie": "^0.4.1",
+		"prism-themes": "^1.7.0",
 		"slugify": "^1.5.3",
 		"tailwindcss-scroll-snap": "^1.1.0",
 		"urlcat": "^2.0.4"
