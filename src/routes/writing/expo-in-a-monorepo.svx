@@ -1,11 +1,11 @@
 ---
 title: Expo in a monorepo
-description: Blog post description
+description: An Expo application can not be integrated inside a monorepo without doing some extra work. Fortunately the Expo team has published some tools to ease our job.
 datetime: 2021-06-12T18:48:01.937Z
 tags:
-    - Front-end
-    - React Native
-    - Expo
+  - Front-end
+  - React Native
+  - Expo
 ---
 
 Today I encountered some difficulties to make Expo work inside a monorepo.
