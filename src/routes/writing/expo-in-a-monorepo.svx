@@ -151,11 +151,11 @@ yarn install
 
 It will install the dependencies, and in the case of a monorepo, it will also create a symbolic link from packages to the root `node_modules`, as you can see in the following image:
 
-![/img/CleanShot_2021-05-31_at_23.15.432x.png](/img/CleanShot_2021-05-31_at_23.15.432x.png)
+![node_modules folder expanded to see symlinked packages](/img/CleanShot_2021-05-31_at_23.15.432x.png)
 
 Now if you run again the index.js file in calculator package, you should see the expected result:
 
-![/img/CleanShot_2021-05-31_at_23.12.112x.png](/img/CleanShot_2021-05-31_at_23.12.112x.png)
+![Result is The amount of minutes is 120](/img/CleanShot_2021-05-31_at_23.12.112x.png)
 
 Tada 🎉! We have a working simple monorepo architecture.
 
@@ -169,9 +169,9 @@ Go to packages directory and run in a shell:
 expo init app
 ```
 
-![/img/CleanShot_2021-06-01_at_20.00.372x.png](/img/CleanShot_2021-06-01_at_20.00.372x.png)
+![Expo init asking to choose a template](/img/CleanShot_2021-06-01_at_20.00.372x.png)
 
-![/img/CleanShot_2021-06-01_at_20.00.542x.png](/img/CleanShot_2021-06-01_at_20.00.542x.png)
+![Logs of expo init after having chosen the TypeScript tabs template](/img/CleanShot_2021-06-01_at_20.00.542x.png)
 
 Go to `packages/app/package.json` and set the name of the package to `@expo-monorepo-demo/app`.
 
@@ -211,13 +211,13 @@ So let's run `yarn start` inside our `app` package.
 
 You should see something similar to the following screenshot:
 
-![/img/CleanShot_2021-06-01_at_22.53.102x.png](/img/CleanShot_2021-06-01_at_22.53.102x.png)
+![Expo start logs with instructions to launch simulators](/img/CleanShot_2021-06-01_at_22.53.102x.png)
 
 Let's press `a` or `i`, according to which simulator you want to launch.
 
 Expo will try to bundle the application and launch it in the simulator, but it will fail.
 
-![/img/CleanShot_2021-06-01_at_22.56.422x.png](/img/CleanShot_2021-06-01_at_22.56.422x.png)
+![Expo start logs indicating a failure due to the entry point pointing to a non-existent file](/img/CleanShot_2021-06-01_at_22.56.422x.png)
 
 Expo tells us that the `main` field defined in our `package.json` does not point to an existing file.
 
@@ -305,9 +305,9 @@ expo start --clear
 
 Now when we launch the Android or the iOS simulator, we see that the application is compiled correctly and that the simulator is effectively opened 🎉.
 
-![/img/CleanShot_2021-06-12_at_18.54.272x.png](/img/CleanShot_2021-06-12_at_18.54.272x.png)
+![Expo start logs indicating that the JavaScript bundle having been compiled correctly](/img/CleanShot_2021-06-12_at_18.54.272x.png)
 
-![/img/CleanShot_2021-06-12_at_18.43.312x.png](/img/CleanShot_2021-06-12_at_18.43.312x.png)
+![A screenshot of the iOS simulator showing the demonstration application](/img/CleanShot_2021-06-12_at_18.43.312x.png)
 
 ### Bonus: Configuring Expo for Web to work with a monorepo
 
@@ -328,7 +328,7 @@ The configuration of Webpack can be extended however you want from this point.
 
 If we launch the Web version of our test Expo application we see the application running in the browser. And I find that fantastic.
 
-![/img/CleanShot_2021-06-12_at_20.32.562x.png](/img/CleanShot_2021-06-12_at_20.32.562x.png)
+![A screenshot of the demonstration Expo application running in a browser](/img/CleanShot_2021-06-12_at_20.32.562x.png)
 
 ## Conclusion
 
