@@ -92,7 +92,8 @@
 </div>
 
 <style lang="postcss">
-	label + :global(input:required:not(:focus), textarea:required:not(:focus)) {
+	label + :global(input:required:not(:focus)),
+	label + :global(textarea:required:not(:focus)) {
 		@apply shadow-none;
 	}
 </style>
