@@ -5,6 +5,10 @@ datetime: 2021-09-22T17:54:57.528Z
 tags: ['XState', 'Testing', 'Front-end']
 ---
 
+<script>
+  import XStateViz from '$lib/XStateViz.svelte'
+</script>
+
 ## Imperative way to write front-end tests
 
 On front-end side I usually focus on writing integration tests that cover the green path of a sgement of the application. I tend to do not rely on implementation details and for that I use the amazing [Testing Library](https://testing-library.com/). I do not care whether a component renders two or three `div` elements, which is the case when using snapshots. Instead I want to ensure that clicking on this button triggers form validation. This methodology is called Black-box testing and has several huge benefits :
@@ -135,4 +139,6 @@ But there is a better way to see this problem. Instead of determining ourselves 
 
 `@xstate/test` is a library developed by XState team. This library exports a function called `createModel` that takes a XState machine and computes all the possible *paths* to go from the initial state to each state by following transitions. The concept behind this library is called [Model-based testing](https://en.wikipedia.org/wiki/Model-based_testing).
 
-Let's take a pragmatic example. Let's model a form with validation.
+Let's begin modeling our todo list application.
+
+<XStateViz id="03107919-a451-4085-9b66-633cd8794164" />
