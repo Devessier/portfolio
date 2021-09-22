@@ -17,7 +17,8 @@ Let's see how this methodology can be applied to test our todo application.
 
 I created a simple todo list application using Vue 3, TailwindCSS and XState. You can add todos, check or uncheck todos. Let's see how we can implement an integration test with Testing Library to ensure users can created todos.
 
-```tsx
+<!--SNIPSTART todo-app-xstate-test-manual-tests-create-todo-->
+```ts
 import { screen, render, within, waitFor } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { lorem } from "faker";
@@ -50,12 +51,14 @@ test("User can add a todo", async () => {
   expect(newTodoItem).toBeVisible();
 });
 ```
+<!--SNIPEND-->
 
 This test is quite straightforward. We ensure the name of the application, xtodo, is on the screen. We ensure clicking on *Add Todo* button opens the form, which contains an input with a label of *New Todo*. We ensure users can click on *Save* button to create the todo, which should be displayed on the screen.
 
 This test is great. With a nice API, without dealing with implementation details we wrote a test that ensures users can create todos. And it's nice to be sure users can create todos with our todo list application. But users can also check or uncheck todos. Let's create tests for that.
 
-```tsx
+<!--SNIPSTART todo-app-xstate-test-manual-tests-check-todo-->
+```ts
 test("User can check a todo", async () => {
   render(App);
 
@@ -120,6 +123,7 @@ test("User can uncheck a todo", async () => {
   });
 });
 ```
+<!--SNIPEND-->
 
 We create two separate tests, one that checks a todo, and the other one that unchecks a todo. We select the group of todos, get the first one and check or uncheck it. We expect the todo to have been switched to the other group.
 
