@@ -2,7 +2,133 @@
 title: Modeling front-end tests with @xstate/test
 description: Blog post description
 datetime: 2021-09-22T17:54:57.528Z
-tags: ['Temporal']
+tags: ['XState', 'Testing', 'Front-end']
 ---
 
-Hi from **Modeling front-end tests with @xstate/test** article!
+## Imperative way to write front-end tests
+
+On front-end side I usually focus on writing integration tests that cover the green path of a sgement of the application. I tend to do not rely on implementation details and for that I use the amazing [Testing Library](https://testing-library.com/). I do not care whether a component renders two or three `div` elements, which is the case when using snapshots. Instead I want to ensure that clicking on this button triggers form validation. This methodology is called Black-box testing and has several huge benefits :
+
+- A new coming developer into the team can understand how the application is supposed to be used.
+- Test Driven Development (TDD) is much more practicable as tests do not dictate how code should be implemented.
+- Tests are less likely to produce false negative as the implementation can be refactored without tests breaking. With Testing Library tests could even be kept untouched when migrating to another front-end framework.
+
+Let's see how this methodology can be applied to test our todo application.
+
+I created a simple todo list application using Vue 3, TailwindCSS and XState. You can add todos, check or uncheck todos. Let's see how we can implement an integration test with Testing Library to ensure users can created todos.
+
+```tsx
+import { screen, render, within, waitFor } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
+import { lorem } from "faker";
+import App from "../src/App.vue";
+
+test("User can add a todo", async () => {
+  render(App);
+
+  const newTodo = lorem.sentence();
+
+  const title = screen.getByText(/xtodo/i);
+  expect(title).toBeVisible();
+
+  const addTodoButton = screen.getByRole("button", { name: /add.*todo/i });
+  expect(addTodoButton).toBeVisible();
+
+  userEvent.click(addTodoButton);
+
+  const newTodoInput = await screen.findByLabelText(/new.*todo/i);
+  expect(newTodoInput).toBeVisible();
+
+  userEvent.type(newTodoInput, newTodo);
+
+  const submitTodoButton = screen.getByRole("button", { name: /save/i });
+  expect(submitTodoButton).toBeVisible();
+
+  userEvent.click(submitTodoButton);
+
+  const newTodoItem = await screen.findByText(newTodo);
+  expect(newTodoItem).toBeVisible();
+});
+```
+
+This test is quite straightforward. We ensure the name of the application, xtodo, is on the screen. We ensure clicking on *Add Todo* button opens the form, which contains an input with a label of *New Todo*. We ensure users can click on *Save* button to create the todo, which should be displayed on the screen.
+
+This test is great. With a nice API, without dealing with implementation details we wrote a test that ensures users can create todos. And it's nice to be sure users can create todos with our todo list application. But users can also check or uncheck todos. Let's create tests for that.
+
+```tsx
+test("User can check a todo", async () => {
+  render(App);
+
+  const uncheckedTodosGroup = screen.getByRole("group", {
+    name: /things.*to.*do/i,
+  });
+  expect(uncheckedTodosGroup).toBeVisible();
+  const uncheckedTodos = within(uncheckedTodosGroup).getAllByRole("listitem");
+  expect(uncheckedTodos.length).toBeGreaterThanOrEqual(1);
+  const uncheckedTodoToCheck = uncheckedTodos[0];
+  expect(uncheckedTodoToCheck).toBeVisible();
+  const uncheckedTodoToCheckCheckbox =
+    within(uncheckedTodoToCheck).getByRole("checkbox");
+  expect(uncheckedTodoToCheckCheckbox).toBeVisible();
+
+  userEvent.click(uncheckedTodoToCheckCheckbox);
+
+  const checkedTodosGroup = screen.getByRole("group", {
+    name: /things.*done/i,
+  });
+  expect(uncheckedTodosGroup).toBeVisible();
+
+  await waitFor(() => {
+    const checkedTodos = within(checkedTodosGroup).getAllByRole("listitem");
+
+    const checkedTodoUnchecked = checkedTodos.find((todo) =>
+      todo.textContent?.includes(uncheckedTodoToCheck.textContent!)
+    );
+    expect(checkedTodoUnchecked).toBeVisible();
+  });
+});
+
+test("User can uncheck a todo", async () => {
+  render(App);
+
+  const checkedTodosGroup = screen.getByRole("group", {
+    name: /things.*done/i,
+  });
+  expect(checkedTodosGroup).toBeVisible();
+  const checkedTodos = within(checkedTodosGroup).getAllByRole("listitem");
+  expect(checkedTodos.length).toBeGreaterThanOrEqual(1);
+  const checkedTodoToUncheck = checkedTodos[0];
+  expect(checkedTodoToUncheck).toBeVisible();
+  const checkedTodoToUncheckCheckbox =
+    within(checkedTodoToUncheck).getByRole("checkbox");
+  expect(checkedTodoToUncheckCheckbox).toBeVisible();
+
+  userEvent.click(checkedTodoToUncheckCheckbox);
+
+  const uncheckedTodosGroup = screen.getByRole("group", {
+    name: /things.*to.*do/i,
+  });
+  expect(uncheckedTodosGroup).toBeVisible();
+
+  await waitFor(() => {
+    const uncheckedTodos = within(uncheckedTodosGroup).getAllByRole("listitem");
+
+    const uncheckedTodoChecked = uncheckedTodos.find((todo) =>
+      todo.textContent?.includes(checkedTodoToUncheck.textContent!)
+    );
+    expect(uncheckedTodoChecked).toBeVisible();
+  });
+});
+```
+
+We create two separate tests, one that checks a todo, and the other one that unchecks a todo. We select the group of todos, get the first one and check or uncheck it. We expect the todo to have been switched to the other group.
+
+Again, these tests do the job, and they do it well. But if we take a step back, we might see that these three tests do not cover all the ways a user can interact with the application. For instance, what if a user opens the todo creation form and clicks on a todo to check it or uncheck it? Do we prevent such an action because the form is active? Actually our todo list application does not prevent a user from checking a todo while the form is active. But it is not sufficient to know that it works that way, we would need to ensure it remains true in the long term, that is adding a test for that case. Therefore we would need to create two other tests, conceptually the both we just wrote with a previous step that is opening the form. Honnestly, it would be a bit boring to duplicate tests code. I would probably end up with a function that wraps code to open the todo form, one to check a todo and another one to uncheck a todo. I do not think it's a good practice to isolate testing instructions, it makes tests less clear.
+
+But there is a better way to see this problem. Instead of determining ourselves all the ways users can interact with our application and coding each of them, let's *model* our application. And this is where `@xstate/test` library can help us.
+
+## Modeling the todo list application with `@xstate/test`
+
+`@xstate/test` is a library developed by XState team. This library exports a function called `createModel` that takes a XState machine and computes all the possible *paths* to go from the initial state to each state by following transitions. The concept behind this library is called [Model-based testing](https://en.wikipedia.org/wiki/Model-based_testing).
+
+Let's take a pragmatic example. Let's model a form with validation.
