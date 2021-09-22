@@ -26,7 +26,7 @@ const config = {
 		prerender: {
 			crawl: true,
 			enabled: true,
-			onError: 'continue',
+			force: true,
 			pages: ['*']
 		}
 	}
