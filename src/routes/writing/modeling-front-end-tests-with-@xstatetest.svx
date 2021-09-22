@@ -1,0 +1,8 @@
+---
+title: Modeling front-end tests with @xstate/test
+description: Blog post description
+datetime: 2021-09-22T17:54:57.528Z
+tags: ['Temporal']
+---
+
+Hi from **Modeling front-end tests with @xstate/test** article!
