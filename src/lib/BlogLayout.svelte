@@ -66,7 +66,7 @@
 		<p class="mt-8 text-xl text-gray-500 leading-8">{description}</p>
 	</div>
 
-	<div class="mt-6 prose prose-red prose-lg text-gray-500 mx-auto">
+	<div class="mt-6 prose prose-red prose-lg text-gray-500 mx-auto break-words">
 		<slot />
 	</div>
 </Page>

@@ -8,8 +8,12 @@ module.exports = {
 			fontFamily: {
 				sans: ['Inter var', ...defaultTheme.fontFamily.sans],
 				cursive: ['Comfortaa', 'cursive']
-			},
+			}
 		}
 	},
-	plugins: [require('tailwindcss-scroll-snap'), require('@tailwindcss/typography')]
+	plugins: [
+		require('tailwindcss-scroll-snap'),
+		require('@tailwindcss/typography'),
+		require('@tailwindcss/aspect-ratio')
+	]
 };
