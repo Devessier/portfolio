@@ -1,7 +1,14 @@
 <script>
 	export let id;
 
-	$: src = `https://stately.ai/viz/embed/${id}?mode=viz&controls=1&pan=0&zoom=0`;
+	export let mode = 'viz';
+	export let controls = true;
+	export let pan = true;
+	export let zoom = true;
+
+	$: src = `https://stately.ai/viz/embed/${id}?mode=${mode}&controls=${controls ? 1 : 0}&pan=${
+		pan ? 1 : 0
+	}&zoom=${zoom ? 1 : 0}`;
 </script>
 
 <div class="aspect-w-16 aspect-h-9">
