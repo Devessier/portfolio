@@ -9,7 +9,7 @@ tags: ['XState']
     import XStateViz from '$lib/XStateViz.svelte'
 </script>
 
-Parallel states bring a lot of useful patterns to state machines. Thanks to them you can have a set of child states that are active at the same time. You can truely have several little state machines that run concurrently, although they are integrated in a bigger state machine that controls when they are run and when they are stopped.
+Parallel states bring a lot of useful patterns to state machines. Thanks to them you can have a set of child states that are active at the same time. You can truly have several little state machines that run concurrently, although they are integrated in a bigger state machine that controls when they are run and when they are stopped.
 
 ## Uploading front and back of a document
 
@@ -101,7 +101,7 @@ As we can see in the visualizer, uploading the front and uploading the back are 
 
 Going back to our uploading system, let's imagine we want to add cancellation. Users should be able to cancel the uploading of the front and the back of the document at the same time: whatever is the uploading status of the both parts, pressing a *Cancel* button must cancel the uploading of both.
 
-This is where parallel states are amazing. By quoting [SCXML specification](https://www.w3.org/TR/scxml/#N10199), *the child states [of a parallel state] execute in parallel in the sense that any event that is processed is processed in each child state independently*. It means is that if there are two active parallel states, such as `uploadFrontOfDocument` and `uploadBackOfDocument`, if the state machine receives a `CANCEL` event, both parallel states will receive this event and will be able to catch it independently.
+This is where parallel states are amazing. By quoting [SCXML specification](https://www.w3.org/TR/scxml/#N10199), *the child states [of a parallel state] execute in parallel in the sense that any event that is processed is processed in each child state independently*. It means that if there are two active parallel states, such as `uploadFrontOfDocument` and `uploadBackOfDocument`, if the state machine receives a `CANCEL` event, both parallel states will receive this event and will be able to catch it independently.
 
 Therefore we can implement cancellation that way:
 
@@ -277,7 +277,7 @@ createMachine<Context>(
 
               onDone: [
                 {
-                  cond: "isSuccessStatus",
+                  cond: "isPendingStatus",
 
                   target: "debouncing",
                 },
@@ -356,7 +356,7 @@ createMachine<Context>(
     },
 
     guards: {
-      isSuccessStatus: (_, event) => {
+      isPendingStatus: (_, event) => {
         const { data } = event as DoneInvokeEvent<Status>;
 
         return data === "PENDING";
@@ -368,7 +368,7 @@ createMachine<Context>(
         pollingIndex: ({ pollingIndex }) => pollingIndex + 1,
       }),
     },
-  }
+  }s
 );
 ```
 
