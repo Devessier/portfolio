@@ -57,6 +57,7 @@
 		"@tailwindcss/typography": "^0.4.1",
 		"cookie": "^0.4.1",
 		"prism-themes": "^1.9.0",
+		"rehype-external-links": "^1.0.0",
 		"slugify": "^1.6.0",
 		"tailwindcss-scroll-snap": "^1.1.0",
 		"urlcat": "^2.0.4"

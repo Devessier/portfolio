@@ -2,6 +2,7 @@ import preprocess from 'svelte-preprocess';
 import adapter from '@sveltejs/adapter-static';
 import { mdsvex } from 'mdsvex';
 import rehypeSlugPlugin from 'rehype-slug';
+import rehypeExternalLinks from 'rehype-external-links';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -16,7 +17,7 @@ const config = {
 
 		mdsvex({
 			layout: './src/lib/BlogLayout.svelte',
-			rehypePlugins: [rehypeSlugPlugin]
+			rehypePlugins: [rehypeSlugPlugin, rehypeExternalLinks]
 		})
 	],
 
