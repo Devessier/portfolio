@@ -1,0 +1,161 @@
+---
+title: External transition to child state
+description: Blog post description
+datetime: 2021-10-20T21:52:46.521Z
+tags: ['XState']
+---
+
+<script>
+    import XStateViz from '$lib/XStateViz.svelte'
+</script>
+
+In [SCXML specification](https://www.w3.org/TR/scxml/#N101D7), we can read that when an external transition is taken, the active state that defines the transition will be *exited* and *reentered*. We mean that all `exit` handlers will be triggered, and spawned services will be stopped. Immediately after that, `entry` handlers will be triggered, and services will be respawned. On the other hand, *internal* transitions do not exit the state, therefore `exit` and `entry` actions are not called, nor are services stoppped and respawned. Both types of transitions are useful but do not deserve the same objective.
+
+Let's take an example. We want to send a request whatever the current state is, and abort pending sendings.
+
+```ts
+import { createMachine } from "xstate";
+
+interface Context {}
+
+type Events = { type: "TRIGGER" } | { type: "SENT_REQUEST" };
+
+createMachine<Context, Events>(
+  {
+    initial: "processing",
+
+    states: {
+      processing: {
+        initial: "idle",
+
+        states: {
+          idle: {},
+
+          sending: {
+            invoke: {
+              src: "sendRequest",
+            },
+
+            on: {
+              SENT_REQUEST: {
+                target: "idle",
+              },
+            },
+          },
+        },
+
+        on: {
+          TRIGGER: {
+            target: ".sending",
+          },
+        },
+      },
+    },
+  },
+  {
+    services: {
+      sendRequest: () => (sendBack) => {
+        console.log("invoked sendRequest");
+
+        const timerId = setTimeout(() => {
+          console.log("acknowledge request sending");
+
+          sendBack({
+            type: "SENT_REQUEST",
+          });
+        }, 1_000);
+
+        return () => {
+          console.log("exiting sendRequest");
+
+          clearTimeout(timerId);
+        };
+      },
+    },
+  }
+);
+```
+
+<XStateViz id="2a8c649c-934f-478b-8bad-7bf34c3a2ae8" />
+
+We want to send a request each time `processing` state receives a `TRIGGER` event. We implement two states in `processing`: `idle` and `sending`. In `idle`, we do nothing special, and in `sending`, we invoke `sendRequest` service that sends back a `SENT_REQUEST` event after one second. When we receive this event, we go back from `sending` to `idle`.
+
+You can try the example live and open your console to see logs. Try sending `TRIGGER` event while being on `sending` state. We would expect to see `sendRequest` service stopped and reinvoked immediately. This is because **child transitions are internal by default** with XState. Therefore `sendRequest` service is not restarted as its state is not reentered. We need an external transition for that.
+
+There are several ways to make a child transition external with XState:
+
+- Make use of [`internal: false` on the transition](https://xstate.js.org/docs/guides/transitions.html#external-transitions).
+- Transition to the parent state and target its child state with `processing.sending`
+
+The second solution works because each child state is its own sibling. This solution is my go to as it involves less knowledge of XState internals. Let's fix the bug in the state machine.
+
+```ts
+import { createMachine } from "xstate";
+
+interface Context {}
+
+type Events = { type: "TRIGGER" } | { type: "SENT_REQUEST" };
+
+createMachine<Context, Events>(
+  {
+    initial: "processing",
+
+    states: {
+      processing: {
+        initial: "idle",
+
+        states: {
+          idle: {},
+
+          sending: {
+            invoke: {
+              src: "sendRequest",
+            },
+
+            on: {
+              SENT_REQUEST: {
+                target: "idle",
+              },
+            },
+          },
+        },
+
+        on: {
+          TRIGGER: {
+            target: "processing.sending",
+          },
+        },
+      },
+    },
+  },
+  {
+    services: {
+      sendRequest: () => (sendBack) => {
+        console.log("invoked sendRequest");
+
+        const timerId = setTimeout(() => {
+          console.log("acknowledge request sending");
+
+          sendBack({
+            type: "SENT_REQUEST",
+          });
+        }, 1_000);
+
+        return () => {
+          console.log("exiting sendRequest");
+
+          clearTimeout(timerId);
+        };
+      },
+    },
+  }
+);
+```
+
+<XStateViz id="62b204f5-c2d3-4ded-a8fa-098618c84e99" />
+
+Now if we interact with the state machine, we see that sending a `TRIGGER` event while being in `sending` state will actually stop `sendRequest` service and reinvoke it. Perfect!
+
+## Conclusion
+
+Transitions to child states are internal by default with XState. We can make them external easily by targeting the current state *and* the child state. It can be useful to reset services or *delayed transitions* declared in a child state when transitioning to it.
