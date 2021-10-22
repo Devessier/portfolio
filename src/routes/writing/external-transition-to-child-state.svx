@@ -169,7 +169,7 @@ On `TRIGGER` transition we explicitly tell XState to do not make this transition
 
 ## Make external transition to source state and its child
 
-In [SCXML specification](https://www.w3.org/TR/scxml/#N101D7), the *source state* of a transition is the state that defines the transition. In our state machine, the source state of the transition triggered by `TRIGGER` event is `processing`. We can make an external transition by targeting `processing` state itself, and its child we want to enter on, i.e. `sending`. We would have a transition target such as: `processing.sending`.
+In [SCXML specification](https://www.w3.org/TR/scxml/#N101D7), the *source state* of a transition is the state that defines the transition. In our state machine, the source state of the transition triggered by `TRIGGER` event is `processing`. We can make an external transition by targeting `processing` state itself, and its child we want to enter on, i.e. `sending`. We end up with a transition target such as `processing.sending`.
 
 This is possible because a state node is considered to be its own sibling. And as all sibling transitions are by default external, we will exit active state and reenter on it.
 
@@ -240,24 +240,24 @@ createMachine<Context, Events>(
 
 <XStateViz id="62b204f5-c2d3-4ded-a8fa-098618c84e99" />
 
-It should work as expected, but with a different approach.
+It should work as expected.
 
 ## Side note: SCXML specification
 
-It seems that XState does not follow SCXML specification strictly about internal transitions.
+It seems that XState does not follow strictly SCXML specification on internal transitions.
 
 The [specification](https://www.w3.org/TR/scxml/#N101D7) describes internal transitions behaviour as follows:
 
-> an internal transition will not exit and re-enter its source state
+> The behavior of transitions with 'type' of "internal" is identical [except that] an internal transition will not exit and re-enter its source state
 
-In other words, the issue we encountered would not have existed with a totally SCXML compliant interpreter. `processing.sending` state would have exited and reentered but not its parent state. This is described with an example on the specification linked above.
+In other words and if I understand specification correctly, the issue we encountered would not have existed with a totally SCXML compliant interpreter. `processing.sending` state would have exited and reentered but not its parent state. This is described with an example on the specification linked above.
 
-I leave this information as is because I do not use internal transitions a lot. Maybe would it be worth discussing this topic with XState team to know their point of view on the subject.
+I do not have to interpret state machines following scrupulously SCXML specification so I am not really concerned. But it's something to know when you have to.
 
 ## Conclusion
 
 Transitions with a relative target are internal by default with XState. We can make them external by setting `internal` property of the transition to `false` explicitly, or by targeting the source state and its child state. That way the child state is cleaned up properly. It can be useful to reset services or [delayed transitions](https://xstate.js.org/docs/guides/delays.html).
 
-I personally tend to use as target the source state and its child state, like with `processing.sending`. It relies on the default behaviour of almost all transitions: being external.
+I personally tend to use the source state and its child state as the target, like with `processing.sending`. It relies on the default behaviour of almost all transitions: being external.
 
 There are other ways to solve that problem. For instance, we could move the transition to each child state of `processing` and target `sending` as a sibling state. Although this would involve some duplication.
