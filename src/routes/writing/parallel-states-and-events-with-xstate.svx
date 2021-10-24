@@ -368,7 +368,7 @@ createMachine<Context>(
         pollingIndex: ({ pollingIndex }) => pollingIndex + 1,
       }),
     },
-  }s
+  }
 );
 ```
 
