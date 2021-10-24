@@ -27,7 +27,6 @@ pre {
 
 	/* Important to allow the code to move horizontally; */
 	overflow-x: auto;
-	position: relative;
 }
 pre.shiki {
 	overflow-x: auto;

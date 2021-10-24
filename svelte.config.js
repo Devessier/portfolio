@@ -49,7 +49,8 @@ const config = {
 
 					const highlighter = await createShikiHighlighter({ theme: NightOwlTheme });
 					const html = renderCodeToHTML(code, lang, fence ?? {}, {}, highlighter, twoslash);
-					return `{@html \`${escape_svelty(html)}\` }`;
+
+					return `{@html \`<div class="relative">${escape_svelty(html)}</div>\` }`;
 				}
 			}
 		})
