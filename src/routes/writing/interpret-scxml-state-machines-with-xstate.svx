@@ -1,0 +1,100 @@
+---
+title: Interpret SCXML state machines with XState
+description: SCXML is an universal format to describe state machines. XState can be used to interpret them in JavaScript.
+datetime: 2021-10-23T15:48:18.234Z
+tags: ['XState']
+---
+
+<script>
+    import AppAlert from '$lib/AppAlert.svelte'
+</script>
+
+SCXML is a XML-based state machine language based on [Harel statecharts](https://en.wikipedia.org/wiki/State_diagram#Harel_statechart). SCXML stands for State Chart XML. It is a specification strongly documented and that can be used to express state machines in an universal format, consumed by interpreters of any language, provided that they follow the specification. You can find some great samples of SCXML state machines on [SCXML-tutorial](https://alexzhornyak.github.io/SCXML-tutorial/).
+
+We might want to interpret such state machines with the really great [XState library](https://xstate.js.org/docs/). XState follows SCXML specification but is focused on writing state machines in plain JavaScript. A lesser-known feature of XState is its hability to take a SCXML state machine as a string, and compile it to a XState machine. After this compilation, the state machine can be used in JavaScript, as if it had been written from the beginning with XState.
+
+## SCXML machine to XState machine
+
+XState exports a function [`toMachine`](https://github.com/statelyai/xstate/blob/main/packages/core/src/scxml.ts#L462) that transforms a SCXML state machine into a XState machine.
+
+It can be used that way:
+
+```ts
+import { toMachine } from 'xstate/lib/scxml';
+
+const scxmlMachine = `
+    <scxml name="Scxml" version="1.0" xmlns="http://www.w3.org/2005/07/scxml">
+        <state id="Level 1"/>
+    </scxml>
+`;
+
+// The second parameter is necessary.
+// It allows to define the delimiter of targets.
+// By default it's a dot `.` and there is no need to change it.
+//
+// We get a XState machine that can be used
+// for instance with `interpret`, `@xstate/react` or `@xstate/vue`.
+const machine = toMachine(scxmlMachine, {});
+```
+
+<AppAlert>
+
+`toMachine` function uses [`xml-js`](https://github.com/nashwaan/xml-js) library but does not bundle it. You **have** to install it yourself.
+
+</AppAlert>
+
+It's the perfect solution if you want to integrate a SCXML machine within an overall system. But if you just want to interpret the machine to see how it works, there is a simpler way...
+
+## Online SCXML interpreter
+
+I created an [online interpreter for SCXML machines](https://scxml-interpreter.netlify.app/), powered by XState. The heart of the application is `toMachine` function we introduced above that [compiles the state machine written in the editor](https://github.com/Devessier/scxml-interpreter/blob/bf1ed380d0364c5525192b4dacfbd74e463f7013/src/machines/app.ts#L146).
+
+State machines are then interpreted by using `@xstate/vue` library and I use [`@xstate/inspect`](https://xstate.js.org/docs/packages/xstate-inspect/) to have a visualization of the state machine in real time. This is a great solution if you want to try some SCXML state machines out, for example if you plan to learn SCXML with [SCXML-tutorial](https://alexzhornyak.github.io/SCXML-tutorial/).
+
+## Side Note: Final states
+
+Some examples in SCXML-tutorial are state machines that immediately go to a finite state. It means that the XState service that interprets them will immediately be stopped. Therefore, the inspector will not be able to connect to them as they won't exist anymore.
+
+It happens with the following machine:
+
+```xml
+<scxml name="Scxml" version="1.0" xmlns="http://www.w3.org/2005/07/scxml">
+	<state id="Work">
+		<transition event="done.state.Work" target="WorkFinished"/>
+		<state id="CompletingTask">
+			<transition target="Completed"/>
+		</state>
+		<final id="Completed"/>
+	</state>
+	<final id="WorkFinished"/>
+</scxml>
+```
+
+The default state of `Work` state is `CompletingTask` and it contains an *eventless transition* that causes transitioning to `Completed` state immediately. `Completed` state is a final state, which will cause a transition to `WorkFinished`, the final state of the state machine. All these steps will occur sequentially and as a result in a very short time the state machine will be stopped.
+
+To inspect this state machine we would have to replace the eventless transition with a plain transition triggered by an event, such as:
+
+```xml
+<scxml name="Scxml" version="1.0" xmlns="http://www.w3.org/2005/07/scxml">
+	<state id="Work">
+		<transition event="done.state.Work" target="WorkFinished"/>
+		<state id="CompletingTask">
+			<transition event="COMPLETE" target="Completed"/>
+		</state>
+		<final id="Completed"/>
+	</state>
+	<final id="WorkFinished"/>
+</scxml>
+```
+
+It changes the behaviour of the state machine, but now we can inspect it.
+
+## Side Note: Support of SCXML specification
+
+Currently, `toMachine` does not support all SCXML features, such as [`cancel`](https://www.w3.org/TR/scxml/#cancel). If you want to contribute to XState and understand SCXML deeper, it might be a good start!
+
+## Conclusion
+
+SCXML is an universal format that can be used to express state machine based on Harel statecharts. It is also a specification, followed by XState, which allows to interpret such machines with it. XState exports a `toMachine` function from `xstate/lib/scxml` to compile a SCXML state machine into a XState machine.
+
+Check out [the online interpreter](https://scxml-interpreter.netlify.app/) I made, paste your SCXML machine and start interacting with it!
