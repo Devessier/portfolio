@@ -3,7 +3,7 @@
 	import AppBadge from '$lib/AppBadge.svelte';
 	import { formatDate } from '$lib/format-date';
 	import slugify from 'slugify';
-	import 'prism-themes/themes/prism-night-owl.css';
+	import '../shiki.css';
 
 	export let title;
 	export let description;
