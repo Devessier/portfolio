@@ -25,6 +25,7 @@
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^3.2.1",
+		"fenceparser": "^2.0.0",
 		"husky": "^4.3.8",
 		"lint-staged": "^11.1.2",
 		"mdsvex": "^0.9.8",
@@ -37,6 +38,7 @@
 		"rimraf": "^3.0.2",
 		"sade": "^1.7.4",
 		"sharp": "^0.28.3",
+		"shiki-twoslash": "^3.0.1",
 		"svelte": "^3.43.0",
 		"svelte-check": "^2.2.6",
 		"svelte-preprocess": "^4.9.5",
@@ -49,14 +51,14 @@
 		"workbox-precaching": "^6.3.0",
 		"workbox-routing": "^6.3.0",
 		"workbox-strategies": "^6.3.0",
-		"workbox-window": "^6.3.0"
+		"workbox-window": "^6.3.0",
+		"xstate": "^4.25.0"
 	},
 	"type": "module",
 	"dependencies": {
 		"@lukeed/uuid": "^2.0.0",
 		"@tailwindcss/typography": "^0.4.1",
 		"cookie": "^0.4.1",
-		"prism-themes": "^1.9.0",
 		"rehype-external-links": "^1.0.0",
 		"slugify": "^1.6.0",
 		"tailwindcss-scroll-snap": "^1.1.0",

@@ -19,7 +19,7 @@ XState exports a function [`toMachine`](https://github.com/statelyai/xstate/blob
 
 It can be used that way:
 
-```ts
+```ts twoslash
 import { toMachine } from 'xstate/lib/scxml';
 
 const scxmlMachine = `
@@ -74,7 +74,7 @@ The default state of `Work` state is `CompletingTask` and it contains an *eventl
 
 To inspect this state machine we would have to replace the eventless transition with a plain transition triggered by an event, such as:
 
-```xml
+```xml {4}
 <scxml name="Scxml" version="1.0" xmlns="http://www.w3.org/2005/07/scxml">
 	<state id="Work">
 		<transition event="done.state.Work" target="WorkFinished"/>
