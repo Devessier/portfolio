@@ -49,6 +49,7 @@ pre.shiki div.highlight {
 }
 pre.shiki div.line {
 	min-height: 1rem;
+	display: flex;
 }
 
 /** Don't show the language identifiers */
