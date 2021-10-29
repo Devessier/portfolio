@@ -1,0 +1,20 @@
+---
+title: Create state machines in Erlang
+description: Blog post description
+datetime: 2021-10-26T18:26:16.995Z
+tags: ['Erlang', 'State Machines']
+---
+
+What is a state machine? In its simplest form, a state machine is an *abstract machine* that has a finite set of *states* and is at any time in only one of them. It goes from one state to another one in reaction to an *input*, also called an *event*, and this transformation is called a *transition*.
+
+## Implement state machines from hands
+
+Let's imagine a chat system with really basic authentication: a user can be either logged in or logged out, and can receive messages only when logged in.
+
+When in logged in state, user can log out; when in logged out state, user can log in.
+
+These interactions are schematized below.
+
+![Schema of chat system with authentication states](../../../static/chat%20erlang%20system.png)
+
+
