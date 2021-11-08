@@ -1,6 +1,6 @@
 ---
 title: Create state machines in Erlang
-description: Blog post description
+description: Erlang is a functional language that implements pattern matching. We can make use of this great feature to create declarative state machines.
 datetime: 2021-10-26T18:26:16.995Z
 tags: ['Erlang', 'State Machines']
 ---
@@ -19,6 +19,8 @@ These interactions are schematized below.
 
 Let's implement this state machine in Erlang.
 
+### The State Handlers
+
 We create a module named `fsm_auth`.
 
 ```erlang
@@ -31,9 +33,9 @@ logged_out(_Event, _Context) ->
     ok.
 ```
 
-We create two functions, each one representing a state. These functions will be called each time an event is received by the state machine. The `_Context` is some data, shared across state handlers. We will use it to keep track of received messages.
+We create two functions, each one representing a state. These *state handlers* will be called when an event is received by the state, respectively when it's in `logged_in` state and in `logged_out` state. The `_Context` is some data, shared across state handlers. We will use it to keep track of received messages.
 
-Let's create a function clause for each state handler in order to hold the event to go to the other state.
+Let's create a function clause for each state handler in order to hold the event to go to the other state. This is where we begin taking advantage of pattern matching 😎.
 
 ```erlang
 -module(fsm_auth).
@@ -49,7 +51,7 @@ logged_out(_Event, _Context) ->
     ok.
 ```
 
-If in `logged_in` state we receive a `log_out` event, we will go to `logged_out`. We use a tuple with as first entry the atom `next_state` to tell what is the next state.
+If in `logged_in` state we receive a `log_out` event, we will go to `logged_out`. We use a tuple with as first entry the atom `next_state` and then the state to go to.
 
 Let's introduce a notation to tell that we want to stay in the current state:
 
@@ -67,11 +69,11 @@ logged_out(_Event, _Context) ->
     {keep_state}.
 ```
 
-State handlers can return a tupple with as first entry the atom `keep_state` to stay in the current state.
+State handlers can return a tuple with as first entry the atom `keep_state` to stay in the current state.
 
-Now let's implement an *interpreter*, that will listen to events, call matching state handlers and understand their return value.
+Now that we scaffolded our state handlers and designed a beggining of API, it's time to implement an *interpreter* that will listen to events, call matching state handlers and understand their return value to keep the current state in memory.
 
-### Interpreter
+### The Interpreter
 
 ```erlang
 -module(fsm_auth).
@@ -109,9 +111,41 @@ loop(State, Context) ->
     end.
 ```
 
-We created a function `loop/0` that calls `loop/2` with an initial state and an initial context. The default state is `logged_out` and the context in an empty dictionnary.
+We create a function `loop/0` that calls `loop/2`, which is our event loop with the initial state and the initial context:
 
-In `loop/2` we are waiting for messages and keep only those matching `{event, Event}` pattern. Then we call `call_state_handler` that calls the appropriate state handler with the event and the context.
+```erlang
+loop() ->
+    InitialState = logged_out,
+    InitialContext = #{},
+
+    loop(InitialState, InitialContext).
+```
+
+The default state is `logged_out` and the context in an empty dictionnary.
+
+In `loop/2` we take the current state and the current context as parameters. We are waiting for messages and keep only those matching `{event, Event}` pattern:
+
+```erlang
+loop(State, Context) ->
+    receive
+        {event, Event} ->
+            % ...
+    end.
+```
+
+It means that events will have to be sent to the machine process by using the following pattern:
+
+```erlang
+Machine ! {event, Event}
+```
+
+For example, to send `log_in` event, we would have to write the following statement:
+
+```erlang
+Machine ! {event, log_in}
+```
+
+Then we call `call_state_handler` that calls the appropriate state handler with the event and the context.
 
 Then in `loop/2` we match `HandlerReturn` against `{keep_state}` and `{next_state, NewState}`. If `{keep_state}` matches, we call `loop/2` without changing neither the state nor the context. If `{next_state, NewState}` matches we call `loop/2` with the new state and we keep the context.
 
