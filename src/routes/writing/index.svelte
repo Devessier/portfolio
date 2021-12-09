@@ -29,7 +29,7 @@
 	export let articles: WritingPreview[];
 
 	const title = 'Baptiste Devessier | Writing';
-	const description = 'Développeur Web Full Stack sur Paris';
+	const description = 'My articles about Web Development';
 	const canonical = 'https://baptiste.devessier.fr/writing/';
 	const schemas = [];
 	const facebook = [

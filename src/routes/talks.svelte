@@ -15,7 +15,7 @@
 	];
 
 	const title = 'Baptiste Devessier | Talks';
-	const description = 'Développeur Web Full Stack sur Paris';
+	const description = 'My talks about Web Development';
 	const canonical = 'https://baptiste.devessier.fr/talks/';
 	const schemas = [];
 	const facebook = [
