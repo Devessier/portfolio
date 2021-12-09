@@ -27,3 +27,20 @@ export interface ArticlePreview {
 	slug: string;
 	tags: Tag[];
 }
+
+export interface TalkPreview {
+	title: string;
+	description: string;
+	datetime: string;
+	tags: string[];
+	link: string;
+}
+
+export interface TalkPreviewFormatted {
+	title: string;
+	description: string;
+	datetime: string;
+	formattedDatetime: string;
+	tags: string[];
+	link: string;
+}

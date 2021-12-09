@@ -24,6 +24,10 @@
 			text: 'Writing'
 		},
 		{
+			href: '/talks',
+			text: 'Talks'
+		},
+		{
 			href: '/contact',
 			text: 'Contact'
 		}
