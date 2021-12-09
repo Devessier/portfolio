@@ -67,7 +67,11 @@
 
 		<div class="items-center hidden md:flex">
 			{#each links as { href, text }, index}
-				<NavLink {href} active={segment === href} class={index < links.length - 1 ? 'mr-10' : ''}>
+				<NavLink
+					{href}
+					active={segment === href}
+					class={index < links.length - 1 ? 'mr-8 lg:mr-10' : ''}
+				>
 					{text}
 				</NavLink>
 			{/each}
