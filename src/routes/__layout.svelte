@@ -25,12 +25,11 @@
 			wb.addEventListener('installed', (event) => {
 				if (event.isUpdate) {
 					toasts.trigger({
-						title: 'Mise à jour',
-						text:
-							"Une nouvelle version est disponible. Rechargez la page pour qu'elle soit prise en compte.",
+						title: 'Update available',
+						text: 'An update of the website is available. Please reload the page to see the new version.',
 						buttons: [
 							{
-								text: 'Recharger',
+								text: 'Reload',
 								action: () => window.location.reload()
 							}
 						],

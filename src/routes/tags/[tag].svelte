@@ -39,7 +39,7 @@
 
 	$: formattedTag = prettyTagName ?? tag;
 	$: title = `Baptiste Devessier | Writing about ${formattedTag}`;
-	const description = 'Développeur Web Full Stack sur Paris';
+	$: description = `My articles about ${formattedTag}`;
 	$: canonical = `https://baptiste.devessier.fr/tags/${tag}/`;
 	const schemas = [];
 	$: facebook = [
