@@ -15,7 +15,7 @@
 		"@commitlint/config-conventional": "^13.1.0",
 		"@sveltejs/adapter-netlify": "^1.0.0-next.31",
 		"@sveltejs/adapter-static": "^1.0.0-next.19",
-		"@sveltejs/kit": "1.0.0-next.171",
+		"@sveltejs/kit": "1.0.0-next.201",
 		"@tailwindcss/aspect-ratio": "^0.2.1",
 		"@typescript-eslint/eslint-plugin": "^4.31.2",
 		"@typescript-eslint/parser": "^4.31.2",
@@ -76,5 +76,8 @@
 			"eslint --fix"
 		],
 		"*.html": "prettier --write"
+	},
+	"volta": {
+		"node": "16.13.1"
 	}
 }
