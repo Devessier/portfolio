@@ -2,7 +2,7 @@
 	import AppBadge from '$lib/AppBadge.svelte';
 	import { formatDate } from '$lib/format-date';
 	import type { WritingPreview, ArticlePreview } from '$lib/types';
-	import slugify from 'slugify';
+	import { slugify } from '$lib/slugify';
 
 	export let articles: WritingPreview[];
 
@@ -12,9 +12,7 @@
 		formattedDatetime: formatDate(article.datetime),
 		tags: article.tags.map((tag) => ({
 			title: tag,
-			slug: slugify(tag, {
-				lower: true
-			})
+			slug: slugify(tag)
 		}))
 	}));
 </script>
