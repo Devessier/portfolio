@@ -40,7 +40,7 @@
 						{description}
 					</p>
 
-					<div class="mt-4">
+					<div class="flex mt-4">
 						{#each tags as { title, slug }, index}
 							<AppBadge href="/tags/{slug}" class={index === 0 ? 'ml-0' : 'ml-2'}>
 								{title}
