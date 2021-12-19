@@ -386,3 +386,5 @@ Erlang's implementation of the Actor Model is fabulous and amazing to use.
 Thanks to Erlang's pattern matching, it's easy to write declarative state machines.
 
 By combining both features, we get a powerful tool to build predictable actors systems where actors behaviours have to be made explicit.
+
+You can find the code of this article [on Github](https://github.com/Devessier/erlang-state-machines/blob/b6f8a3f5ac241c14d1b4c09e7e07b23222c6eafe/src/fsm_auth.erl).
