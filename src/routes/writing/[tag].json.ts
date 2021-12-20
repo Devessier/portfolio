@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type { Locals, WritingPreview } from '$lib/types';
-import slugify from 'slugify';
+import { slugify } from '$lib/slugify';
 import { getBlogPosts } from './_api';
 
 interface GetResult {
@@ -16,9 +16,7 @@ export const get: RequestHandler<Locals, GetResult> = async ({ params: { tag } }
 
 	for (const blogPost of blogPosts) {
 		for (const blogPostTag of blogPost.tags) {
-			const sluggifiedTag = slugify(blogPostTag, {
-				lower: true
-			});
+			const sluggifiedTag = slugify(blogPostTag);
 
 			if (sluggifiedTag === tag) {
 				if (prettyTagName === undefined) {

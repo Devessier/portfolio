@@ -1,0 +1,234 @@
+---
+title: Recreate Testing Library waitFor function with XState
+description: Testing Library brings a formidable waitFor function to your tests to wait for a condition to be met before a timeout is reached. But sometimes we need such a function outside of client-side tests.
+datetime: 2021-12-19T22:02:11.662Z
+tags: ['XState', 'Testing Library']
+---
+
+<script>
+    import XStateViz from '$lib/XStateViz.svelte'
+</script>
+
+Testing Library `waitFor` function takes a callback and optionally a timeout. The callback is called repeatedly until it returns a value without throwing, or the timeout is reached. If the timeout is reached, the function throws. Otherwise, the function returns the value returned by the last call to the callback.
+
+I had to recreate `waitFor` function to be able to have the same functionality in my back-end integration tests. This function can be implemented in different ways, let's see two of them.
+
+## Promise.race
+
+At first glance, I decided to go with an implementation using `Promise.race` to *race* between one promise that rejects after the timeout is reached, and another one that tries to call the callback repeatedly.
+
+<!--SNIPSTART without-state-machine-->
+```ts
+function waitForTimeout(timeout: number): [NodeJS.Timeout, Promise<void>] {
+  let timerID: NodeJS.Timeout;
+
+  const promise = new Promise<void>((resolve) => {
+    timerID = setTimeout(() => {
+      resolve();
+    }, timeout);
+  });
+
+  return [timerID!, promise];
+}
+
+function pollCallback<CallbackReturn>(
+  callback: () => CallbackReturn | Promise<CallbackReturn>
+): [NodeJS.Timeout, Promise<CallbackReturn>] {
+  const INTERVAL_BETWEEN_COMPUTES = 10;
+
+  let timerID: NodeJS.Timeout;
+
+  const promise = new Promise<CallbackReturn>((resolve) => {
+    timerID = setInterval(async () => {
+      try {
+        const result = await callback();
+
+        resolve(result);
+
+        clearInterval(timerID);
+      } catch (err) {}
+    }, INTERVAL_BETWEEN_COMPUTES);
+  });
+
+  return [timerID!, promise];
+}
+
+export async function waitFor<CallbackReturn>(
+  callback: () => CallbackReturn | Promise<CallbackReturn>,
+  timeout: number
+): Promise<CallbackReturn> {
+  const [globalTimeoutID, globalTimerPromise] = waitForTimeout(timeout);
+  const [pollIntervalTimerID, pollPromise] = pollCallback(callback);
+
+  try {
+    const result = await Promise.race([
+      globalTimerPromise.then(() => {
+        throw new Error("Timer expired");
+      }),
+      pollPromise,
+    ]);
+
+    return result;
+  } catch (err) {
+    throw new Error("waitFor times out");
+  } finally {
+    clearTimeout(globalTimeoutID);
+    clearInterval(pollIntervalTimerID);
+  }
+}
+```
+<!--SNIPEND-->
+
+It works, but it's not very readable. The flow of the function can not be immediately understood, we need to go through several functions that do low-level tasks.
+
+We must not forget to clear the timers when we're done otherwise we would end up with memory leaks. It would be quite difficult to discover that they are originated from this little `waitFor` function.
+
+## State machine
+
+But can we make this function more readable and stop managing timers ourselves? Yes, by using state machines!
+
+<!--SNIPSTART with-state-machine-->
+```ts
+import {
+  assign,
+  createMachine,
+  DoneInvokeEvent,
+  interpret,
+  StateFrom,
+} from "xstate";
+
+interface WaitForMachineContext<CallbackReturn> {
+  expectReturn: CallbackReturn | undefined;
+}
+
+function createWaitForMachine<CallbackReturn>(timeout: number) {
+  return createMachine<WaitForMachineContext<CallbackReturn>>(
+    {
+      context: {
+        expectReturn: undefined as CallbackReturn | undefined,
+      },
+
+      after: {
+        TIMEOUT: {
+          target: "cancelled",
+        },
+      },
+
+      initial: "tryExpect",
+
+      states: {
+        tryExpect: {
+          initial: "assert",
+
+          states: {
+            assert: {
+              invoke: {
+                src: "expect",
+
+                onDone: {
+                  target: "succeeded",
+
+                  actions: assign({
+                    expectReturn: (
+                      _,
+                      { data }: DoneInvokeEvent<CallbackReturn>
+                    ) => data,
+                  }),
+                },
+
+                onError: {
+                  target: "debouncing",
+                },
+              },
+            },
+
+            debouncing: {
+              after: {
+                10: {
+                  target: "assert",
+                },
+              },
+            },
+
+            succeeded: {
+              type: "final",
+            },
+          },
+
+          onDone: {
+            target: "succeeded",
+          },
+
+          on: {
+            CANCELLED: {
+              target: "cancelled",
+            },
+          },
+        },
+
+        succeeded: {
+          type: "final",
+        },
+
+        cancelled: {
+          type: "final",
+        },
+      },
+    },
+    {
+      delays: {
+        TIMEOUT: timeout,
+      },
+    }
+  );
+}
+
+export function waitFor<CallbackReturn>(
+  callback: () => CallbackReturn | Promise<CallbackReturn>,
+  timeout: number
+): Promise<CallbackReturn> {
+  return new Promise((resolve, reject) => {
+    let state: StateFrom<typeof createWaitForMachine>;
+
+    interpret(
+      createWaitForMachine(timeout).withConfig({
+        services: {
+          expect: async () => {
+            return await callback();
+          },
+        },
+      })
+    )
+      .onTransition((updatedState) => {
+        state = updatedState;
+      })
+      .onDone(() => {
+        if (state.matches("succeeded")) {
+          resolve(state.context.expectReturn as CallbackReturn);
+
+          return;
+        }
+
+        reject(new Error("Assertion timed out"));
+      })
+      .start();
+  });
+}
+```
+<!--SNIPEND-->
+
+If you are not used to declarative state machines, you are probably a bit scared by `createWaitForMachine` function. This is a function that creates a machine with the timeout provided by the user.
+
+To better undestand what happens, we can interact with the machine thanks to [Stately Visualizer](https://stately.ai/viz):
+
+<XStateViz id="50aa42ae-cfbc-441c-9bcd-d14a11d9fc04" />
+
+In this implementation, `waitFor` function `interpret`s the machine, that is, creates a new instance of the machine and starts it. It keeps track of the state of the machine and when it's done, it resolves or rejects the promise.
+
+All the logic is inside the machine and is all declarative. Timers are created with `after` keyword and cleared when exiting the state they were created in.
+
+This is the [solution I ended up with](https://github.com/AdonisEnProvence/MusicRoom/blob/2dc6a237364d7da00fa22b1d5ad3e432689e4467/packages/server/tests/utils/TestUtils.ts#L514) in my back-end integration tests.
+
+## Conclusion
+
+XState is a perfect tool to manage timers and concurrent tasks in an expressive way. It can be used to drive [dynamic applications](https://twitter.com/erikras/status/1457755082141970442) but also little functions such as a `waitFor` utility!

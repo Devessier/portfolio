@@ -2,7 +2,7 @@
 	import AppBadge from '$lib/AppBadge.svelte';
 	import { formatDate } from '$lib/format-date';
 	import type { WritingPreview, ArticlePreview } from '$lib/types';
-	import slugify from 'slugify';
+	import { slugify } from '$lib/slugify';
 
 	export let articles: WritingPreview[];
 
@@ -12,9 +12,7 @@
 		formattedDatetime: formatDate(article.datetime),
 		tags: article.tags.map((tag) => ({
 			title: tag,
-			slug: slugify(tag, {
-				lower: true
-			})
+			slug: slugify(tag)
 		}))
 	}));
 </script>
@@ -42,7 +40,7 @@
 						{description}
 					</p>
 
-					<div class="mt-4">
+					<div class="flex mt-4">
 						{#each tags as { title, slug }, index}
 							<AppBadge href="/tags/{slug}" class={index === 0 ? 'ml-0' : 'ml-2'}>
 								{title}

@@ -8,7 +8,9 @@
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
-		"format": "prettier --write --plugin-search-dir=. ."
+		"format": "prettier --write --plugin-search-dir=. .",
+		"code:sync": "snipsync",
+		"code:sync:clear": "snipsync --clear"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^13.1.0",
@@ -39,6 +41,7 @@
 		"sade": "^1.7.4",
 		"sharp": "^0.28.3",
 		"shiki-twoslash": "^3.0.1",
+		"snipsync": "^1.5.0",
 		"svelte": "^3.43.0",
 		"svelte-check": "^2.2.6",
 		"svelte-preprocess": "^4.9.5",
@@ -60,7 +63,7 @@
 		"@tailwindcss/typography": "^0.4.1",
 		"cookie": "^0.4.1",
 		"rehype-external-links": "^1.0.0",
-		"slugify": "^1.6.0",
+		"slugify": "^1.6.4",
 		"tailwindcss-scroll-snap": "^1.1.0",
 		"urlcat": "^2.0.4"
 	},

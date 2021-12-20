@@ -2,7 +2,7 @@
 	import Page from '$lib/Page/Page.svelte';
 	import AppBadge from '$lib/AppBadge.svelte';
 	import { formatDate } from '$lib/format-date';
-	import slugify from 'slugify';
+	import { slugify } from '$lib/slugify';
 	import '../shiki.css';
 
 	export let title;
@@ -10,9 +10,7 @@
 	export let datetime;
 	export let tags;
 
-	$: sluggifiedTitle = slugify(title, {
-		lower: true
-	});
+	$: sluggifiedTitle = slugify(title);
 
 	$: canonical = `https://baptiste.devessier.fr/writing/${sluggifiedTitle}/`;
 	const schemas = [];
@@ -35,9 +33,7 @@
 	let formattedTags;
 	$: formattedTags = tags.map((tag) => ({
 		title: tag,
-		slug: slugify(tag, {
-			lower: true
-		})
+		slug: slugify(tag)
 	}));
 
 	$: formattedDate = formatDate(datetime);
