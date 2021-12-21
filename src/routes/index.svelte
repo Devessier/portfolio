@@ -1,4 +1,5 @@
 <script lang="ts">
+	import urlcat from 'urlcat';
 	import { APP_URL } from '$lib/env';
 	import Page from '$lib/Page/Page.svelte';
 	import { GithubIcon, MailIcon, TildIcon, BriefcaseIcon } from '$lib/Icons';
@@ -25,7 +26,7 @@
 
 	const communicationMeans = [
 		{
-			href: `${APP_URL}/cv.pdf`,
+			href: urlcat(APP_URL, '/cv.pdf'),
 			title: 'CV',
 			icon: BriefcaseIcon
 		},
