@@ -63,6 +63,7 @@
 		"@lukeed/uuid": "^2.0.0",
 		"@tailwindcss/typography": "^0.4.1",
 		"cookie": "^0.4.1",
+		"feed": "^4.2.2",
 		"rehype-external-links": "^1.0.0",
 		"slugify": "^1.6.4",
 		"tailwindcss-scroll-snap": "^1.1.0",
