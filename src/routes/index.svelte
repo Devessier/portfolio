@@ -2,6 +2,7 @@
 	import { APP_URL } from '$lib/env';
 	import Page from '$lib/Page/Page.svelte';
 	import { GithubIcon, MailIcon, TildIcon, BriefcaseIcon } from '$lib/Icons';
+	import { urlcat } from '$lib/url';
 
 	const title = 'Baptiste Devessier | Home';
 	const description = 'Full Stack Web Developer in Paris';
@@ -25,7 +26,7 @@
 
 	const communicationMeans = [
 		{
-			href: `${APP_URL}/cv.pdf`,
+			href: urlcat(APP_URL, '/cv.pdf'),
 			title: 'CV',
 			icon: BriefcaseIcon
 		},

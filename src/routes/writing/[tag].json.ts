@@ -4,11 +4,12 @@ import { slugify } from '$lib/slugify';
 import { getBlogPosts } from './_api';
 
 interface GetResult {
+	[key: string]: any;
 	prettyTagName?: string;
 	articles: WritingPreview[];
 }
 
-export const get: RequestHandler<Locals, GetResult> = async ({ params: { tag } }) => {
+export const get: RequestHandler<Locals, unknown, GetResult> = async ({ params: { tag } }) => {
 	const blogPosts = getBlogPosts();
 
 	const articles: WritingPreview[] = [];
