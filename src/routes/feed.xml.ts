@@ -1,9 +1,9 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { Feed } from 'feed';
-import urlcat from 'urlcat';
 import type { Locals } from '$lib/types';
 import { APP_URL } from '$lib/env';
 import { getBlogPosts } from './writing/_api';
+import { urlcat } from '$lib/url';
 
 export const get: RequestHandler<Locals, unknown, string> = () => {
 	const blogPosts = getBlogPosts();
