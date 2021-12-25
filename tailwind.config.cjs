@@ -12,8 +12,6 @@ module.exports = {
 		}
 	},
 	plugins: [
-		require('tailwindcss-scroll-snap'),
 		require('@tailwindcss/typography'),
-		require('@tailwindcss/aspect-ratio')
 	]
 };
