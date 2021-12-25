@@ -11,7 +11,7 @@
 	}&zoom=${zoom ? 1 : 0}`;
 </script>
 
-<div class="aspect-w-16 aspect-h-9">
+<div class="aspect-video">
 	<iframe
 		{src}
 		title="XState Vizualiser"
