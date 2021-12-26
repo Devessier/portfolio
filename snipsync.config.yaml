@@ -1,6 +1,9 @@
 origins:
   - owner: Devessier
     repo: xstate-wait-for
+  - files:
+    - ./src/**/*.ts
+    - ./src/**/*.html
 
 targets:
   - src/routes/writing
