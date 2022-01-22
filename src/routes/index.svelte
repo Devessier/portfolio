@@ -53,7 +53,7 @@
 				'XState',
 				'TailwindCSS, Vuetify',
 				'GraphQL',
-				'Jamstack'
+				'Jamstack, SSR'
 			]
 		],
 		[
@@ -64,6 +64,7 @@
 				'GraphQL',
 				'Golang',
 				'PostgreSQL',
+				'Temporal',
 				'RabbitMQ',
 				'Scraping, Puppeteer, Cheerio'
 			]
