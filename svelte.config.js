@@ -26,7 +26,10 @@ const config = {
 		}),
 
 		mdsvex({
-			layout: './src/lib/BlogLayout.svelte',
+			layout: {
+				notes: './src/routes/notes/_NotesLayout.svelte',
+				_: './src/lib/BlogLayout.svelte'
+			},
 			rehypePlugins: [rehypeSlugPlugin, rehypeExternalLinks],
 			highlight: {
 				async highlighter(code, lang, meta) {

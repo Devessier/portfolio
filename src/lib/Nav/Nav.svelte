@@ -28,6 +28,10 @@
 			text: 'Talks'
 		},
 		{
+			href: '/notes',
+			text: 'Notes'
+		},
+		{
 			href: '/contact',
 			text: 'Contact'
 		}
