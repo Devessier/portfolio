@@ -1,0 +1,30 @@
+---
+layout: notes
+---
+
+<script>
+    import Note from './_Note.svelte';
+</script>
+
+<Note datetime="2022-01-25T23:13:39.343Z">
+
+## Links to resources on same domain with SvelteKit
+
+By default, [SvelteKit](https://kit.svelte.dev/) intercepts all clicks on links pointing to pages of the application, and handles the navigation so that the browser does not refresh.
+
+However, SvelteKit will also try to handle links to resources on the same domain, such as images, videos, PDF documents, etc.
+
+To solve this issue, SvelteKit provides a way to create links that trigger a real browser navigation, by specifying the `rel="external"` attribute on `a` tags:
+
+```html {2}
+<a
+    href="/document.pdf"
+    rel="external"
+>
+    Link to PDF document
+</a>
+```
+
+The really cool thing is that SvelteKit did not invent the value `external` for `rel` attribute, but instead it is [a standard value for links to external resources](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel#attr-external). By default this value has no behavior, it can just be used to apply specific styles to external links. But SvelteKit *progressively enhances* it.
+
+</Note>
