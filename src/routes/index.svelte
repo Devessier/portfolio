@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { APP_URL } from '$lib/env';
 	import Page from '$lib/Page/Page.svelte';
 	import { GithubIcon, MailIcon, TildIcon, BriefcaseIcon } from '$lib/Icons';
-	import { urlcat } from '$lib/url';
 
 	const title = 'Baptiste Devessier | Home';
 	const description = 'Full Stack Web Developer in Paris';
@@ -26,17 +24,20 @@
 
 	const communicationMeans = [
 		{
-			href: urlcat(APP_URL, '/cv.pdf'),
+			href: '/cv.pdf',
+			external: true,
 			title: 'CV',
 			icon: BriefcaseIcon
 		},
 		{
 			href: 'https://github.com/Devessier',
+			external: true,
 			title: 'My Github profile',
 			icon: GithubIcon
 		},
 		{
-			href: 'contact',
+			href: '/contact',
+			external: false,
 			title: 'Contact me',
 			icon: MailIcon
 		}
@@ -89,14 +90,15 @@
 		<p class="mt-5 text-2xl font-medium">Full Stack Web Developer, Paris</p>
 
 		<ul class="flex items-center mt-8">
-			{#each communicationMeans as { href, title, icon }, index}
+			{#each communicationMeans as { href, external, title, icon }, index}
 				<li>
 					<a
-						sveltekit:prefetch
 						{href}
+						{title}
+						sveltekit:prefetch
+						rel={external === true ? 'external' : undefined}
 						class="block p-2 text-red-500 border border-gray-200
                         rounded-full {index < communicationMeans.length - 1 ? 'mr-2' : ''}"
-						{title}
 					>
 						<span class="sr-only">{title}</span>
 
