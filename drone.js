@@ -1,5 +1,4 @@
 import sade from 'sade';
-import dedent from 'dedent';
 import outdent from 'outdent';
 import slugify from 'slugify';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -10,18 +9,17 @@ const prog = sade('drone');
 prog.version('1.0.0');
 
 function generateBlogPostTemplate(blogPostName) {
-	return (
-		dedent`
----
-title: ${blogPostName}
-description: Blog post description
-datetime: ${new Date().toISOString()}
-tags: ['Temporal']
----
+	return outdent`
+		---
+		title: ${blogPostName}
+		description: Blog post description
+		datetime: ${new Date().toISOString()}
+		tags: ['Temporal']
+		---
 
-Hi from **${blogPostName}** article!
-	` + '\n'
-	);
+		Hi from **${blogPostName}** article!
+
+	`;
 }
 
 const WRITING_DIRECTORY = new URL('src/routes/writing', import.meta.url);
