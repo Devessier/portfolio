@@ -6,6 +6,8 @@ layout: notes
     import Note from './_Note.svelte';
 </script>
 
+<!-- NOTES -->
+
 <Note datetime="2022-01-25T23:13:39.343Z">
 
 ## Links to resources on same domain with SvelteKit

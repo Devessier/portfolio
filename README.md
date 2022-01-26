@@ -12,8 +12,24 @@ It's a PWA ([Progressive Web Application](https://web.dev/what-are-pwas/)) that 
 
 This website is also my personal blog.
 
-I created a [tool to scaffold a new blog post](./drone.js). It can be run with the following command:
+## Drone
+
+I created a [tool to help me automate some tasks](./drone.js). It can be run with the following command:
+
+### Create an article
 
 ```bash
 node drone generate-article 'The title of the blog post'
+```
+
+### Refresh article publication date
+
+```bash
+node drone update-article-datetime 'The title of the blog post'
+```
+
+### Create a note
+
+```bash
+node drone create-note
 ```
