@@ -67,7 +67,8 @@ const config = {
 			enabled: true,
 			onError: 'continue',
 			entries: ['*']
-		}
+		},
+		trailingSlash: 'always'
 	}
 };
 
