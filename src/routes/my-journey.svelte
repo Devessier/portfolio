@@ -7,7 +7,7 @@
 	const title = 'Baptiste Devessier | My journey';
 	const description =
 		'My journey to become a Full Stack Web Developer specialized in JavaScript, TypeScript, Vue.js, Nuxt.js, TailwindCSS, Svelte, SvelteKit and Node.js';
-	const canonical = 'https://baptiste.devessier.fr/my-way/';
+	const canonical = 'https://baptiste.devessier.fr/my-journey/';
 	const schemas = [];
 	const facebook = [
 		{
