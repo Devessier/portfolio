@@ -36,7 +36,7 @@
 			icon: GithubIcon
 		},
 		{
-			href: '/contact',
+			href: '/contact/',
 			external: false,
 			title: 'Contact me',
 			icon: MailIcon

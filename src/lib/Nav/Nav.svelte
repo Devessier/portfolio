@@ -12,27 +12,27 @@
 
 	const links = [
 		{
-			href: '/my-journey',
+			href: '/my-journey/',
 			text: 'My journey'
 		},
 		{
-			href: '/projects',
+			href: '/projects/',
 			text: 'Projects'
 		},
 		{
-			href: '/writing',
+			href: '/writing/',
 			text: 'Writing'
 		},
 		{
-			href: '/talks',
+			href: '/talks/',
 			text: 'Talks'
 		},
 		{
-			href: '/notes',
+			href: '/notes/',
 			text: 'Notes'
 		},
 		{
-			href: '/contact',
+			href: '/contact/',
 			text: 'Contact'
 		}
 	];

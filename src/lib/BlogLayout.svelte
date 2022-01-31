@@ -43,7 +43,7 @@
 	<div class="max-w-prose text-lg mx-auto">
 		<div class="flex items-center justify-center flex-wrap mb-2">
 			{#each formattedTags as { title, slug }}
-				<AppBadge href="/tags/{slug}">
+				<AppBadge href="/tags/{slug}/">
 					{title}
 				</AppBadge>
 			{/each}

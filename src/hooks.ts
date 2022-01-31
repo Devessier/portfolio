@@ -3,6 +3,13 @@ import { v4 as uuid } from '@lukeed/uuid';
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ request, resolve }) => {
+	// We activated `trailingSlash: 'always'` and we need to remove the trailing
+	// slash from the request path because SvelteKit would not find the endpoint otherwise.
+	// See https://kit.svelte.dev/docs#configuration-trailingslash.
+	if (request.path === '/feed.xml/') {
+		request.path = '/feed.xml';
+	}
+
 	const cookies = cookie.parse(request.headers.cookie || '');
 	request.locals.userid = cookies.userid || uuid();
 
