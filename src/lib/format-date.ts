@@ -4,6 +4,7 @@ export function formatDate(datetime: string): string {
 	return new Intl.DateTimeFormat('en-US', {
 		day: 'numeric',
 		month: 'long',
-		year: 'numeric'
+		year: 'numeric',
+		timeZone: 'UTC'
 	}).format(date);
 }
