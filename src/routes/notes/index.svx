@@ -8,6 +8,58 @@ layout: notes
 
 <!-- NOTES -->
 
+<Note datetime="2022-01-31T12:20:54.468Z">
+
+## A subquery can not be the `DEFAULT` value of a column in PostgreSQL
+
+Today I wanted to create a column which default value would have been the primary key of an exact row from another table.
+
+Basically, I created a table that serves as an enum and inserted the values of the enum in the same migration. I wanted the column of another table to default to one of the enum values.
+
+I tried to write the following query:
+
+```sql
+ALTER TABLE
+    users
+ADD COLUMN
+    devices_visibility_setting_uuid UUID DEFAULT (
+        SELECT
+            uuid
+        FROM
+            setting_visibilities
+        WHERE
+            name = 'PUBLIC'
+    );
+```
+
+But Postgres told me that we can not use a subquery as a `DEFAULT` value.
+
+The [Postgres documentation](https://www.postgresql.org/docs/current/ddl-default.html) strictly mentions that we can use either a static value, or a function. But there is no mention to using subqueries.
+
+My workaround was to compute the primary key (an uuid) of the enum value row in JS, inside the migration file, use it when I create the row in the enum table, and then use this uuid in the `DEFAULT` value of the column.
+
+I ended up with the following queries, which work:
+
+```sql
+INSERT INTO
+    setting_visibilities (
+        uuid,
+        name
+    )
+VALUES
+    (
+        ${publicVisibilitySettingRowUUID},
+        'PUBLIC'
+    );
+
+ALTER TABLE
+    users
+ADD COLUMN
+    devices_visibility_setting_uuid UUID DEFAULT ${publicVisibilitySettingRowUUID};
+```
+
+</Note>
+
 <Note datetime="2022-01-26T22:10:48.212Z">
 
 ## Git Worktrees to manage several workspaces for the same repository
