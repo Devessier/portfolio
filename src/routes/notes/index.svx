@@ -58,6 +58,10 @@ ADD COLUMN
     devices_visibility_setting_uuid UUID DEFAULT ${publicVisibilitySettingRowUUID};
 ```
 
+### Edit
+
+Finally I decided to do not put this business logic in the database, but in my back-end code. When I create a new user, I attach it to the row I want in the enum table.
+
 </Note>
 
 <Note datetime="2022-01-26T22:10:48.212Z">
