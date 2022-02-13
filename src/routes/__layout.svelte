@@ -7,7 +7,7 @@
 	import Nav from '$lib/Nav/Nav.svelte';
 	import ToastContainer from '$lib/Toasts/ToastContainer.svelte';
 
-	$: segment = $page.path;
+	$: segment = $page.url.pathname;
 
 	$: $page,
 		freshNavigation.update((value) => {

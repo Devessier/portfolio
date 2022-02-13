@@ -1,37 +1,7 @@
-<script context="module" lang="ts">
-	import type { Load } from '@sveltejs/kit';
-	import type { WritingPreview } from '$lib/types';
-
-	export const load: Load = async ({
-		page: {
-			params: { tag }
-		},
-		fetch
-	}) => {
-		const response = await fetch(`/writing/${tag}.json`);
-
-		if (response.ok === false) {
-			return {
-				error: new Error('error occured while getting writings list'),
-				status: 500
-			};
-		}
-
-		const { prettyTagName, articles } = await response.json();
-
-		return {
-			props: {
-				tag,
-				prettyTagName,
-				articles: articles as WritingPreview[]
-			}
-		};
-	};
-</script>
-
 <script lang="ts">
 	import BlogPostsList from '$lib/BlogPostsList.svelte';
 	import Page from '$lib/Page/Page.svelte';
+	import type { WritingPreview } from '$lib/types';
 
 	export let tag: string;
 	export let prettyTagName: string;
