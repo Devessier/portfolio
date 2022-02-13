@@ -88,7 +88,7 @@
 		<div class="z-30 flex items-center md:hidden">
 			<button on:click={toggle}>
 				<span class="sr-only">
-					{showNavBar ? 'Fermer le menu' : 'Ouvrir le menu'}
+					{showNavBar ? 'Close drawer' : 'Open drawer'}
 				</span>
 
 				<MenuIcon width={30} height={30} opened={showNavBar} />
