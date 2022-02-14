@@ -1,13 +1,17 @@
-<script>
-	export let href;
+<script lang="ts">
+	export let href: string;
+	export let external = false;
 	export let active = false;
-
-	let className;
-
-	export { className as class };
 </script>
 
-<a {href} sveltekit:prefetch class:active-link={active} class={className} on:click>
+<a
+	{href}
+	rel={external === true ? 'external' : undefined}
+	target={external === true ? '_blank' : undefined}
+	sveltekit:prefetch
+	class:active-link={active}
+	on:click
+>
 	<slot />
 </a>
 

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { VideoCamera, Rss, Mail } from '@steeze-ui/heroicons';
 	import { MenuIcon, LogoIcon } from '$lib/Icons';
 
 	import NavLink from './NavLink.svelte';
@@ -33,9 +35,24 @@
 		},
 		{
 			href: '/contact/',
-			text: 'Contact'
+			text: 'Contact',
+			icon: Mail
+		},
+		{
+			href: 'https://www.youtube.com/channel/UCHkj5xmIUA357RS944tY5Tg',
+			text: 'YouTube',
+			external: true,
+			icon: VideoCamera
+		},
+		{
+			href: '/feed.xml/',
+			text: 'RSS',
+			external: true,
+			icon: Rss
 		}
 	];
+	$: textLinks = links.filter((link) => link.icon === undefined);
+	$: iconLinks = links.filter((link) => link.icon !== undefined);
 
 	let mounted = false;
 	onMount(() => {
@@ -73,22 +90,30 @@
 			<LogoIcon class="w-20 h-20" title="Accueil" />
 		</a>
 
-		<div class="items-center hidden md:flex">
-			{#each links as { href, text }, index}
-				<NavLink
-					{href}
-					active={segment === href}
-					class={index < links.length - 1 ? 'mr-8 lg:mr-10' : ''}
-				>
+		<div class="items-center hidden md:flex space-x-6">
+			{#each textLinks as { href, external, text }}
+				<NavLink {href} {external} active={segment === href}>
 					{text}
 				</NavLink>
+			{/each}
+
+			{#each iconLinks as { href, external, text, icon }}
+				<a
+					{href}
+					rel={external === true ? 'external' : undefined}
+					target={external === true ? '_blank' : undefined}
+					title={text}
+					sveltekit:prefetch
+				>
+					<Icon src={icon} class="w-6 h-6" />
+				</a>
 			{/each}
 		</div>
 
 		<div class="z-30 flex items-center md:hidden">
 			<button on:click={toggle}>
 				<span class="sr-only">
-					{showNavBar ? 'Fermer le menu' : 'Ouvrir le menu'}
+					{showNavBar ? 'Close drawer' : 'Open drawer'}
 				</span>
 
 				<MenuIcon width={30} height={30} opened={showNavBar} />
@@ -101,13 +126,8 @@
 			class="fixed inset-0 px-10 pt-20 bg-white md:hidden z-20 flex flex-col items-start"
 			transition:fade={{ duration: 200 }}
 		>
-			{#each links as { href, text }}
-				<NavLink
-					{href}
-					active={segment === href}
-					on:click={() => (showNavBar = false)}
-					class="font-bold"
-				>
+			{#each links as { href, text, external }}
+				<NavLink {href} {external} active={segment === href} on:click={() => (showNavBar = false)}>
 					{text}
 				</NavLink>
 			{/each}
