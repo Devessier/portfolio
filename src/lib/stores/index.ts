@@ -7,7 +7,7 @@ function createInputsStore() {
 
 	return {
 		subscribe,
-		update: (id, input) => update((store) => ({ ...store, [id]: input }))
+		update: (id: string, input: string) => update((store) => ({ ...store, [id]: input }))
 	};
 }
 

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 
 	export let skipWaiting = false;
@@ -17,7 +17,9 @@
 		loaded = true;
 	});
 
-	function handleAnimationEnd({ target: { classList } }) {
+	function handleAnimationEnd({
+		currentTarget: { classList }
+	}: AnimationEvent & { currentTarget: EventTarget & HTMLParagraphElement }) {
 		classList.remove('fadeIn');
 	}
 </script>

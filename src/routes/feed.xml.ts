@@ -1,14 +1,13 @@
 // @@@SNIPSTART blog-feed-xml
 import type { RequestHandler } from '@sveltejs/kit';
 import { Feed } from 'feed';
-import type { Locals } from '$lib/types';
 import { APP_URL } from '$lib/env';
 import { getBlogPosts } from './writing/_api';
 import { urlcat } from '$lib/url';
 
 // This function will be called when SvelteKit server
 // receives a GET request for `/feed.xml`.
-export const get: RequestHandler<Locals, unknown, string> = () => {
+export const get: RequestHandler = () => {
 	// We get the list of all the blog posts.
 	// The list is ordered by publication date. The most recent post is at the top.
 	const blogPosts = getBlogPosts();

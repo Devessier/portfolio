@@ -1,12 +1,12 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import type { Locals, WritingPreview } from '$lib/types';
+import type { WritingPreview } from '$lib/types';
 import { getBlogPosts } from './_api';
 
-interface GetResult {
+type GetResult = {
 	articles: WritingPreview[];
-}
+};
 
-export const get: RequestHandler<Locals, GetResult> = async () => {
+export const get: RequestHandler<never, GetResult> = async () => {
 	const blogPosts = getBlogPosts();
 
 	return {

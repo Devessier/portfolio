@@ -1,15 +1,14 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import type { Locals, WritingPreview } from '$lib/types';
+import type { WritingPreview } from '$lib/types';
 import { slugify } from '$lib/slugify';
-import { getBlogPosts } from './_api';
+import { getBlogPosts } from '../writing/_api';
 
-interface GetResult {
-	[key: string]: any;
+type GetResult = {
 	prettyTagName?: string;
 	articles: WritingPreview[];
-}
+};
 
-export const get: RequestHandler<Locals, unknown, GetResult> = async ({ params: { tag } }) => {
+export const get: RequestHandler<never, GetResult> = async ({ params: { tag } }) => {
 	const blogPosts = getBlogPosts();
 
 	const articles: WritingPreview[] = [];
@@ -31,6 +30,7 @@ export const get: RequestHandler<Locals, unknown, GetResult> = async ({ params: 
 
 	return {
 		body: {
+			tag,
 			articles,
 			prettyTagName
 		}
