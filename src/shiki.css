@@ -35,7 +35,7 @@ pre.shiki:hover .dim {
 	opacity: 1;
 }
 pre.shiki div.dim {
-	transition: opacity .2s ease-in-out;
+	transition: opacity 0.2s ease-in-out;
 	opacity: 0.5;
 }
 pre.shiki div.dim,

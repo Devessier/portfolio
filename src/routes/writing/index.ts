@@ -6,7 +6,7 @@ type GetResult = {
 	articles: WritingPreview[];
 };
 
-export const get: RequestHandler<GetResult> = async () => {
+export const get: RequestHandler<never, GetResult> = async () => {
 	const blogPosts = getBlogPosts();
 
 	return {

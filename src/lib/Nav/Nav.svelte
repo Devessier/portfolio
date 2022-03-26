@@ -75,7 +75,9 @@
 		showNavBar = !showNavBar;
 	}
 
-	function handleWindowResize({ target: { innerWidth } }) {
+	function handleWindowResize({
+		currentTarget: { innerWidth }
+	}: UIEvent & { currentTarget: EventTarget & Window }) {
 		if (BREAKPOINT <= innerWidth && showNavBar) {
 			showNavBar = false;
 		}

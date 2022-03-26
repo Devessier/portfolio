@@ -1,4 +1,4 @@
-import { timestamp, files, build } from '$service-worker';
+import { version, files, build } from '$service-worker';
 import { skipWaiting, clientsClaim } from 'workbox-core';
 import { registerRoute } from 'workbox-routing';
 import { NetworkFirst, StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
@@ -27,7 +27,7 @@ clientsClaim();
 precacheAndRoute(
 	toCache.map((resource) => {
 		const dotsCount = [...resource].filter((c) => c === '.').length;
-		const revision = dotsCount === 2 ? null : String(timestamp);
+		const revision = dotsCount === 2 ? null : version;
 
 		return { url: resource, revision };
 	})
