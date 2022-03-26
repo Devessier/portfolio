@@ -14,6 +14,8 @@ const escape_svelty = (str) =>
 		.replace(/[{}`]/g, (c) => ({ '{': '&#123;', '}': '&#125;', '`': '&#96;' }[c]))
 		.replace(/\\([trn])/g, '&#92;$1');
 
+const highlighter = await createShikiHighlighter({ theme: NightOwlTheme });
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	extensions: ['.svelte', '.svx'],
@@ -32,7 +34,7 @@ const config = {
 			},
 			rehypePlugins: [rehypeSlugPlugin, rehypeExternalLinks],
 			highlight: {
-				async highlighter(code, lang, meta) {
+				highlighter(code, lang, meta) {
 					// Copied from https://github.com/pngwn/MDsveX/issues/212#issuecomment-937574889
 
 					// Adapted from the `remark-shiki-twoslash` repo
@@ -45,12 +47,11 @@ const config = {
 						throw new Error(`Could not parse the codefence for this code sample \n${code}`);
 					}
 
-					let twoslash;
+					let twoslash = undefined;
 					if (fence?.twoslash === true) {
-						twoslash = runTwoSlash(code, lang);
+						twoslash = runTwoSlash(code, lang, {});
 					}
 
-					const highlighter = await createShikiHighlighter({ theme: NightOwlTheme });
 					const html = renderCodeToHTML(code, lang, fence ?? {}, {}, highlighter, twoslash);
 
 					return `{@html \`<div class="relative">${escape_svelty(html)}</div>\` }`;
