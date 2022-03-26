@@ -45,7 +45,7 @@
 			icon: VideoCamera
 		},
 		{
-			href: '/feed.xml/',
+			href: '/feed.xml',
 			text: 'RSS',
 			external: true,
 			icon: Rss
