@@ -39,7 +39,7 @@ const config = {
 
 					// Adapted from the `remark-shiki-twoslash` repo
 					// See: https://github.com/shikijs/twoslash/blob/fbf061261fcda90c46e946ce1e2e9357d465c145/packages/remark-shiki-twoslash/src/index.ts#L172-L215
-					let fence;
+					let fence = undefined;
 
 					try {
 						fence = parse(lex([lang, meta].filter(Boolean).join(' ')));
@@ -49,7 +49,14 @@ const config = {
 
 					let twoslash = undefined;
 					if (fence?.twoslash === true) {
-						twoslash = runTwoSlash(code, lang, {});
+						twoslash = runTwoSlash(code, lang, {
+							defaultCompilerOptions: {
+								allowJs: true,
+								checkJs: true,
+								target: 'es2021'
+							}
+						});
+						code = twoslash.code;
 					}
 
 					const html = renderCodeToHTML(code, lang, fence ?? {}, {}, highlighter, twoslash);
