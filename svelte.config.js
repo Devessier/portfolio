@@ -4,8 +4,10 @@ import adapter from '@sveltejs/adapter-static';
 import { mdsvex } from 'mdsvex';
 import rehypeSlugPlugin from 'rehype-slug';
 import rehypeExternalLinks from 'rehype-external-links';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { lex, parse } from 'fenceparser';
 import { createShikiHighlighter, runTwoSlash, renderCodeToHTML } from 'shiki-twoslash';
+import { h } from 'hastscript';
 
 const NightOwlTheme = JSON.parse(readFileSync('./themes/Night Owl-color-theme.json'));
 
@@ -32,7 +34,21 @@ const config = {
 				notes: './src/routes/notes/_NotesLayout.svelte',
 				_: './src/lib/BlogLayout.svelte'
 			},
-			rehypePlugins: [rehypeSlugPlugin, rehypeExternalLinks],
+			rehypePlugins: [
+				rehypeSlugPlugin,
+				rehypeExternalLinks,
+				[
+					rehypeAutolinkHeadings,
+					{
+						behavior: 'prepend',
+						properties: {
+							class:
+								'-ml-8 pr-4 absolute no-underline text-gray-300 hover:text-red-700 opacity-0 md:opacity-100'
+						},
+						content: [h('span.sr-only', 'permalink'), h('span', { ariaHidden: true }, '#')]
+					}
+				]
+			],
 			highlight: {
 				highlighter(code, lang, meta) {
 					// Copied from https://github.com/pngwn/MDsveX/issues/212#issuecomment-937574889
