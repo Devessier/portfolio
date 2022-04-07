@@ -8,6 +8,22 @@ layout: notes
 
 <!-- NOTES -->
 
+<Note datetime="2022-04-07T18:20:30.111Z">
+
+## Stop a Docker container and remove its volumes
+
+Sometimes I want to restart from the ground up a database launched in a Docker container and to remove its data entirely.
+
+I found that [`docker compose down`](https://docs.docker.com/compose/reference/down/) command has an option to do so:
+
+```bash
+docker-compose down <container name> --volumes
+```
+
+That way, the volumes attached to `<container name>` will be removed as well as the container.
+
+</Note>
+
 <Note datetime="2022-03-26T19:38:17.144Z">
 
 ## Override version of a dependency of another dependency with npm
