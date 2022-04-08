@@ -15,6 +15,7 @@ layout: notes
 To create a named group in a JavaScript RegExp, we can use the `(?<name>...)` syntax:
 
 ```ts twoslash
+// @lib: esnext
 const text = 'foo bar foo'
 const regex = /(?<wanted>bar)/
 
