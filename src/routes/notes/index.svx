@@ -8,6 +8,27 @@ layout: notes
 
 <!-- NOTES -->
 
+<Note datetime="2022-04-08T15:45:10.557Z">
+
+## Create a named group in a JavaScript RegExp
+
+To create a named group in a JavaScript RegExp, we can use the `(?<name>...)` syntax:
+
+```ts twoslash
+const text = 'foo bar foo'
+const regex = /(?<wanted>bar)/
+
+const result = regex.exec(text)
+if (result === null) {
+    throw new Error('No match')
+}
+
+const wantedGroup = result.groups?.wanted
+//        ^?
+```
+
+</Note>
+
 <Note datetime="2022-04-07T18:20:30.111Z">
 
 ## Stop a Docker container and remove its volumes
