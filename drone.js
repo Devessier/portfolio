@@ -91,6 +91,8 @@ prog
 		];
 
 		await writeFile(NOTES_FILES, newNotesContent.join('\n'));
+
+		console.log(`Open ${NOTES_FILES.pathname}`);
 	});
 
 prog.parse(process.argv);
