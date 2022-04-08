@@ -172,8 +172,8 @@ pre .error-behind {
 }
 /* Queries */
 pre .arrow {
-	/* Transparent background */
-	background-color: #eee;
+	/* Copy-pasted from background of Night owl theme */
+	background-color: #011627;
 	position: relative;
 	top: -7px;
 	margin-left: 0.1rem;
@@ -187,9 +187,11 @@ pre .arrow {
 }
 pre .popover {
 	margin-bottom: 10px;
-	background-color: #eee;
+	/* Copy-pasted from background of Night owl theme */
+	background-color: #011627;
+	border: 1px solid #eee;
 	display: inline-block;
-	padding: 0 0.5rem 0.3rem;
+	padding: 0 0.5rem 0.4rem;
 	margin-top: 10px;
 	border-radius: 3px;
 }
