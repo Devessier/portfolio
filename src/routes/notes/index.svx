@@ -8,6 +8,59 @@ layout: notes
 
 <!-- NOTES -->
 
+<Note datetime="2022-04-12T15:53:43.170Z">
+
+## Stress testing with Artillery
+
+To ensure a server can handle a certain amount of requests per second for a certain delay, we can use [stress testing](https://en.wikipedia.org/wiki/Stress_testing).
+
+[Artillery](https://www.artillery.io/) is a library for stress testing. We define *scenarios* in a YAML file and how we want to simulate users making requests accord to scenarios. Here is an example of configuration for a chat application:
+
+```yaml
+# chat.yaml
+
+config:
+  target: "http://localhost:3333"
+  phases:
+    # Create up to 10 virtual users per second in one minute
+    - duration: 60
+      arrivalRate: 10
+    # Create up to 100 virtual users per second in ten minutes
+    - duration: 600
+      arrivalRate: 100
+
+scenarios:
+  # Enable sending Socket.io events
+  - engine: "socketio"
+    flow:
+      # Create a user
+      - post:
+          url: "/sign-up"
+          json:
+            username: "Jean-Louis Murat"
+            password: "La Princesse of the Cool"
+
+      # Get my information
+      - get:
+          url: "/me"
+
+      # Add a friend
+      - post:
+          url: "/friend"
+          json:
+            id: "b0518bea-4df4-415c-a01d-129ecae34c33"
+
+      # Send a message to my friend
+      # HTTP requests and Socket.io events can be mixed!
+      - emit:
+          channel: "chat"
+          data:
+            userId: "b0518bea-4df4-415c-a01d-129ecae34c33"
+            message: "Hello JL!"
+```
+
+</Note>
+
 <Note datetime="2022-04-08T15:45:10.557Z">
 
 ## Create a named group in a JavaScript RegExp
