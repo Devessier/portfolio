@@ -1,21 +1,26 @@
 ---
 title: Handle logic at the right place in React
-description: Deciding where to put logic code in React applications is crucial to keep a codebase clean and maintainable. Rethinking the place of the logic to go from top to bottom can help a lot, and XState is a great ally.
+description: Deciding where to put logic code in React applications is crucial to keep a codebase clean and maintainable, and even functional. Rethinking the place of the logic to go from top to bottom can help a lot, and it's the main purpose of XState.
 datetime: 2022-04-17T19:27:29.290Z
 tags: ['React', 'XState']
 ---
 
-Recently, with a friend of mine, we wanted to let a React component know when some work was done in one of its child components. We were passing down a callback function.
+Recently, with a friend of mine, we wanted to let a React component know when some work was done in one of its child components. We were passing down a callback function, called inside a `useEffect`, when we got a `response` from a `useResponse` hook.
 
 ```tsx twoslash
 // @module: esnext
+// @lib: dom,esnext
 // @filename: useResponse.ts
 export declare function useResponse(): [Response | null, () => void];
+
+// @filename: store.ts
+export declare function sendResponseToServer(response: Response): Promise<void>;
 
 // @filename: App.tsx
 // ---cut---
 import React, { useEffect } from "react";
 import { useResponse } from "./useResponse";
+import { sendResponseToServer } from "./store";
 
 interface ChildProps {
   onResponseChange: (response: Response) => void;
@@ -39,8 +44,10 @@ function Child({ onResponseChange }: ChildProps) {
 
 export default function App() {
   // This function will be redeclared during each render.
-  function handleResponseChange(response: Response) {
+  async function handleResponseChange(response: Response) {
     console.log("received response", response);
+
+    await sendResponseToServer(response);
   }
 
   return (
@@ -57,15 +64,20 @@ The issue is that `handleResponseChange` function was recreated for each render,
 
 Instead of declaring a new function for each render in the parent component, we can memoize it with `useCallback` hook.
 
-```tsx twoslash {1,25-28}
+```tsx twoslash {1,26-31}
 // @module: esnext
+// @lib: dom,esnext
 // @filename: useResponse.ts
 export declare function useResponse(): [Response | null, () => void];
+
+// @filename: store.ts
+export declare function sendResponseToServer(response: Response): Promise<void>;
 
 // @filename: App.tsx
 // ---cut---
 import React, { useEffect, useCallback } from "react";
 import { useResponse } from "./useResponse";
+import { sendResponseToServer } from "./store";
 
 interface ChildProps {
   onResponseChange: (response: Response) => void;
@@ -89,8 +101,10 @@ function Child({ onResponseChange }: ChildProps) {
 
 export default function App() {
   // This function will be declared once.
-  const handleResponseChange = useCallback((response: Response) => {
+  const handleResponseChange = useCallback(async (response: Response) => {
     console.log("received response", response);
+
+    await sendResponseToServer(response);
   }, []);
 
   return (
@@ -109,8 +123,12 @@ I'm a big fan of XState, so we are going to use it now. If you are not familiar 
 
 ```tsx twoslash
 // @module: esnext
+// @lib: dom,esnext
 // @filename: useResponse.ts
 export declare function useResponse(): [Response | null, () => void];
+
+// @filename: store.ts
+export declare function sendResponseToServer(response: Response): Promise<void>;
 
 // @filename: App.tsx
 // ---cut---
@@ -118,6 +136,7 @@ import React, { useEffect, useCallback } from "react";
 import { createMachine } from 'xstate';
 import { useInterpret } from '@xstate/react';
 import { useResponse } from "./useResponse";
+import { sendResponseToServer } from "./store";
 
 interface ChildProps {
   onResponseChange: (response: Response) => void;
@@ -150,7 +169,8 @@ function Child({ onResponseChange }: ChildProps) {
     // will be updated in the service each time they change in the React component.
     //
     // It means that this action will always reference the most recent value
-    // of `onResponseChange` and never become stale.
+    // of `onResponseChange` and never become stale, but it will be called
+    // only when a new response is received.
     actions: {
       'Forward response': (_context, event) => {
         if (event.response === null) {
@@ -179,8 +199,10 @@ function Child({ onResponseChange }: ChildProps) {
 export default function App() {
   // This is no longer an issue if the function is re-declared
   // for each render.
-  function handleResponseChange(response: Response) {
+  async function handleResponseChange(response: Response) {
     console.log("received response", response);
+
+    await sendResponseToServer(response);
   }
 
   return (
@@ -191,29 +213,34 @@ export default function App() {
 }
 ```
 
-In `<Child />` component we create a state machine that waits for one event: `Received response`. When the machine receives it, it checks if the response it contains is defined and if it is, it calls `onResponseChange`.
+In `<Child />` component we create a state machine that waits for one event: `Received response`. When the machine receives it, it checks if the response the event contains is defined and if it is, it calls `onResponseChange`.
 
 Actions provided to `useInterpret` in its second parameter will be [updated in the service each time they change](https://github.com/statelyai/xstate/blob/fe5f0e6c9bbb6ff740673889892301c8989eacfd/packages/xstate-react/src/useInterpret.ts#L74-L83) in the React component. There will never be stale references to `onResponseChange`. This is no longer an issue if the function we depend on is re-declared on each render!
 
 We still use a `useEffect`, in which we send an event to the service of the machine. The service is stable between renders, so only things we really want to depend on will trigger the effect.
 
-Please note that, indeed, a state machine can have no states except the implicit *root* state. This is called a combinatorial machine and is [supported by XState since a year](https://github.com/statelyai/xstate/releases/tag/xstate%404.18.0). I rarely found practical use cases for it, but being able to act as a proxy is one of its main advantages.
+Note that, indeed, a state machine can have no states except the implicit *root* state. This is called a combinatorial machine and is [supported by XState since a year](https://github.com/statelyai/xstate/releases/tag/xstate%404.18.0). I rarely found practical use cases for it, but being able to act as a proxy is one of its main advantages.
 
 ## Think from top to bottom: with plain React
 
 Until now, we wrote what [David Khourshid calls *bottom-up code*](https://frontendmasters.com/courses/xstate/the-problem-with-adding-features/), that is, logic code spread low in components tree, directly in events handlers, making the code hard to understand and then to maintain.
 
-The real issue is that our `<Child />` component should not handle logic itself. The parent component should centralize the logic and only let its child component determine how `load` function is triggered.
+The real issue is that our `<Child />` component should not handle that part of logic itself. The parent component should centralize the logic and only let its child component determine how `load` function is triggered.
 
 ```tsx twoslash
 // @module: esnext
+// @lib: dom,esnext
 // @filename: useResponse.ts
 export declare function useResponse(): [Response | null, () => void];
+
+// @filename: store.ts
+export declare function sendResponseToServer(response: Response): Promise<void>;
 
 // @filename: App.tsx
 // ---cut---
 import React, { useEffect } from "react";
 import { useResponse } from "./useResponse";
+import { sendResponseToServer } from "./store";
 
 interface ChildProps {
   onLoadButtonClick: () => void;
@@ -234,9 +261,11 @@ export default function App() {
     // the effect only depends on the response.
     //
     // The risk of referencing stale values is reduced but the effect would
-    // still be re-run if it needs to depend on other values.
-    function handleResponseChange(response: Response) {
+    // still re-run if it needs to depend on other values than `response`.
+    async function handleResponseChange(response: Response) {
       console.log("received response", response);
+
+      await sendResponseToServer(response);
     }
 
     if (response !== null) {
@@ -252,7 +281,7 @@ export default function App() {
 }
 ```
 
-This is a better solution, and it feels less hacky than the combinatorial machine. However, the code is still fragile. Say that `handleResponseChange` function performs some asynchronous operations. What does happen if the value of `response` changes before the asynchronous operations finish? The effect would be triggered again, and the function would be called again but this time with the new response. This may be wanted, but if not, this would be difficult to avoid without tricks based on `useRef`.
+This is a better solution, and it feels less hacky than the combinatorial machine. However, the code is still fragile and relies on *implicit behaviors*. What does happen if the value of `response` changes before the async function `sendResponseToServer` finishes? The effect would be triggered again, and `handleResponseChange` would be called again but this time with the new response. This may be wanted, but if not, this would be difficult to avoid without tricks based on `useRef`.
 
 Let's do a last refactor, and use XState again.
 
@@ -387,12 +416,12 @@ export default function App() {
 }
 ```
 
-The *initial* state of the machine is `Waiting for response`. In this state, we listen to `Received response` event. When we receive this event, we transition to `Sending response to server`, in which we do something with the response. Because in `Sending response to server` state we also listen to `Received response`, if the response changes while the last response has not finished being sent, the last operation will be cancelled, and the new request will be sent. The previous code without XState behaved the same way, but now the behavior is explicit.
+The *initial* state of the machine is `Waiting for response`. In this state, we listen to `Received response` event. When we receive this event, we transition to `Sending response to server`, in which we do something with the response. Because in `Sending response to server` state we also listen to `Received response`, if the response changes while the last response has not finished being sent, the last operation will be cancelled, and the new request will be sent. The previous code without XState behaved the same way, but now the behavior is explicit and way more predictable.
 
-Note that we are still using a `useEffect`. XState can be used in conjunction with libraries from classic React's ecosystem. Thanks to a `useEffect` we can synchronize our machine with a hook.
+Note that we are still using `useEffect` hook. XState can be used in conjunction with libraries from classic React's ecosystem. Thanks to a `useEffect` we can synchronize our machine with other hooks.
 
 ## Conclusion
 
-We went from a solution where a child component was handling a part of the logic, to a solution where the parent component centralizes the logic and makes it totally explicit. The lesson to learn from this experience is that logic should always go from top to bottom. The logic should be centralized high in components tree, not be put in handlers of HTML elements, nor in child components. This makes the code more predictable and then less error-prone and easier to maintain.
+We went from a solution where a child component was handling a part of the logic, where we had a hard time figuring out how to solve extraneous runs of an effect, to a solution where the parent component centralizes the logic and makes it totally explicit. The lesson to learn from this experience is that logic should always go from top to bottom. The logic should be centralized high in components tree, not be put in handlers of HTML elements, nor in child components. This makes the code more predictable, and then less error-prone and easier to maintain.
 
-XState encourages this practice. It can be used in conjunction with libraries bringing hooks thanks to `useEffect` without fear.
+XState encourages this practice. It can be used in conjunction with libraries bringing hooks without any fear, notably thanks to `useEffect` hook.
