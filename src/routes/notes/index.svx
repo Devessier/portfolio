@@ -8,6 +8,26 @@ layout: notes
 
 <!-- NOTES -->
 
+<Note datetime="2022-06-29T15:58:36.740Z">
+
+## Back up code with another Git remote
+
+At 42 school, we need to push code of projects to an internal Git server to be evaluated. However, I prefer to work on GitHub so that my code is public, and I benefit from Pull Requests, GitHub Actions, etc. When the project is finished, or to back up the project, I also push on the Git server of the school.
+
+I create a new remote for the Git server of the school:
+
+```sh
+git remote add 42 <school-remote>
+```
+
+And then I push to it (mostly the *main* branch):
+
+```sh
+git push 42 main
+```
+
+</Note>
+
 <Note datetime="2022-06-28T14:22:24.628Z">
 
 ## Storing verification tokens into database
