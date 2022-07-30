@@ -8,6 +8,16 @@ tags:
   - Expo
 ---
 
+<script>
+    import AppAlert from '$lib/AppAlert.svelte'
+</script>
+
+<AppAlert type="warning">
+
+Since the date of writing of this article, Expo has evolved and there is now a simpler way to set it up inside a monorepo. I recommend reading the [official documentation about monorepos](https://docs.expo.dev/guides/monorepos/).
+
+</AppAlert>
+
 Today I encountered some difficulties to make Expo work inside a monorepo.
 
 As part of my studies I have to create a mobile application to listen to music in collaboration with other people. We decided to create it with React Native, and to ease the development, we decided to use [Expo](https://expo.io/). We also decided to organize our project by packages, owned by a single repository. To orchestrate these different packages, we chose to use [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/) and [Lerna](https://lerna.js.org/).
