@@ -691,4 +691,194 @@ const vizMachine = createMachine({
 });
 ```
 
-As a lot of things in development, the best solution is context-dependent. Parallel states are perfect to allow a machine to orchestrate more than one thing at a time, but this can lead to synchronization issues and less understandable code. I talked about this problem in [a YouTube video](https://www.youtube.com/watch?v=Lvpi0XM_Nzg).
+As a lot of things in development, the best solution is context-dependent. Parallel states are perfect to allow a machine to orchestrate more than one thing at a time, but this can lead to synchronization issues and less understandable code. I talked about this problem in [a YouTube video](https://youtu.be/Lvpi0XM_Nzg).
+
+## Prevent loading animation from flickering when network is fast
+
+Loading indicators are necessary for users to know that they are waiting something that will happen, and not wasting their time. But bad UX comes when loading indicators are directly bound to HTTP responses, that can come really fast, making loading indicator flicker. [Sam Selikoff explains it well in one of his videos](https://youtu.be/YnksFDAN_GA).
+
+The solution is to ensure loading state is always displayed enough time for users to see it, understand something is loading, and do not be surprised by a rough disappearing. Once again, parallel states can help us.
+
+Instead of directly targeting the state that makes the request when receiving a `Load` event, we target a parallel state:
+
+```ts
+const vizMachine = createMachine({
+    context: {
+        // Other properties...
+        errorHasOccuredWhileSendingRequest: false,
+    },
+    schema: {
+        context: {} as {
+            // Other properties...
+            errorHasOccuredWhileSendingRequest: boolean;
+        },
+    },
+    // ...
+    type: "parallel",
+    states: {
+        // ...
+        "Managing input and machine execution": {
+            initial: "Idle",
+            states: {
+                "Idle": {},
+                "Executing machine and input": {
+                    entry: "Reset that error has occured while sending request",
+                    // We have a parallel state inside a parallel state!
+                    type: "parallel",
+                    states: {
+                        "Making request to server": {
+                            initial: "Sending request",
+                            states: {
+                                // The state we were using to make
+                                // the request behaves the same.
+                                "Sending request": {
+                                    invoke: {
+                                        src: "Execute machine and input on server",
+                                        onDone: {
+                                            actions: "Assign machine execution to context",
+                                            target: "Received response",
+                                        },
+                                        onError: {
+                                            target: "Error occured",
+                                        },
+                                    },
+                                },
+                                "Received response": {
+                                    type: "final",
+                                },
+                                "Error occured": {
+                                    // Save information to context
+                                    // to dissociate final states.
+                                    entry:
+                                        "Assign error has occured while sending request to context",
+                                    type: "final",
+                                },
+                            },
+                        },
+                    },
+                    // When all orthogonal regions of a parallel state
+                    // reach a final state, the parallel state
+                    // is considered to be *done*.
+                    onDone: [
+                        {
+                            cond: "Error has occured while sending request",
+                            target: "Failed to execute machine with input",
+                        },
+                        {
+                            target: "Received response",
+                        },
+                    ],
+                },
+                "Received response": { /** */ },
+                "Failed to execute machine with input": { /** */ },
+            },
+            // ...
+        },
+    },
+    // ...
+}, {
+    actions: {
+        "Assign error has occured while sending request to context":
+            assign({
+                errorHasOccuredWhileSendingRequest: (_context) => true,
+            }),
+        "Reset that error has occured while sending request": assign({
+          errorHasOccuredWhileSendingRequest: (_context) => false,
+        }),
+    },
+    guards: {
+        "Error has occured while sending request": ({
+          errorHasOccuredWhileSendingRequest,
+        }) => errorHasOccuredWhileSendingRequest === true,
+    },
+});
+```
+
+The machine behaves exactly the same as previously, in a more sophisticated way. We benefit from the fact that when all the orthogonal regions of a parallel state reach a final state, the parallel state is considered to be *done* and `onDone` transitions defined on it are tried.
+
+Currently, `Executing machine and input` only has one orthogonal region (`Making request to server`), that reaches a final state when request returns. If the execution fails, we assign a property to context to be able to later know if the execution failed, once the overall parallel state is done. Think of a parallel state used like this as a `Promise.all` that would not know the resolved value of each promise; values must be assigned somewhere, like so:
+
+```ts
+let errorHasOccuredWhileSendingRequest = false;
+
+await Promise.all([
+    executeMachineWithInputPromise.catch(() => {
+        errorHasOccuredWhileSendingRequest = true;
+    }),
+]);
+```
+
+Once all orthogonal regions are done, `onDone` transitions defined on the parallel state are tried. If `Error has occured while sending request` returns `true`, we target the error state (`Failed to execute machine with input`), otherwise we target the success state (`Received response`). `Failed to execute machine with input` can be used to conditionally display the error alert as it used to!
+
+The last thing to do is to implement a delay of one second:
+
+```ts {14-28}
+const vizMachine = createMachine({
+    // ...
+    type: "parallel",
+    states: {
+        // ...
+        "Managing input and machine execution": {
+            initial: "Idle",
+            states: {
+                "Idle": {},
+                "Executing machine and input": {
+                    entry: "Reset that error has occured while sending request",
+                    type: "parallel",
+                    states: {
+                        "Making request to server": { /** */ },
+                        "Delaying loading state": {
+                            initial: "Pending",
+                            states: {
+                                Pending: {
+                                    after: {
+                                        "1000": {
+                                            target: "Reached end of delay",
+                                        },
+                                    },
+                                },
+                                "Reached end of delay": {
+                                    type: "final",
+                                },
+                            },
+                        },
+                    },
+                    onDone: [
+                        {
+                            cond: "Error has occured while sending request",
+                            target: "Failed to execute machine with input",
+                        },
+                        {
+                            target: "Received response",
+                        },
+                    ],
+                },
+                "Received response": { /** */ },
+                "Failed to execute machine with input": { /** */ },
+            },
+            // ...
+        },
+    },
+    // ...
+});
+```
+
+A timer of one second is started, which triggers a transition to a final state after. The behavior of the parallel state is now to wait for its both orthogonal regions to finish.
+
+If the network is fast, we artificially wait for one second:
+
+![Execute machine with a fast network and artificially wait for one second](/img/turing/fast-network.gif)
+
+If the request fails, we display the error alert only after one second:
+
+![Execute machine but request fails, still artificially wait for one second](/img/turing/network-fails.gif)
+
+If the network is slow, but the request takes less than one second, we wait a bit artificially:
+
+![Execute machine with a slow network in less than a second and artificially wait for one second](/img/turing/slow-network-less-1s.gif)
+
+If the network is slow and the request takes more than one second, we do not wait artificially and stop displaying loading indicator when response arrives:
+
+![Execute machine with a slow network in less than a second and artificially wait for one second](/img/turing/slow-network-more-1s.gif)
+
+I recorded [a video about loading state with XState](https://youtu.be/BLyn0CIi0Zw).
