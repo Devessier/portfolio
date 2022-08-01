@@ -882,3 +882,102 @@ If the network is slow and the request takes more than one second, we do not wai
 ![Execute machine with a slow network in less than a second and artificially wait for one second](/img/turing/slow-network-more-1s.gif)
 
 I recorded [a video about loading state with XState](https://youtu.be/BLyn0CIi0Zw).
+
+## Indicate when input or machine configuration are stale
+
+This is the feature I'm the most proud of, while it's probably one of the simplest to implement. But it gives the visualizer a more professional look.
+
+When input or machine configuration are different from the last input and machine configuration that led to a successful execution, we indicate that inputs are stale:
+
+![Stale indicator is displayed when input and machine configuration change](/img/turing/stale-indicator.gif)
+
+To implement this, first we need to cache the previous input and machine configuration when we receive a successful execution result:
+
+
+```ts {1-12, 29-32, 48-51}
+const vizMachine = createMachine({
+    context: {
+        // Other properties...
+        lastSuccessfullyExecutedInput: undefined,
+        lastSuccessfullyExecutedMachineCode: undefined,
+    },
+    schema: {
+        context: {} as {
+            // Other properties...
+            lastSuccessfullyExecutedInput: string | undefined;
+            lastSuccessfullyExecutedMachineCode: string | undefined;
+        },
+    },
+    // ...
+    type: "parallel",
+    states: {
+        // ...
+        "Managing input and machine execution": {
+            initial: "Idle",
+            states: {
+                "Idle": {},
+                "Executing machine and input": {
+                    // ...
+                    type: "parallel",
+                    states: {
+                        "Making request to server": {
+                            initial: "Sending request",
+                            states: {
+                                "Sending request": { /** */ },
+                                "Received response": {
+                                    entry: "Cache input and machine code into context",
+                                    type: "final",
+                                },
+                                "Error occured": { /** */ },
+                            },
+                        },
+                    },
+                    onDone: [ /** */ ],
+                },
+                "Received response": { /** */ },
+                "Failed to execute machine with input": { /** */ },
+            },
+            // ...
+        },
+    },
+    // ...
+}, {
+    actions: {
+        "Cache input and machine code into context": assign({
+            lastSuccessfullyExecutedInput: (context) => context.input,
+            lastSuccessfullyExecutedMachineCode: (context) => context.machineCode,
+        }),
+    },
+});
+```
+
+Then in Vue side, we create a `computed`:
+
+```ts
+import { computed } from 'vue';
+
+const isStale = computed(() => {
+    const {
+        input,
+        lastSuccessfullyExecutedInput,
+        machineCode,
+        lastSuccessfullyExecutedMachineCode
+    } = state.value.context;
+
+    if (
+        lastSuccessfullyExecutedInput === undefined ||
+        lastSuccessfullyExecutedMachineCode === undefined
+    ) {
+        return false;
+    }
+
+    return (
+        input !== lastSuccessfullyExecutedInput ||
+        machineCode !== lastSuccessfullyExecutedMachineCode
+    );
+});
+```
+
+If no successful execution has been performed yet, cached values are `undefined` and data are not stale. Otherwise, we compare values with the cached ones.
+
+This is a stylistic detail that improves the UX, and that is not so hard to implement!
