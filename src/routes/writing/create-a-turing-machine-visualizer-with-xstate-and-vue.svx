@@ -9,6 +9,8 @@ tags: ['XState', 'Vue']
 
 **Say that we use Vue 3 with Composition API, and XState with TypeScript (schema to define context and events)**
 
+We are going to work on `vizMachine`, the machine that orchestrates the whole visualizer, from play/pause to the request to server.
+
 ## Move tape automatically
 
 When the user clicks to play the machine, the tape starts to move automatically, one step per second. The speed can be increased to reach two steps per second.
@@ -927,7 +929,7 @@ Loading states are an interesting UI/UX topic, especially with XState because th
 
 ## Indicate when input or machine configuration are stale
 
-This is the feature I'm the most proud of, while it's probably one of the simplest to implement. But it gives the visualizer a more professional look.
+This is the feature I'm the most proud of, while it was one of the simplest to implement. But it gives the visualizer a more professional look.
 
 When input or machine configuration are different from the last input and machine configuration that led to a successful execution, we indicate that inputs are stale:
 
@@ -1029,7 +1031,7 @@ This is a stylistic detail that improves the UX, and that is not so hard to impl
 
 Until now, we assumed that `Load` event, used to trigger execution of machine configuration with input, was sent to `vizMachine` when clicking on the `Load` button.
 
-Indeed, the origin of the event is the user clicking on the button, but there is a step in-between.
+Indeed, the origin of the event is the user clicking on the button, but there is a step in-between: `submitButtonMachine`.
 
 ```ts
 import { sendParent } from "xstate";
@@ -1085,7 +1087,7 @@ const submitButtonMachine = createMachine({
 });
 ```
 
-We'll see that this machine interacts with its parent machine and expect it to respond.
+This machine interacts with its parent machine and expects it to respond.
 
 ### Forward `Load` event to parent
 
@@ -1201,7 +1203,7 @@ const submitButtonMachine = createMachine({
 });
 ```
 
-And in parent machine, we send the events expected by `submitButtonMachine` machine when response is received:
+So, in parent machine, we send the events expected by `submitButtonMachine` machine when response is received:
 
 ```ts {6, 15, 22, 30-47}
 import { send } from "xstate";
@@ -1256,10 +1258,10 @@ const vizMachine = createMachine({
 });
 ```
 
-To send an event to an invoked service, we use the `send` action and provide an option object with `to` property that is the id of the service.
+To send an event to an invoked service, we use the `send` action and provide an option object with `to` property that is the identifier of the service.
 
 Apart from the fact that events are exchanged between different machines, the base contract remains the same: events are sent and listened to.
 
-This even works good in case of error!
+This even works in case of error!
 
 ![Submit button transitions to loading state and then failure state](/img/turing/submit-button-failure-state.gif)
