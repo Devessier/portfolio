@@ -7,19 +7,25 @@ tags: ['XState', 'Vue']
 
 **Add description of the project and link to online website**
 
+**Say that we use Vue 3 with Composition API, and XState with TypeScript (schema to define context and events)**
+
 ## Move tape automatically
 
-When the user clicks to play the machine, the tape moves automatically, one frame per second. The speed can be increased to reach two frames per second.
+When the user clicks to play the machine, the tape starts to move automatically, one step per second. The speed can be increased to reach two steps per second.
 
 ![Tape moves automatically and speed is increased](/img/turing/automatic-playing-with-different-speed-modes.gif)
 
-By default, automatic playing is off. User needs to click the play button to start automatic playing.
+By default, automatic playing is off. User needs to click the play button to start automatic playing:
 
 ```ts
 import { createMachine } from "xstate";
 
 const vizMachine = createMachine({
     // ...
+    schema: {
+        events: {} as
+            | { type: "Play" },
+    },
     initial: "Automatic playing off",
     states: {
         "Automatic playing off": {
@@ -35,9 +41,9 @@ const vizMachine = createMachine({
 });
 ```
 
-To make automatic playing work, we create a delayed transition in `Automatic playing on` state, that transitions to the state itself, after incrementing the index of the step.
+To make automatic playing work, we create a delayed transition in `Automatic playing on` state, that transitions to the state itself, after incrementing the index of the step:
 
-```ts {1-8, 21-26, 32-36}
+```ts {1-9, 20-29, 33-37}
 const vizMachine = createMachine({
     context: {
         stepsIndex: 0,
@@ -46,6 +52,7 @@ const vizMachine = createMachine({
         context: {} as {
             stepsIndex: number;
         },
+        // ...
     },
     // ...
     initial: "Automatic playing off",
@@ -78,11 +85,11 @@ const vizMachine = createMachine({
 });
 ```
 
-Note that the transition is explicitly made external through `internal: false`. This is necessary because the state needs to be reentered for the delayed transition to be set up again.
+Note that the transition is explicitly made external through `internal: false`. This is necessary because `Automatic playing on` state needs to be reentered for the delayed transition to be set up again.
 
-The delay transition is defined with a string, which references a function dynamically computing the delay. It uses the speed mode, stored in context, to determine the delay between two frames:
+The delay transition is defined with a string, which references a function dynamically computing the delay. It uses the speed mode, stored in context, to determine the delay between two steps:
 
-```ts {1-14, 31-35, 38-42, 47-49}
+```ts {1-16, 33-37, 40-44, 49-51}
 const vizMachine = createMachine({
     context: {
         stepsIndex: 0,
@@ -93,10 +100,12 @@ const vizMachine = createMachine({
             stepsIndex: number;
             automaticPlayingDelayMode: "MEDIUM" | "FAST";
         },
-        events: {} as {
-            type: "Set automatic playing delay";
-            mode: "MEDIUM" | "FAST";
-        },
+        events: {} as 
+            | { type: "..." } // Other events...
+            | {
+                type: "Set automatic playing delay";
+                mode: "MEDIUM" | "FAST";
+            },
     },
     // ...
     initial: "Automatic playing off",
@@ -137,9 +146,9 @@ const vizMachine = createMachine({
 });
 ```
 
-If the speed mode is modified, only the timer of the next tick will know about the change. The current timer is not reset.
+If the speed mode is modified while a timer is pending, only the timer of the next tick will know about the change. The current timer is **not** reset.
 
-In Vue side, we compute the squares to print on the tape according to the step list and the current step index, and we let `<TransitionGroup />` handle the smooth transition of squares:
+On Vue side, we compute the squares to print on the tape according to the step list and the current step index, and we let `<TransitionGroup />` handle the smooth transition of squares:
 
 ```svelte
 <TransitionGroup
@@ -164,6 +173,12 @@ Player can be stopped and resumed with a single state transition:
 ```ts
 const vizMachine = createMachine({
     // ...
+    schema: {
+        // ...
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Pause" },
+    },
     initial: "Automatic playing off",
     states: {
         "Automatic playing off": {
@@ -201,6 +216,12 @@ When we receive `Next step` event, that is emitted by next step button, we targe
 ```ts
 const vizMachine = createMachine({
     // ...
+    schema: {
+        // ...
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Next step" },
+    },
     initial: "Automatic playing off",
     states: {
         "Automatic playing off": { /** */ },
@@ -220,7 +241,7 @@ Again, because `Automatic playing on` state is exited, if a timer was scheduled,
 
 ## Know when end of steps is reached
 
-When end of steps is reached, we want to tell it to user, stop automatic playing and allow restarting steps.
+When end of steps is reached, we want to tell it to the user, stop automatic playing and allow restarting steps.
 
 ![End of steps is reached and steps are restarted from beginning](/img/turing/reaching-end-of-steps.gif)
 
@@ -248,7 +269,7 @@ const vizMachine = createMachine({
 });
 ```
 
-We use an eventless transition (with `always` keyword) to target `Reached end of steps` state when `Has reached end of steps` condition is met:
+We use an [eventless transition](https://xstate.js.org/docs/guides/transitions.html#eventless-always-transitions) (with `always` keyword) to target `Reached end of steps` state when `Has reached end of steps` condition is met:
 
 ```ts {10-13, 23-30}
 const vizMachine = createMachine({
@@ -286,25 +307,31 @@ const vizMachine = createMachine({
 });
 ```
 
-Say that automatic playing is turned on, and the current step is the last one. The behavior of the machine is:
+Say that automatic playing is turned on, and the current step is the last one, the timer of automatic playing is about to end. The behavior of the machine is:
 
 1. Delay is reached
 1. Step index is incremented
 1. Reenter `Automatic playing on` state
-1. Compute `Has reached end of steps` condition; as it returns true, we target `Reached end of steps` state
-1. Enter `Reached end of steps` state
+2. Compute `Has reached end of steps` condition; as it returns `true`, target `Reached end of steps` state
+3. Enter `Reached end of steps` state
 
 `Reached end of steps` state is entered even before the timer of `Automatic playing on` state is restarted.
 
-The eventless transition will be tried when the state in which it is defined is entered for the first time, and then every time something happens in the machine. It includes when an event is received from the outside (from Vue components in our case), but the eventless transition will be tried **after** a transition (including a self-transition) is taken.
+The eventless transition will be tried when the state in which it is defined is entered for the first time, and then every time the machine processes an event.
 
 ### Restart steps when end has been reached
 
 To enable to restart steps, we listen to another event in `Reached end of steps`:
 
-```ts {7-14, 19-21}
+```ts {2-7, 13-20, 25-27}
 const vizMachine = createMachine({
     // ...
+    schema: {
+        // ...
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Reset steps" },
+    },
     initial: "Playing steps",
     states: {
         "Playing steps": {
