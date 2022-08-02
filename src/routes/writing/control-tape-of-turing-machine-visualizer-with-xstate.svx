@@ -1,9 +1,27 @@
 ---
 title: Control tape of Turing machine visualizer with XState
-description: In this article I present XState patterns I used to control the tape of a Turing machine in a visualizer built with XState.
+description: The execution of a Turing machine with an input produces a list of operations on a tape, that are made to be visualized. We built such a visualizer with XState, and used cool patterns to visualize operations on the tape.
 datetime: 2022-08-02T16:57:30.076Z
 tags: ['Turing visualizer', 'XState', 'Vue']
 ---
+
+<script>
+    import ContentImageWithShadow from '$lib/ContentImageWithShadow.svelte'
+</script>
+
+A Turing machine is made of a head that reads symbols on a tape, and behaves according to a set of rules. It has a *current state*, like those of a finite state machine. When the machine is in a state T and reads a symbol S, it checks in the rules what to do in this case, and then replaces the symbol with another one, moves to right or left, and changes its state. Finite state machines, as implemented by XState, are a special case of Turing machines.
+
+As part of a 42 school project, with a good friend of mine, [Paul Rastoin](https://prastoin.netlify.app/), we built an interpreter for Turing machines in Erlang, to be used with a web visualizer made with Vue 3 and XState for all logic code.
+
+<ContentImageWithShadow>
+
+![Screenshot of Turing machine visualizer, showing the tape and the controls](/img/turing/presentation.png)
+
+</ContentImageWithShadow>
+
+[Open Turing machine visualizer →](https://turing.adonisenprovence.com/)
+
+In this series of articles, we're going to explore XState patterns used by the code of our visualizer. For today, let's focus on the controls of the visualizer that let users start the execution, pause it and go step by step.
 
 ## Move tape automatically
 
