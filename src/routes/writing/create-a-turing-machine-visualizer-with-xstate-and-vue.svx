@@ -362,6 +362,10 @@ When this transition is taken, the tape recovers its original state, and all tha
 
 We want the machine to always hold the most recent values of the input and machine configuration.
 
+![Typing on input field and machine configuration field](/img/turing/type-on-fields.gif)
+
+The machine listens to changes on input and machine configuration values, and updates its context:
+
 ```ts
 const vizMachine = createMachine({
     // ...
