@@ -421,15 +421,21 @@ On Vue side, the value of inputs must reflect the values in the context, and whe
 
 ## Send input and machine configuration to server for execution
 
+We wrote a server in Erlang to compute Turing machines with an input. It expects the input and the machine configuration to be sent as JSON in a POST request.
+
 ![Execution succeeds and visualizer is usable](/img/turing/loading-successful.gif)
 
-We wrote a server in Erlang to compute Turing machines. It expects the input and the machine configuration to be sent as JSON in a POST request.
-
-A first implementation can be to create a state sibling to `Playing steps` for instance, and wait for a `Load` event to make the request:
+A first implementation can be to create a state sibling to `Playing steps`, where we wait for a `Load` event to make the request:
 
 ```ts
 const vizMachine = createMachine({
     // ...
+    schema: {
+        // ...
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Load" },
+    },
     initial: "Playing steps",
     states: {
         "Playing steps": {
@@ -453,7 +459,9 @@ const vizMachine = createMachine({
 });
 ```
 
-In this implementation, `Playing steps` and `Making request to server` states are mutually exclusive, that is that they can not be active at the same time. When making a request to the server to compute a new execution, current Turing machine can not be visualized anymore. This may be the behavior you want to implement, and indeed this is what we wanted. But things get harder when we want to deal with error cases.
+In this implementation, `Playing steps` and `Making request to server` states are mutually exclusive, that is, they can not be active at the same time—this is the main characteristic of a finite state machine, that can only be in one state at a time. When making a request to the server to compute a new execution, user can no longer interact with the visualizer, as it can only in `Playing steps` state.
+
+This may be the behavior you want to implement, and indeed this is what we wanted. But things get harder when we want to deal with error cases for request.
 
 ![Execution failed server-side, but visualizer can still be used with previous execution](/img/turing/loading-unsuccessful.gif)
 
@@ -482,7 +490,7 @@ const vizMachine = createMachine({
 });
 ```
 
-But now, if an error occurred during the last execution, we can no longer interact with the visualizer, which is only available when `Playing steps` state is active. As a consequence, we need to find another way to store that an error occurred.
+But now, if an error occurred during the last execution, we can no longer interact with the visualizer, which is only interactive when `Playing steps` state is active. As a consequence, we need to find another way to store that an error occurred.
 
 The first idiomatic way to solve the issue is to store another property into the context:
 
@@ -528,9 +536,9 @@ const vizMachine = createMachine({
 });
 ```
 
-There is more work to do, as we need to reset the property when making another request, but this works well.
+There is more work to do, as we need to reset the property when making another request, but this works well and is definitely okay.
 
-What I dislike with this solution is that request to server is too tightly coupled with visualizer management. If tomorrow we want to allow users to perform some actions while request is pending, we would need to substantially change the machine. This is not to say that in normal circumstances refactoring should be avoided when involving heavy changes, but here the refactoring would be huge because at first we used the wrong tools to solve the problem.
+What I dislike with this solution though is that request to server is too tightly coupled with visualizer management. If tomorrow we want to allow users to perform some actions while request is pending, we would need to substantially change the machine. That could even lead to [state-explosion problem](https://statecharts.dev/state-machine-state-explosion.html). This is not to say that refactoring should be avoided when involving heavy changes, but here the refactoring would be significant because at first we used not suitable tools to solve the problem.
 
 We had a hard time figuring out how to insert request to server in visualizer management flow because these both parts are **interleaved**: they are neither totally independent nor totally mutually exclusive.
 
@@ -582,9 +590,11 @@ const vizMachine = createMachine({
 });
 ```
 
+Contrary to a compound state, which can only have one of its child states active at the same time, a parallel state has all its child states active at the same time. The machine is in several states at the same time, and `state.matches()` returns `true` for several values. Children of a parallel state are called *orthogonal regions*, in the sens that [they are independent](https://en.wikipedia.org/wiki/Orthogonality_(programming)).
+
 An important feature of parallel states is that all active regions receive events and can handle them separately. Here, `Managing input and machine execution` state goes to its child state `Making request to server` that starts the request.
 
-The previous implementation that did not use parallel states was preventing users from interacting with the visualizer while a request was performing. We must update our latest implementation to behave the same.
+The previous implementation that did not use parallel states was preventing users from interacting with the visualizer while a request was performing, and we want to keep this behavior. We must update our implementation.
 
 First, we disable the visualizer when loading starts, and we ensure visualizer is only available after a machine has been executed:
 
@@ -685,9 +695,9 @@ const vizMachine = createMachine({
 });
 ```
 
-When execution succeeds, we assign steps to context, and we enter `Received response` state, which sends `Enable playing execution steps` event to the machine itself. Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Idle` we wait for `Enable playing execution steps` event to go to `Playing steps` state.
+When execution succeeds, we assign steps to context, and we enter `Received response` state, which sends `Enable playing execution steps` event to the machine itself. Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Idle` state we wait for `Enable playing execution steps` event to go to `Playing steps` state.
 
-We may think that this solution is overengineered and involves a lot more code to achieve the same result. And in a way it's true, we wrote more code. But we wrote more explicit, more robust and less *hacky* code.
+We may think that this solution is overengineered and involves a lot more code to achieve the same result. And in a way it's true, we wrote more code. But we wrote more explicit and more robust code. We made a clear distinction between different concerns.
 
 If we want to know if error alert should be shown, we can test whether machine is in `Failed to execute machine with input` state, without needing to maintain a boolean in context.
 
@@ -722,7 +732,7 @@ const vizMachine = createMachine({
 });
 ```
 
-As a lot of things in development, the best solution is context-dependent. Parallel states are perfect to allow a machine to orchestrate more than one thing at a time, but this can lead to synchronization issues and less understandable code. I talked about this problem in [a YouTube video](https://youtu.be/Lvpi0XM_Nzg).
+As a lot of things in development, the *best* solution is context-dependent. Parallel states are perfect to allow a machine to orchestrate more than one thing at a time, but this can lead to synchronization issues and less understandable code. I talked about this problem in [a YouTube video](https://youtu.be/Lvpi0XM_Nzg).
 
 ## Prevent loading animation from flickering when network is fast
 
