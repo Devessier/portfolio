@@ -762,6 +762,7 @@ const vizMachine = createMachine({
             initial: "Idle",
             states: {
                 "Idle": {},
+                // 👇 The famous parallel state
                 "Executing machine and input": {
                     entry: "Reset that error has occured while sending request",
                     // We have a parallel state inside a parallel state!
@@ -788,8 +789,8 @@ const vizMachine = createMachine({
                                     type: "final",
                                 },
                                 "Error occured": {
-                                    // Save information to context
-                                    // to dissociate final states.
+                                    // Dissociate final states
+                                    // with a property in context.
                                     entry:
                                         "Assign error has occured while sending request to context",
                                     type: "final",
@@ -799,7 +800,7 @@ const vizMachine = createMachine({
                     },
                     // When all orthogonal regions of a parallel state
                     // reach a final state, the parallel state
-                    // is considered to be *done*.
+                    // is considered to be done.
                     onDone: [
                         {
                             cond: "Error has occured while sending request",
@@ -837,7 +838,7 @@ const vizMachine = createMachine({
 
 The machine behaves exactly the same as previously, in a more sophisticated way. We benefit from the fact that when all the orthogonal regions of a parallel state reach a final state, the parallel state is considered to be *done* and `onDone` transitions defined on it are tried.
 
-Currently, `Executing machine and input` only has one orthogonal region (`Making request to server`), that reaches a final state when request returns. If the execution fails, we assign a property to context to be able to later know if the execution failed, once the overall parallel state is done. Think of a parallel state used like this as a `Promise.all` that would not know the resolved value of each promise; values must be assigned somewhere, like so:
+Currently, `Executing machine and input` only has one orthogonal region (`Making request to server`), that reaches a final state when request returns, by resolving or rejecting. If the execution fails, we assign a property to context to be able to later know if the execution failed, once the overall parallel state is done. Think of a parallel state used like this as a `Promise.all` that would not know the resolved value of each promise; values must be assigned somewhere, like so:
 
 ```ts
 let errorHasOccuredWhileSendingRequest = false;
@@ -849,7 +850,7 @@ await Promise.all([
 ]);
 ```
 
-Once all orthogonal regions are done, `onDone` transitions defined on the parallel state are tried. If `Error has occured while sending request` returns `true`, we target the error state (`Failed to execute machine with input`), otherwise we target the success state (`Received response`). `Failed to execute machine with input` can be used to conditionally display the error alert as it used to!
+Once all orthogonal regions are done, `onDone` transitions defined on the parallel state are tried. If `Error has occured while sending request` returns `true`, we target the error state (`Failed to execute machine with input`), otherwise we target the success state (`Received response`). The error state, `Failed to execute machine with input`, can be used to conditionally display the error alert as it used to!
 
 The last thing to do is to implement a delay of one second:
 
@@ -904,7 +905,7 @@ const vizMachine = createMachine({
 });
 ```
 
-A timer of one second is started, which triggers a transition to a final state after. The behavior of the parallel state is now to wait for its both orthogonal regions to finish.
+A timer of one second is started, which then triggers a transition to a final state. The behavior of the parallel state is now to wait for its both orthogonal regions to finish.
 
 If the network is fast, we artificially wait for one second:
 
@@ -922,7 +923,7 @@ If the network is slow and the request takes more than one second, we do not wai
 
 ![Execute machine with a slow network in less than a second and artificially wait for one second](/img/turing/slow-network-more-1s.gif)
 
-I recorded [a video about loading state with XState](https://youtu.be/BLyn0CIi0Zw).
+Loading states are an interesting UI/UX topic, especially with XState because they have to be thoroughly thought. I recorded [a video about deferred and cancellable loading states with XState](https://youtu.be/BLyn0CIi0Zw).
 
 ## Indicate when input or machine configuration are stale
 
