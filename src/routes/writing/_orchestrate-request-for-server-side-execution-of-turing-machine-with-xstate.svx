@@ -1,0 +1,382 @@
+---
+title: Orchestrate request for server-side execution of Turing machine with XState
+description: In this article I present XState patterns I used to manage request to server in order to compute a Turing machine.
+datetime: 2022-08-02T17:05:23.731Z
+tags: ['Turing visualizer', 'XState', 'Vue']
+---
+
+## Synchronize input and machine configuration values with machine
+
+We want the machine to always hold the most recent values of the input and machine configuration.
+
+![Typing on input field and machine configuration field](/img/turing/type-on-fields.gif)
+
+The machine listens to changes on input and machine configuration values, and updates its context:
+
+```ts
+const vizMachine = createMachine({
+    // ...
+    context: {
+        // Other properties...
+        input: "",
+        machineCode: "",
+    },
+    schema: {
+        context: {} as {
+            // Other properties...
+            input: string;
+            machineCode: string;
+        },
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Set input"; input: string }
+            | { type: "Set machine code"; machineCode: string },
+    },
+    // ...
+    on: {
+        "Set input": {
+            actions: "Assign input to context",
+        },
+        "Set machine code": {
+            actions: "Assign machine code to context",
+        },
+    },
+    // ...
+}, {
+    actions: {
+        "Assign input to context": assign({
+            input: (_, event) => event.input,
+        }),
+        "Assign machine code to context": assign({
+            machineCode: (_, event) => event.machineCode,
+        }),
+    },
+});
+```
+
+On Vue side, the value of inputs must reflect the values in the context, and when inputs get changed, they send events to the machine:
+
+```svelte
+<input
+    :value="state.context.input"
+    @input="send({
+        type: "Set input",
+        input: $event.target.value,
+    })"
+/>
+```
+
+## Send input and machine configuration to server for execution
+
+We wrote a server in Erlang to compute Turing machines with an input. It expects the input and the machine configuration to be sent as JSON in a POST request.
+
+![Execution succeeds and visualizer is usable](/img/turing/loading-successful.gif)
+
+A first implementation can be to create a state sibling to `Playing steps`, where we wait for a `Load` event to make the request:
+
+```ts
+const vizMachine = createMachine({
+    // ...
+    schema: {
+        // ...
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Load" },
+    },
+    initial: "Playing steps",
+    states: {
+        "Playing steps": {
+            on: {
+                Load: {
+                    target: "Making request to server",
+                }
+            }
+        },
+        "Making request to server": {
+            invoke: {
+                src: "Execute machine and input on server",
+                onDone: {
+                    actions: "Assign machine execution to context",
+                },
+                // ...
+            },
+        },
+    },
+    // ...
+});
+```
+
+In this implementation, `Playing steps` and `Making request to server` states are mutually exclusive, that is, they can not be active at the same time—this is the main characteristic of a finite state machine, that can only be in one state at a time. When making a request to the server to compute a new execution, user can no longer interact with the visualizer, as it can only in `Playing steps` state.
+
+This may be the behavior you want to implement, and indeed this is what we wanted. But things get harder when we want to deal with error cases for request.
+
+![Execution failed server-side, but visualizer can still be used with previous execution](/img/turing/loading-unsuccessful.gif)
+
+If execution fails, we want to display an alert telling the user that an error occurred and that the visualizer does not show the latest execution, but the last one that succeeded. We need to store in the machine, somewhere, the state of the last execution that failed.
+
+We can target an error state when execution fails, and after use `state.matches()` to test whether this state is active:
+
+```ts {9-11, 14}
+const vizMachine = createMachine({
+    // ...
+    initial: "Playing steps",
+    states: {
+        "Playing steps": { /** */ },
+        "Making request to server": {
+            invoke: {
+                src: "Execute machine and input on server",
+                // ...
+                onError: {
+                    target: "Failed to execute machine with input",
+                },
+            },
+        },
+        "Failed to execute machine with input": { /** */ },
+    },
+    // ...
+});
+```
+
+But now, if an error occurred during the last execution, we can no longer interact with the visualizer, which is only interactive when `Playing steps` state is active. As a consequence, we need to find another way to store that an error occurred.
+
+The first idiomatic way to solve the issue is to store another property into the context:
+
+```ts {2-12, 17, 21-24, 31-36}
+const vizMachine = createMachine({
+    // ...
+    context: {
+        // Other properties...
+        hasLastExecutionFailed: false,
+    },
+    schema: {
+        context: {} as {
+            // Other properties...
+            hasLastExecutionFailed: boolean;
+        },
+        // ...
+    },
+    initial: "Playing steps",
+    states: {
+        "Playing steps": { /** */ },
+        "Making request to server": {
+            entry: "Reset whether last execution failed",
+            invoke: {
+                src: "Execute machine and input on server",
+                // ...
+                onError: {
+                    target: "Playing steps",
+                    actions: "Set that last execution failed",
+                },
+            },
+        },
+    },
+    // ...
+}, {
+    actions: {
+        "Reset whether last execution failed": assign({
+            hasLastExecutionFailed: (_context) => false,
+        }),
+        "Set that last execution failed": assign({
+            hasLastExecutionFailed: (_context) => true,
+        }),
+    },
+});
+```
+
+There is more work to do, as we need to reset the property when making another request, but this works well and is definitely okay.
+
+What I dislike with this solution though is that request to server is too tightly coupled with visualizer management. If tomorrow we want to allow users to perform some actions while request is pending, we would need to substantially change the machine. That could even lead to [state-explosion problem](https://statecharts.dev/state-machine-state-explosion.html). This is not to say that refactoring should be avoided when involving heavy changes, but here the refactoring would be significant because at first we used not suitable tools to solve the problem.
+
+We had a hard time figuring out how to insert request to server in visualizer management flow because these both parts are **interleaved**: they are neither totally independent nor totally mutually exclusive.
+
+There are two tools in XState to implement interleaved behaviors: [parallel states](https://xstate.js.org/docs/guides/parallel.html) and services (especially [machine services](https://xstate.js.org/docs/guides/communication.html#invoking-machines)). Choosing between one or the other really depends on the context of use, but here I think parallel states are more suitable as both behaviors are more coupled than independent, and they would benefit from being written in the same machine.
+
+We refactor the machine to use a parallel state:
+
+```ts
+const vizMachine = createMachine({
+    // ...
+    type: "parallel",
+    states: {
+        // First orthogonal (independent) region
+        "Managing visualizer execution": {
+            initial: "Playing steps",
+            states: {
+                "Playing steps": { /** */ },
+                "Reached end of steps": { /** */ },
+            },
+        },
+        // Second orthogonal (independent) region
+        "Managing input and machine execution": {
+            initial: "Idle",
+            states: {
+                "Idle": {},
+                "Making request to server": {
+                    invoke: {
+                        src: "Execute machine and input on server",
+                        onDone: {
+                            actions: "Assign machine execution to context",
+                            target: "Received response",
+                        },
+                        onError: {
+                            target: "Failed to execute machine with input",
+                        },
+                    },
+                },
+                "Received response": { /** */ },
+                "Failed to execute machine with input": { /** */ },
+            },
+            on: {
+                Load: {
+                    target: ".Making request to server",
+                },
+            },
+        },
+    },
+    // ...
+});
+```
+
+Contrary to a compound state, which can only have one of its child states active at the same time, a parallel state has all its child states active at the same time. The machine is in several states at the same time, and `state.matches()` returns `true` for several values. Children of a parallel state are called *orthogonal regions*, in the sens that [they are independent](https://en.wikipedia.org/wiki/Orthogonality_(programming)).
+
+An important feature of parallel states is that all active regions receive events and can handle them separately. Here, `Managing input and machine execution` state goes to its child state `Making request to server` that starts the request.
+
+The previous implementation that did not use parallel states was preventing users from interacting with the visualizer while a request was performing, and we want to keep this behavior. We must update our implementation.
+
+First, we disable the visualizer when loading starts, and we ensure visualizer is only available after a machine has been executed:
+
+```ts {5, 7, 11-15}
+const vizMachine = createMachine({
+    // ...
+    type: "parallel",
+    states: {
+        "Managing visualizer execution": {
+            initial: "Idle",
+            states: {
+                Idle: {},
+                "Playing steps": { /** */ },
+                "Reached end of steps": { /** */ },
+            },
+            on: {
+                Load: {
+                    target: ".Idle",
+                },
+            },
+        },
+        "Managing input and machine execution": {
+            // ...
+            on: {
+                Load: { /** */ },
+            },
+        },
+    },
+    // ...
+});
+```
+
+When machine starts or when an execution starts, `Idle` state is entered. Note that `Load` state is caught in both orthogonal regions, and leads to different actions in both regions.
+
+Now we need to enter in `Playing steps` state when Turing machine has been executed successfully:
+
+```ts {3-8, 15-21, 39, 45-47, 56-58}
+import { send } from 'xstate';
+
+const vizMachine = createMachine({
+    schema: {
+        // ...
+        events: {} as
+            | { type: "..." } // Other events...
+            | { type: "Enable playing execution steps" }
+    },
+    // ...
+    type: "parallel",
+    states: {
+        "Managing visualizer execution": {
+            initial: "Idle",
+            states: {
+                Idle: {
+                    on: {
+                        "Enable playing execution steps": {
+                            target: "Playing steps"
+                        },
+                    },
+                },
+                "Playing steps": { /** */ },
+                "Reached end of steps": { /** */ },
+            },
+            on: {
+                Load: {
+                    target: ".Idle",
+                },
+            },
+        },
+        "Managing input and machine execution": {
+            initial: "Idle",
+            states: {
+                "Idle": {},
+                "Making request to server": {
+                    invoke: {
+                        src: "Execute machine and input on server",
+                        onDone: {
+                            actions: "Assign machine execution to context",
+                            target: "Received response",
+                        },
+                        // ...
+                    },
+                },
+                "Received response": {
+                    entry: "Allow to play execution steps",
+                },
+                "Failed to execute machine with input": { /** */ },
+            },
+            // ...
+        },
+    },
+    // ...
+}, {
+    actions: {
+        "Allow to play execution steps": send({
+            type: "Enable playing execution steps",
+        }),
+    },
+});
+```
+
+When execution succeeds, we assign steps to context, and we enter `Received response` state, which sends `Enable playing execution steps` event to the machine itself. Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Idle` state we wait for `Enable playing execution steps` event to go to `Playing steps` state.
+
+We may think that this solution is overengineered and involves a lot more code to achieve the same result. And in a way it's true, we wrote more code. But we wrote more explicit and more robust code. We made a clear distinction between different concerns.
+
+If we want to know if error alert should be shown, we can test whether machine is in `Failed to execute machine with input` state, without needing to maintain a boolean in context.
+
+If in a week we want to allow users to interact with visualizer while a request is pending, all we would have to do is removing an event listener:
+
+
+```ts {17-19}
+const vizMachine = createMachine({
+    // ...
+    type: "parallel",
+    states: {
+        "Managing visualizer execution": {
+            initial: "Idle",
+            states: {
+                Idle: {
+                    on: {
+                        "Enable playing execution steps": {
+                            target: "Playing steps"
+                        },
+                    },
+                },
+                "Playing steps": { /** */ },
+                "Reached end of steps": { /** */ },
+            },
+            on: {
+                // No longer going to `Idle` when receiving `Load` event.
+            },
+        },
+        // ...
+    },
+    // ...
+});
+```
+
+As a lot of things in development, the *best* solution is context-dependent. Parallel states are perfect to allow a machine to orchestrate more than one thing at a time, but this can lead to synchronization issues and less understandable code. I talked about this problem in [a YouTube video](https://youtu.be/Lvpi0XM_Nzg).
