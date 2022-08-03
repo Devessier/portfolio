@@ -397,4 +397,6 @@ So that's the first article of the series about Turing machine visualizer showca
 
 We'll talk about orchestrating requests and dealing with interlinked behaviors. But I have already said too much! 🤫
 
+The [code of the visualizer](https://github.com/AdonisEnProvence/Turing/tree/master/viz) is on GitHub.
+
 You can [subscribe to RSS feed](/feed.xml) to be notified of releases!
