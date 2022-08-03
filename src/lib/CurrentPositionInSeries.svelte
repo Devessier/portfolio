@@ -1,6 +1,7 @@
 <script>
 	export let indexInSeries;
-	$: indexInSeriesInEnglish = toEnglishNumber(indexInSeries - 1);
+	$: indexInSeriesInEnglish =
+		indexInSeries === undefined ? undefined : toEnglishNumber(indexInSeries - 1);
 
 	function toEnglishNumber(indexZeroBased) {
 		const englishNumbers = [

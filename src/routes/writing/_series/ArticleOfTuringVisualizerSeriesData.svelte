@@ -1,15 +1,18 @@
 <script>
 	import { setContext } from 'svelte';
-	import { page } from '$app/stores';
 	import { parts, finished } from './turing-visualizer.json';
 
-	$: currentArticleIndexZeroBased = parts.findIndex(({ slug }) =>
-		$page.url.pathname.includes(slug)
-	);
-	$: currentArticleIndexOneBased =
-		currentArticleIndexZeroBased === -1 ? undefined : currentArticleIndexZeroBased + 1;
+	export let articleTitle;
+
+	$: currentArticleIndexZeroBased = parts.findIndex(({ title }) => title === articleTitle);
+	$: {
+		if (currentArticleIndexZeroBased === -1) {
+			throw new Error(`Article not found: ${articleTitle}`);
+		}
+	}
+	$: currentArticleIndexOneBased = currentArticleIndexZeroBased + 1;
 	$: linkToPreviousArticle =
-		currentArticleIndexZeroBased <= 0
+		currentArticleIndexZeroBased === 0
 			? undefined
 			: `/writing/${parts[currentArticleIndexZeroBased - 1].slug}/`;
 

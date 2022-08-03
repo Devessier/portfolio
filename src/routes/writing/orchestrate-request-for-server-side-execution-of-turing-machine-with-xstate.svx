@@ -12,7 +12,7 @@ tags: ['Turing visualizer', 'XState', 'Vue']
     import CurrentPositionInSeries from '$lib/CurrentPositionInSeries.svelte'
 </script>
 
-<ArticleOfTuringVisualizerSeriesData let:articleIndex let:linkToPreviousArticle>
+<ArticleOfTuringVisualizerSeriesData articleTitle={title} let:articleIndex let:linkToPreviousArticle>
 
 <CurrentPositionInSeries indexInSeries={articleIndex} />
 
