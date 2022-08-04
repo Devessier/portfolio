@@ -95,4 +95,28 @@ prog
 		console.log(`Open ${NOTES_FILES.pathname}`);
 	});
 
+prog
+	.command('feed-series-config <series-config>')
+	.describe('Fetches data about articles of a series and replace the series config')
+	.example('feed-series-config ./src/routes/writing/_series/turing-visualizer.json')
+	.action(async (seriesConfigPath) => {
+		const rawConfig = await readFile(seriesConfigPath, 'utf8');
+		/** @type {{ parts: { slug: string; title?: string }[] }}  */
+		const parsedConfig = JSON.parse(rawConfig);
+
+		for (const [index, { slug }] of parsedConfig.parts.entries()) {
+			const pathToArticle = join(WRITING_DIRECTORY.pathname, `${slug}.svx`);
+			const articleContent = await readFile(pathToArticle, 'utf8');
+
+			const title = articleContent.match(/title: (.*)/)[1];
+			if (typeof title !== 'string') {
+				throw new Error('title must be defined in frontmatter');
+			}
+
+			parsedConfig.parts[index].title = title;
+		}
+
+		await writeFile(seriesConfigPath, JSON.stringify(parsedConfig, null, 4));
+	});
+
 prog.parse(process.argv);

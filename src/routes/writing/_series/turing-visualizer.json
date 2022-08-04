@@ -1,0 +1,13 @@
+{
+    "parts": [
+        {
+            "slug": "control-tape-of-turing-machine-visualizer-with-xstate",
+            "title": "Control tape of Turing machine visualizer with XState"
+        },
+        {
+            "slug": "orchestrate-request-for-server-side-execution-of-turing-machine-with-xstate",
+            "title": "Orchestrate request for server-side execution of Turing machine with XState"
+        }
+    ],
+    "finished": false
+}

@@ -6,9 +6,17 @@ tags: ['Turing visualizer', 'XState', 'Vue']
 ---
 
 <script>
+    import ArticleOfTuringVisualizerSeriesData from './_series/ArticleOfTuringVisualizerSeriesData.svelte'
     import AppAlert from '$lib/AppAlert.svelte'
     import ContentImageWithShadow from '$lib/ContentImageWithShadow.svelte'
+    import SeriesListOfArticles from '$lib/SeriesListOfArticles.svelte'
+    import CurrentPositionInSeries from '$lib/CurrentPositionInSeries.svelte'
 </script>
+
+<ArticleOfTuringVisualizerSeriesData articleTitle={title} let:articleIndex let:linkToPreviousArticle>
+
+<CurrentPositionInSeries indexInSeries={articleIndex} />
+
 
 A Turing machine is made of a head that reads symbols on a tape, and behaves according to a set of rules. It has a *current state*, like those of a finite state machine. When the machine is in a state T and reads a symbol S, it checks in the rules what to do in this case, and then replaces the symbol with another one on the tape, moves to right or left, and changes its state. Finite state machines, as implemented by XState, are a special case of Turing machines.
 
@@ -400,3 +408,7 @@ We'll talk about orchestrating requests and dealing with interlinked behaviors. 
 The [code of the visualizer](https://github.com/AdonisEnProvence/Turing/tree/master/viz) is on GitHub.
 
 You can [subscribe to RSS feed](/feed.xml) to be notified of releases!
+
+<SeriesListOfArticles />
+
+</ArticleOfTuringVisualizerSeriesData>
