@@ -63,7 +63,9 @@ const vizMachine = createMachine({
                 "Received response": {
                     entry: "Allow to play execution steps",
                 },
-                "Failed to execute machine with input": {},
+                "Failed to execute machine with input": {
+                    entry: "Allow to play execution steps",
+                },
             },
             on: {
                 Load: {
