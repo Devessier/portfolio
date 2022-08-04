@@ -285,6 +285,8 @@ So that's the third article of the series about Turing machine visualizer showca
 
 We'll talk about a small UI detail that makes a big UX improvement: the stale data indicator of our Turing machine visualizer.
 
+The [code of the visualizer](https://github.com/AdonisEnProvence/Turing/tree/master/viz) is on GitHub.
+
 <SeriesListOfArticles />
 
 </ArticleOfTuringVisualizerSeriesData>
