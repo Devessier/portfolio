@@ -298,7 +298,7 @@ const vizMachine = createMachine({
 
 Contrary to a compound state, which can only have one of its child states active at the same time, a parallel state has all its child states active at the same time. The machine is in several states at the same time, and `state.matches()` returns `true` for several values. Children of a parallel state are called *orthogonal regions*, in that [they are independent](https://en.wikipedia.org/wiki/Orthogonality_(programming)).
 
-An important feature of parallel states is that all active regions receive events at the same time, and can handle them separately. Here, when receiving a `Load event`, `Managing input and machine execution` state goes to its child state `Making request to server` that starts the request.
+An important feature of parallel states is that all active regions receive events at the same time, and can handle them separately. Here, when receiving a `Load` event, `Managing input and machine execution` state goes to its child state `Making request to server` that starts the request.
 
 The previous implementation that did not use parallel states was preventing users from interacting with the visualizer while a request was performing, and we want to keep this behavior. We must update our implementation.
 
@@ -405,9 +405,9 @@ const vizMachine = createMachine({
 });
 ```
 
-If execution succeeds, we assign steps to context and we and we enter `Received response` state. In case of error, we only enter `Failed to execute machine with input`. These both states call `Allow to play execution steps` action when entering, that sends an `Enable playing execution steps` event to the machine itself.
+If execution succeeds, we assign steps to context, and we enter `Received response` state. In case of error, we enter `Failed to execute machine with input`. These both states call `Allow to play execution steps` action when entering, that sends an `Enable playing execution steps` event to the machine itself.
 
-Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Managing visualizer execution.Idle` state we wait for `Enable playing execution steps` event to go to `Playing steps` state.
+Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Managing visualizer execution.Idle` state we wait for `Enable playing execution steps` event to go to `Playing steps` state. Wiring finished! 😎
 
 We may think that this solution is overengineered and involves a lot more code to achieve the same result. And in a way it's true, we wrote more code. But we wrote code more resilient to change. We made a clear distinction between different concerns.
 
