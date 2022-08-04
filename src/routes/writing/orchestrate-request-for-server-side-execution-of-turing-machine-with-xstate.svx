@@ -1,7 +1,7 @@
 ---
 title: Orchestrate request for server-side execution of Turing machine with XState
 description: We built a Turing machine visualizer but it does not execute machines itself—it's the job of an Erlang server. The visualizer needs to make a request to execute machines, and XState is the perfect tool to orchestrate this in combination with other behaviors of the visualizer.
-datetime: 2022-08-02T17:05:23.731Z
+datetime: 2022-08-04T16:46:22.416Z
 tags: ['Turing visualizer', 'XState', 'Vue']
 ---
 
