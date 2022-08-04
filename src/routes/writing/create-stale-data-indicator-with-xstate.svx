@@ -1,21 +1,36 @@
 ---
 title: Create stale data indicator with XState
-description: Blog post description
+description: The are few things as boring as not knowing the state of an application. Is this document saved or should I Ctrl+S? In this article I present the stale data indicator of our Turing machine visualizer.
 datetime: 2022-08-02T17:18:13.126Z
 tags: ['Turing visualizer', 'XState', 'Vue']
 ---
 
-## Indicate when input or machine configuration are stale
+<script>
+    import ArticleOfTuringVisualizerSeriesData from './_series/ArticleOfTuringVisualizerSeriesData.svelte'
+    import ContentImageWithShadow from '$lib/ContentImageWithShadow.svelte'
+    import SeriesListOfArticles from '$lib/SeriesListOfArticles.svelte'
+    import CurrentPositionInSeries from '$lib/CurrentPositionInSeries.svelte'
+</script>
+
+<ArticleOfTuringVisualizerSeriesData articleTitle={title} let:articleIndex let:linkToPreviousArticle>
+
+<CurrentPositionInSeries indexInSeries={articleIndex} />
 
 This is the feature I'm the most proud of, while it was one of the simplest to implement. But it gives the visualizer a more professional look.
 
 When input or machine configuration are different from the last input and machine configuration that led to a successful execution, we indicate that inputs are stale:
 
-![Stale indicator is displayed when input and machine configuration change](/img/turing/stale-indicator.gif)
+<ContentImageWithShadow>
+
+![Stale indicator is displayed when input and machine configuration are not the same as cached values](/img/turing/stale-indicator.gif)
+
+</ContentImageWithShadow>
+
+[Try online visualizer →](https://turing.adonisenprovence.com/)
 
 To implement this, first we need to cache the previous input and machine configuration when we receive a successful execution result:
 
-```ts {1-12, 29-32, 48-51}
+```ts {1-12, 40-43, 60-63}
 const vizMachine = createMachine({
     context: {
         // Other properties...
@@ -44,7 +59,18 @@ const vizMachine = createMachine({
                         "Making request to server": {
                             initial: "Sending request",
                             states: {
-                                "Sending request": { /** */ },
+                                "Sending request": {
+                                    invoke: {
+                                        src: "Execute machine and input on server",
+                                        onDone: {
+                                            actions: "Assign machine execution to context",
+                                            target: "Received response",
+                                        },
+                                        onError: {
+                                            target: "Error occured",
+                                        },
+                                    },
+                                },
                                 "Received response": {
                                     entry: "Cache input and machine code into context",
                                     type: "final",
@@ -52,6 +78,7 @@ const vizMachine = createMachine({
                                 "Error occured": { /** */ },
                             },
                         },
+                        "Delaying loading state": { /** */ },
                     },
                     onDone: [ /** */ ],
                 },
@@ -71,6 +98,8 @@ const vizMachine = createMachine({
     },
 });
 ```
+
+`Received response` state is entered when the server responds with a successful execution result. When this state is entered, we cache the input and machine code into the context.
 
 Then in Vue side, we create a `computed`:
 
@@ -101,4 +130,36 @@ const isStale = computed(() => {
 
 If no successful execution has been performed yet, cached values are `undefined` and data are not stale. Otherwise, we compare values with the cached ones.
 
-This is a stylistic detail that improves the UX, and that is not so hard to implement!
+The computed property is then used to dynamically display the stale indicator (and apply a transition!):
+
+```svelte
+<Transition
+    leave-active-class="duration-100 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+>
+    <AppBadge
+        v-if="isStale"
+    >
+        Stale
+    </AppBadge>
+</Transition>
+```
+
+This is a stylistic detail, but it improves greatly the UX. Furthermore, it is not so hard to implement technically!
+
+## Summary
+
+We saw that not every business logic has to be decided by XState. We picked values from machine context to compute some business logic in Vue side. XState orchestrates, and view layer derives from XState.
+
+---
+
+So that’s the fourth article of the series about Turing machine visualizer showcase! The last article will be released soon.
+
+We’ll talk about the *Load* button of the visualizer, and precisely about the way we animate it.
+
+[You can already try the load button!](https://turing.adonisenprovence.com/)
+
+<SeriesListOfArticles />
+
+</ArticleOfTuringVisualizerSeriesData>
