@@ -99,9 +99,15 @@ A first implementation can be to create a sibling state to `Playing steps`, wher
 
 ```ts
 const vizMachine = createMachine({
-    // ...
+    context: {
+        // Other properties...
+        machineExecution: undefined,
+    },
     schema: {
-        // ...
+        context: {} as {
+            // Other properties...
+            machineExecution: MachineExecution | undefined;
+        },
         events: {} as
             | { type: "..." } // Other events...
             | { type: "Load" },
@@ -140,10 +146,15 @@ const vizMachine = createMachine({
             return responseBody;
         },
     },
+    actions: {
+        "Assign machine execution to context": assign({
+            machineExecution: (_context, event) => event.data.machineExecution,
+        }),
+    },
 });
 ```
 
-`Playing steps` in the state that manages the controls of the visualizer, like starting and stopping the visualizer, increasing the speed, etc. Implementation of this state has been detailed [in previous article]({linkToPreviousArticle}).
+`Playing steps` is the state that manages the controls of the visualizer, like starting and stopping the visualizer, increasing the speed, etc. Implementation of this state has been detailed [in previous article]({linkToPreviousArticle}).
 
 `Execute machine and input on server` is [a Promise service](https://xstate.js.org/docs/guides/communication.html#invoking-promises). When the promise resolves, `onDone` transition is taken, otherwise, if the promise rejects, it's `onError` transition.
 
@@ -155,7 +166,7 @@ This may be the behavior you want to implement, and indeed this is what we wante
 
 ![Execution failed server-side, but visualizer can still be used with previous execution](/img/turing/loading-unsuccessful.gif)
 
-If execution fails, we want to display an alert telling the user that an error occurred and that the visualizer does not show the latest execution, but **the last one that succeeded**. We need to store in the machine, somewhere, the state of the last execution that failed.
+If execution fails, we want to display an alert telling the user that an error occurred and that the visualizer does not show the latest execution, but the last one that succeeded. We need to store in the machine, somewhere, the state of the last execution.
 
 We can target an error state when execution fails, and after use `state.matches()` to test whether this state is active:
 
@@ -174,7 +185,7 @@ const vizMachine = createMachine({
                 },
             },
         },
-        "Failed to execute machine with input": { /** */ },
+        "Failed to execute machine with input": {},
     },
     // ...
 });
@@ -234,7 +245,7 @@ What I dislike with this solution though is that request to server is too tightl
 
 We had a hard time figuring out how to insert request to server in visualizer management flow because these both parts are **interleaved**: they are neither totally independent nor totally mutually exclusive.
 
-There are two tools in XState to implement interleaved behaviors: [parallel states](https://xstate.js.org/docs/guides/parallel.html) and services (especially [machine services](https://xstate.js.org/docs/guides/communication.html#invoking-machines)). Choosing between one or the other really depends on the context of use, but here I think parallel states are more suitable as both behaviors are more coupled than independent, and they would benefit from being written in the same machine.
+There are two tools in XState to implement interleaved behaviors: [parallel states](https://xstate.js.org/docs/guides/parallel.html) and services (especially [machine services](https://xstate.js.org/docs/guides/communication.html#invoking-machines)). Choosing between one or the other really depends on the context of use, but here I think parallel states are more suitable as both behaviors are more coupled than independent, and they would benefit from being written in the same machine. For your information, in the last article of this series we are going to use a machine service 👀.
 
 ### Decouple request to server from visualizer management
 
@@ -271,8 +282,8 @@ const vizMachine = createMachine({
                         },
                     },
                 },
-                "Received response": { /** */ },
-                "Failed to execute machine with input": { /** */ },
+                "Received response": {},
+                "Failed to execute machine with input": {},
             },
             on: {
                 Load: {
@@ -287,7 +298,7 @@ const vizMachine = createMachine({
 
 Contrary to a compound state, which can only have one of its child states active at the same time, a parallel state has all its child states active at the same time. The machine is in several states at the same time, and `state.matches()` returns `true` for several values. Children of a parallel state are called *orthogonal regions*, in that [they are independent](https://en.wikipedia.org/wiki/Orthogonality_(programming)).
 
-An important feature of parallel states is that all active regions receive events and can handle them separately. Here, `Managing input and machine execution` state goes to its child state `Making request to server` that starts the request.
+An important feature of parallel states is that all active regions receive events at the same time, and can handle them separately. Here, when receiving a `Load event`, `Managing input and machine execution` state goes to its child state `Making request to server` that starts the request.
 
 The previous implementation that did not use parallel states was preventing users from interacting with the visualizer while a request was performing, and we want to keep this behavior. We must update our implementation.
 
@@ -324,9 +335,9 @@ const vizMachine = createMachine({
 
 When machine starts or when an execution starts, `Idle` state is entered. Note that `Load` state is caught in both orthogonal regions, and leads to different actions in both regions.
 
-Now we need to enter in `Playing steps` state when Turing machine has been executed successfully:
+Now we need to enter in `Playing steps` state when Turing machine execution ends, successfully or not. If the execution was unsuccessful, the user will visualize the last valid machine:
 
-```ts {3-8, 15-21, 38-41, 45-47, 56-58}
+```ts {3-8, 15-21, 38-44, 47-52, 60-62}
 import { send } from 'xstate';
 
 const vizMachine = createMachine({
@@ -369,13 +380,17 @@ const vizMachine = createMachine({
                             actions: "Assign machine execution to context",
                             target: "Received response",
                         },
-                        // ...
+                        onError: {
+                            target: "Failed to execute machine with input",
+                        },
                     },
                 },
                 "Received response": {
                     entry: "Allow to play execution steps",
                 },
-                "Failed to execute machine with input": { /** */ },
+                "Failed to execute machine with input": {
+                    entry: "Allow to play execution steps",
+                },
             },
             // ...
         },
@@ -390,7 +405,9 @@ const vizMachine = createMachine({
 });
 ```
 
-When execution succeeds, we assign steps to context, and we enter `Received response` state, which sends `Enable playing execution steps` event to the machine itself. Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Idle` state we wait for `Enable playing execution steps` event to go to `Playing steps` state.
+If execution succeeds, we assign steps to context and we and we enter `Received response` state. In case of error, we only enter `Failed to execute machine with input`. These both states call `Allow to play execution steps` action when entering, that sends an `Enable playing execution steps` event to the machine itself.
+
+Here we rely on a corollary of the fact that all active orthogonal regions of a statechart receive events: they also receive events sent by other orthogonal regions. It's called *broadcasting*. In `Managing visualizer execution.Idle` state we wait for `Enable playing execution steps` event to go to `Playing steps` state.
 
 We may think that this solution is overengineered and involves a lot more code to achieve the same result. And in a way it's true, we wrote more code. But we wrote code more resilient to change. We made a clear distinction between different concerns.
 
@@ -433,15 +450,17 @@ As a lot of things in development, the *best* solution is context-dependent. Par
 
 In this article we used the context of a machine as the source of truth for inputs and established a two-way binding.
 
-We made HTTP requests by the mean of *services*, started when the state they are defined on is entered. There are different ways to keep track of error state, and we experienced two of them, with a preference for state-based one! 👀
+We made HTTP requests by the mean of *services*, started when the state they are defined on is entered. There are different ways to keep track of error state, and we experienced two of them, with a preference for state-based one. 👀
 
-Seeing that making request and managing visualizer were not able to sit on the same chair at the same time, we decoupled these behaviors with a parallel state. We used tools brought by parallel states to synchronize orthogonal regions with each other, like broadcasting. That made the code more resilient to change.
+Seeing that making requests and managing visualizer were not able to sit on the same chair at the same time, we decoupled these behaviors with a parallel state. We used tools brought by parallel states to synchronize orthogonal regions with each other, like broadcasting. That made the code more resilient to change.
 
 ---
 
 So that was the second article of the series about Turing machine visualizer showcase! Next articles will be released soon.
 
 In the next chapter we are going to talk about the loading animation of the visualizer.
+
+The [code of the visualizer](https://github.com/AdonisEnProvence/Turing/tree/master/viz) is on GitHub.
 
 <SeriesListOfArticles />
 
