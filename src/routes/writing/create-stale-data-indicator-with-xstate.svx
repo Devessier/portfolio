@@ -138,9 +138,7 @@ The computed property is then used to dynamically display the stale indicator (a
     leave-from-class="opacity-100"
     leave-to-class="opacity-0"
 >
-    <AppBadge
-        v-if="isStale"
-    >
+    <AppBadge v-if="isStale">
         Stale
     </AppBadge>
 </Transition>
