@@ -1,6 +1,6 @@
 ---
 title: Create stale data indicator with XState
-description: The are few things as boring as not knowing the state of an application. Is this document saved or should I Ctrl+S? In this article I present the stale data indicator of our Turing machine visualizer.
+description: The are few things as boring as not knowing the state of an application. Is this document saved or should I Ctrl+S? In this article I present the stale data indicator we display on our Turing machine visualizer when visualizer is not in sync with inputs.
 datetime: 2022-08-02T17:18:13.126Z
 tags: ['Turing visualizer', 'XState', 'Vue']
 ---
