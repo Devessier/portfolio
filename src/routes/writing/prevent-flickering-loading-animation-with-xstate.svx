@@ -1,7 +1,7 @@
 ---
 title: Prevent flickering loading animation with XState
 description: Loading indicators tell users that something is happening and will complete soon. They exist to improve UX, but they can worsen UX if they are directly hidden after underlying HTTP requests resolve. In this article I share XState patterns I used to prevent this issue in our Turing machine visualizer.
-datetime: 2022-08-02T17:13:40.355Z
+datetime: 2022-08-15T18:23:20.984Z
 tags: ['Turing visualizer', 'XState', 'Vue']
 ---
 
