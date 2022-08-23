@@ -11,6 +11,10 @@
         {
             "slug": "prevent-flickering-loading-animation-with-xstate",
             "title": "Prevent flickering loading animation with XState"
+        },
+        {
+            "slug": "create-stale-data-indicator-with-xstate",
+            "title": "Create stale data indicator with XState"
         }
     ],
     "finished": false

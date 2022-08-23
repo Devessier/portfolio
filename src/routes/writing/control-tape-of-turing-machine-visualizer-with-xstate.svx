@@ -17,7 +17,6 @@ tags: ['Turing visualizer', 'XState', 'Vue']
 
 <CurrentPositionInSeries indexInSeries={articleIndex} />
 
-
 A Turing machine is made of a head that reads symbols on a tape, and behaves according to a set of rules. It has a *current state*, like those of a finite state machine. When the machine is in a state T and reads a symbol S, it checks in the rules what to do in this case, and then replaces the symbol with another one on the tape, moves to right or left, and changes its state. Finite state machines, as implemented by XState, are a special case of Turing machines.
 
 As part of a 42 school project, with a good friend of mine, [Paul Rastoin](https://prastoin.netlify.app/), we built an interpreter for Turing machines in Erlang, to be used with a web visualizer made with Vue 3 and XState for all logic code.
