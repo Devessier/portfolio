@@ -1,7 +1,7 @@
 ---
 title: Create a proxy state machine to drive CSS transitions on state changes with XState
-description: 'In order to add some behavior to a state machine, we can change it, or we can add another machine in front of it to delegate some responsibilities. In this article I present the machine we added in front of our main machine to manage the load button of our Turing machine visualizer.'
-datetime: 2022-08-02T17:26:11.291Z
+description: 'In order to add some behaviors to a state machine, we can change it, or we can add another machine in front of it to delegate some responsibilities. In this article I present the machine we added in front of our main machine to manage the load button of our Turing machine visualizer.'
+datetime: 2022-09-01T11:26:34.208Z
 tags: ['Turing visualizer', 'XState', 'Vue']
 ---
 
@@ -95,7 +95,7 @@ const vizMachine = createMachine({
 
 In `vizMachine`, we can reference the invoked machine by its *id* (`Submit button`), especially for sending events to it. We'll talk about that soon.
 
-If `submitButtonMachine` is a proxy, the first thing it needs to do is forwarding events to its parent machine.
+`submitButtonMachine` is a proxy, and the first thing it needs to do is forwarding events to its parent machine.
 
 ## Forward `Load` event to parent
 
@@ -128,13 +128,13 @@ const submitButtonMachine = createMachine({
 });
 ```
 
-`sendParent` action can be used to send events to the machine that invoked this machine. If it's used by a machine that has not been invoked by another one, the action throws.
+[`sendParent`](https://xstate.js.org/docs/guides/communication.html#sending-events) action is used to send events to the parent machine, that is, the machine that invoked the current one.
 
 To summarize, when user clicks on *Load* button, `Load` event is received in `Idle` state and the machine forwards it to its parent, that makes a request to the server.
 
-You may have noticed that when `Idle` state receives a `Load` event, it targets `Loading` state. This is because this machine is meant to orchestrate the animation of load button. And when the request starts, the loading state must be triggered too. We'll test these states with Vue to decide which styles to apply.
+You may have noticed that when `Idle` state receives a `Load` event, it targets `Loading` state. This is because this machine is meant to orchestrate the animation of load button. And when the request starts, the loading state must be triggered too. We'll check if these states are active with Vue code to determine which styles to apply.
 
-Note that while the state is `Loading`, the machine does not listen to `Load` event. We allow only one request at a time.
+Note that while the state is `Loading`, the machine does not listen to `Load` event. That way, we allow only one request at a time.
 
 ## Wait for response from parent
 
@@ -257,32 +257,41 @@ const submitButtonMachine = createMachine({
 });
 ```
 
+Success and error states of the button will only be shown for two seconds, and then we'll go back to normal style.
+
 ## Use invoked machine in Vue
 
-On Vue side we need to access the current state of `submitButtonMachine`, but it's invoked in `vizMachine`, so how do we do?
+On Vue side we need to access the current state of `submitButtonMachine`, but it's invoked by `vizMachine` and not started as a standalone machine. So how do we do?
 
 All invoked services of a machine are available on [`state.children`](https://xstate.js.org/docs/guides/communication.html#referencing-services) object, referenced by their id:
 
 ```ts
 import { computed } from "vue";
 import { ActorRefFrom } from "xstate";
+import { useMachine } from "@xstate/vue";
+import { vizMachine, submitButtonMachine } from "./machines";
 
 type SubmitButtonActorRef = ActorRefFrom<typeof submitButtonMachine>;
 
+const { state } = useMachine(vizMachine);
+
 const submitButtonService = computed(() => {
-    // Currently services need to be type-casted
+    // In current XState version (v4), services need to be type-casted
     return state.value.children["Submit button"] as SubmitButtonActorRef;
 });
 ```
 
-From here we can use [`useActor`](https://xstate.js.org/docs/packages/xstate-vue/#useactor-actor-getsnapshot) hook to access the current state:
+From here we can use [`useActor`](https://xstate.js.org/docs/packages/xstate-vue/#useactor-actor-getsnapshot) hook to access the current state of `submitButtonService`:
 
-```ts {2, 10-13}
+```ts {2, 13-16}
 import { computed } from "vue";
 import { ActorRefFrom } from "xstate";
-import { useActor } from "@xstate/vue";
+import { useMachine, useActor } from "@xstate/vue";
+import { vizMachine, submitButtonMachine } from "./machines";
 
 type SubmitButtonActorRef = ActorRefFrom<typeof submitButtonMachine>;
+
+const { state } = useMachine(vizMachine);
 
 const submitButtonService = computed(() => {
     return state.value.children["Submit button"] as SubmitButtonActorRef;
@@ -293,6 +302,8 @@ const {
     send: submitButtonSend,
 } = useActor(submitButtonService);
 ```
+
+`useActor` subscribes to all state changes of a service and returns a computed property always containing the last state value.
 
 And let Vue apply CSS transitions based on the state of `submitButtonMachine`:
 
@@ -355,17 +366,17 @@ Here's the result when request fails:
 
 ## Summary
 
-We learned that state machines can be invoked by other state machines, and communicate between each other. This is another form of separation of concerns than parallel states, [that we used to combine visualizer controls and request making managements](/writing/orchestrate-request-for-server-side-execution-of-turing-machine-with-xstate/).
+We learned that state machines can be invoked by other state machines, and that parent and child machines can communicate between each other. This is another form of separation of concerns than parallel states, [we used to combine visualizer controls and request making managements](/writing/orchestrate-request-for-server-side-execution-of-turing-machine-with-xstate/).
 
-We used a machine in front of another one to add a small behavior, that does not affect the bigger machine. The principle machine has remained the same, but the overall system has been enhanced.
+We used a machine in front of another one to add a small enhancement, that does not affect the biggest machine. The main machine remains the same, but the overall system is enhanced.
 
-On Vue side, we can access invoked services to get their current state, and communicate directly with them, as if they were the primary state machine.
+On Vue side, we can access invoked services and get their current state, and communicate directly with them, as if they were the primary state machine.
 
 ---
 
 So that was the last article of the series about Turing machine visualizer showcase! I hope you enjoyed it.
 
-From here, go use XState on your own projects! It may take time to become efficient with it, but once you get it, you can't stop using XState!
+From here, go use XState on your own projects! Once you get it, you can't stop from using it.
 
 The [code of the visualizer](https://github.com/AdonisEnProvence/Turing/tree/master/viz) is on GitHub.
 
