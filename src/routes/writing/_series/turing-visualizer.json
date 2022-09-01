@@ -15,7 +15,11 @@
         {
             "slug": "create-stale-data-indicator-with-xstate",
             "title": "Create stale data indicator with XState"
+        },
+        {
+            "slug": "create-a-proxy-state-machine-to-drive-css-transitions-on-state-changes-with-xstate",
+            "title": "Create a proxy state machine to drive CSS transitions on state changes with XState"
         }
     ],
-    "finished": false
+    "finished": true
 }
