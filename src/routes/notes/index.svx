@@ -8,6 +8,25 @@ layout: notes
 
 <!-- NOTES -->
 
+<Note datetime="2022-09-13T20:30:30.642Z">
+
+## Fix Xcode Command Line Tools not working while installed
+
+Sometimes Command Line Tools stop working, and I have a hard time fixing them.
+
+Today, I reinstalled them twice, but they kept not working.
+
+I found a topic on Stack Overflow talking about this problem, and I tried [a solution that solved the issue](https://stackoverflow.com/a/48134441):
+
+```bash
+# It seems that Command Line Tools are located at /Library/Developer/CommandLineTools.
+# We can tell Xcode to find Command Line Tools there.
+
+sudo xcode-select --select /Library/Developer/CommandLineTools
+```
+
+</Note>
+
 <Note datetime="2022-06-29T15:58:36.740Z">
 
 ## Back up code with another Git remote
