@@ -24,10 +24,6 @@
 
 <SEO {title} {description} {canonical} {schemas} {facebook} {twitter} />
 
-<div
-	in:fade={{ delay: TRANSITION_DURATION, duration: TRANSITION_DURATION }}
-	out:fade={{ duration: TRANSITION_DURATION }}
-	class="absolute w-full mt-2 lg:mt-10 {className}"
->
+<div class="w-full mt-2 lg:mt-10 {className}">
 	<slot />
 </div>
