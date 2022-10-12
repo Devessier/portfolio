@@ -14,8 +14,8 @@
 
 	const links = [
 		{
-			href: '/my-journey/',
-			text: 'My journey'
+			href: '/about/',
+			text: 'About'
 		},
 		{
 			href: '/projects/',
