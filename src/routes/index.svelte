@@ -1,6 +1,10 @@
 <script lang="ts">
 	import Page from '$lib/Page/Page.svelte';
-	import { GithubIcon, MailIcon, TildIcon, BriefcaseIcon } from '$lib/Icons';
+	import { GithubIcon, MailIcon, TildIcon, TwitterIcon, VideoCameraIcon } from '$lib/Icons';
+	import type { WritingPreview } from '$lib/types';
+	import BlogPostsListBase from '$lib/BlogPostsListBase.svelte';
+
+	export let latestArticles: WritingPreview[];
 
 	const title = 'Baptiste Devessier | Home';
 	const description = 'Full Stack Web Developer in Paris';
@@ -22,18 +26,25 @@
 	];
 	const twitter = [];
 
+	const youtubeChannelUrl = 'https://www.youtube.com/channel/UCHkj5xmIUA357RS944tY5Tg';
 	const communicationMeans = [
-		{
-			href: '/cv.pdf',
-			external: true,
-			title: 'CV',
-			icon: BriefcaseIcon
-		},
 		{
 			href: 'https://github.com/Devessier',
 			external: true,
 			title: 'My Github profile',
 			icon: GithubIcon
+		},
+		{
+			href: 'https://twitter.com/BDevessier',
+			external: true,
+			title: 'My Github profile',
+			icon: TwitterIcon
+		},
+		{
+			href: youtubeChannelUrl,
+			external: true,
+			title: 'My YouTube channel',
+			icon: VideoCameraIcon
 		},
 		{
 			href: '/contact/',
@@ -76,7 +87,7 @@
 
 <Page class="pb-6" {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div>
-		<h1 class="text-4xl font-bold lowercase flex items-center flex-wrap">
+		<h1 class="text-4xl font-bold lowercase flex items-center flex-wrap font-[Comfortaa,cursive]">
 			Baptiste
 			<TildIcon
 				class="w-5 h-4 relative"
@@ -87,56 +98,41 @@
 			Devessier
 		</h1>
 
-		<p class="mt-5 text-2xl font-medium">Full Stack Web Developer, Paris</p>
+		<p class="mt-6 text-base text-gray-600 max-w-prose leading-relaxed">
+			I'm Baptiste Devessier, a fullstack web developer and XState specialist based in Paris,
+			France. I write <a href="/writing/" class="underline">articles</a>, record
+			<a href={youtubeChannelUrl} class="underline">video tutorials</a>
+			and make <a href="/projects/" class="underline">projects</a> about web development and XState.
+		</p>
 
-		<ul class="flex items-center mt-8">
-			{#each communicationMeans as { href, external, title, icon }, index}
+		<ul class="flex items-center mt-8 gap-6">
+			{#each communicationMeans as { href, external, title, icon }}
 				<li>
 					<a
 						{href}
 						{title}
 						sveltekit:prefetch
 						rel={external === true ? 'external' : undefined}
-						class="block p-2 text-red-500 border border-gray-200
-                        rounded-full {index < communicationMeans.length - 1 ? 'mr-2' : ''}"
+						class="inline-block -m-1 p-1 text-zinc-500 hover:text-zinc-600 transition-colors"
 					>
 						<span class="sr-only">{title}</span>
 
-						<svelte:component this={icon} class="w-8 h-8 stroke-current" />
+						<svelte:component this={icon} class="w-6 h-6 stroke-current" />
 					</a>
 				</li>
 			{/each}
 		</ul>
 	</div>
 
-	<div class="mt-16">
-		{#each categories as [title, skills]}
-			<div
-				class="grid grid-cols-1 md:grid-cols-3 pt-4 mb-4 border-t-2
-                border-red-500"
-			>
-				<h2 class="text-2xl mb-4">{title}</h2>
+	<div class="mt-24 md:mt-32 pb-16">
+		<p class="text-lg font-bold uppercase">Latest articles</p>
 
-				<ul class="md:col-span-2 skills">
-					{#each skills as skill}
-						<li class="text-lg mb-2">— {skill}</li>
-					{/each}
-				</ul>
-			</div>
-		{/each}
+		<div class="mt-10">
+			<BlogPostsListBase articles={latestArticles} />
+		</div>
+
+		<div class="mt-10">
+			<a href="/writing/" class="text-red-600 font-medium">See all articles →</a>
+		</div>
 	</div>
 </Page>
-
-<style lang="postcss">
-	h1 {
-		font-family: 'Comfortaa', cursive;
-	}
-
-	.skills {
-		columns: 1;
-
-		@screen sm {
-			columns: 2;
-		}
-	}
-</style>

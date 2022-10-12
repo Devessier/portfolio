@@ -25,3 +25,5 @@ export { default as TildIcon } from './Tild.svelte';
 export { default as DocumentIcon } from './Document.svelte';
 export { default as UserIcon } from './User.svelte';
 export { default as BriefcaseIcon } from './Briefcase.svelte';
+export { default as TwitterIcon } from './Twitter.svelte';
+export { default as VideoCameraIcon } from './VideoCamera.svelte';
