@@ -9,7 +9,7 @@
 	const descriptionText =
 		"I'm Baptiste Devessier, a fullstack web developer and XState specialist based in Paris, France. I write articles, record video tutorials and make projects about web development and XState.";
 
-	const title = 'Baptiste Devessier | Home';
+	const title = 'Baptiste Devessier | Fullstack web developer and XState specialist';
 	const description = descriptionText;
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
