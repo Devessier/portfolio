@@ -6,6 +6,7 @@
 	import { IS_PRODUCTION } from '$lib/env';
 	import Nav from '$lib/Nav/Nav.svelte';
 	import ToastContainer from '$lib/Toasts/ToastContainer.svelte';
+	import AppFooter from '$lib/AppFooter.svelte';
 
 	$: segment = $page.url.pathname;
 
@@ -56,5 +57,7 @@
 <main class="relative flex flex-col flex-grow h-full">
 	<slot />
 </main>
+
+<AppFooter />
 
 <ToastContainer />
