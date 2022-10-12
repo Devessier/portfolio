@@ -6,8 +6,11 @@
 
 	export let latestArticles: WritingPreview[];
 
+	const descriptionText =
+		"I'm Baptiste Devessier, a fullstack web developer and XState specialist based in Paris, France. I write articles, record video tutorials and make projects about web development and XState.";
+
 	const title = 'Baptiste Devessier | Home';
-	const description = 'Full Stack Web Developer in Paris';
+	const description = descriptionText;
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
 	const facebook = [
@@ -99,10 +102,7 @@
 		</h1>
 
 		<p class="mt-6 text-base text-gray-600 max-w-prose leading-relaxed">
-			I'm Baptiste Devessier, a fullstack web developer and XState specialist based in Paris,
-			France. I write <a href="/writing/" class="underline">articles</a>, record
-			<a href={youtubeChannelUrl} class="underline">video tutorials</a>
-			and make <a href="/projects/" class="underline">projects</a> about web development and XState.
+			{descriptionText}
 		</p>
 
 		<ul class="flex items-center mt-8 gap-6">
