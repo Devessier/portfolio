@@ -132,7 +132,9 @@
 		</div>
 
 		<div class="mt-10">
-			<a href="/writing/" class="text-red-600 font-medium">See all articles →</a>
+			<a href="/writing/" class="text-red-600 hover:text-red-700 transition-colors font-medium">
+				See all articles →
+			</a>
 		</div>
 	</div>
 </Page>
