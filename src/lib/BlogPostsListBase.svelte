@@ -35,9 +35,9 @@
 					{description}
 				</p>
 
-				<div class="flex mt-4">
-					{#each tags as { title, slug }, index}
-						<AppBadge href="/tags/{slug}/" class={index === 0 ? 'ml-0' : 'ml-2'}>
+				<div class="flex mt-4 gap-2 flex-wrap">
+					{#each tags as { title, slug }}
+						<AppBadge href="/tags/{slug}/">
 							{title}
 						</AppBadge>
 					{/each}
