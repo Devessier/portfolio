@@ -34,13 +34,13 @@
 		{
 			href: 'https://github.com/Devessier',
 			external: true,
-			title: 'My Github profile',
+			title: 'My GitHub profile',
 			icon: GithubIcon
 		},
 		{
 			href: 'https://twitter.com/BDevessier',
 			external: true,
-			title: 'My Github profile',
+			title: 'My Twitter account',
 			icon: TwitterIcon
 		},
 		{
