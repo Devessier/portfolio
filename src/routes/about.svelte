@@ -23,7 +23,7 @@
 	const twitter = [];
 </script>
 
-<Page class="pb-6" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<h1 class="text-5xl font-cursive">About</h1>
 
 	<div class="prose mt-10">

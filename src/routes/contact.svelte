@@ -110,7 +110,7 @@
 	];
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter} class="pb-8">
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<h1 class="text-5xl font-cursive">Contact</h1>
 
 	<div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-y-8">

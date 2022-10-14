@@ -6,7 +6,7 @@
 	$: formattedDatetime = formatDate(datetime);
 </script>
 
-<article class="mb-16">
+<article>
 	<time {datetime} class="text-red-700 italic font-medium text-sm">
 		{formattedDatetime}
 	</time>

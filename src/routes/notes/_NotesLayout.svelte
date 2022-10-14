@@ -23,14 +23,16 @@
 	const twitter = [];
 </script>
 
-<Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div class="max-w-prose text-lg mx-auto">
 		<h1 class="text-5xl font-cursive">Notes</h1>
 
 		<p class="mt-3 text-xl text-gray-500 sm:mt-4">Things I discover daily and that amaze me</p>
 	</div>
 
-	<div class="mt-10 prose prose-red prose-h2:mt-2 prose-lg text-gray-500 mx-auto break-words">
+	<div
+		class="mt-10 prose prose-red prose-h2:mt-2 prose-lg text-gray-500 mx-auto break-words space-y-16"
+	>
 		<slot />
 	</div>
 </Page>

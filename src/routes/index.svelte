@@ -88,7 +88,7 @@
 	];
 </script>
 
-<Page class="pb-6" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div>
 		<h1 class="text-4xl font-bold lowercase flex items-center flex-wrap font-cursive">
 			Baptiste
@@ -124,7 +124,7 @@
 		</ul>
 	</div>
 
-	<div class="mt-24 md:mt-32 pb-16">
+	<div class="mt-24 md:mt-32">
 		<p class="text-lg font-bold uppercase">Latest articles</p>
 
 		<div class="mt-10">

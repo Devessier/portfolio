@@ -156,10 +156,10 @@
 	];
 </script>
 
-<Page class="pb-8" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<h1 class="text-5xl font-cursive">Projects</h1>
 
-	<section class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-0 md:pb-12 mt-10">
+	<section class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
 		{#each projects as { title, pictures, intro, description, links }}
 			<div class="flex transform md:even:translate-y-12">
 				<article class="flex flex-col flex-grow p-4 border border-gray-300">
