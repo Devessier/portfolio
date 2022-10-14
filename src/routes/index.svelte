@@ -90,7 +90,7 @@
 
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div>
-		<h1 class="text-4xl font-bold lowercase flex items-center flex-wrap font-cursive">
+		<h1 class="text-5xl font-bold lowercase flex items-center flex-wrap font-cursive">
 			Baptiste
 			<TildIcon
 				class="w-5 h-4 relative"
