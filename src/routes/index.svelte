@@ -7,9 +7,9 @@
 	export let latestArticles: WritingPreview[];
 
 	const descriptionText =
-		"I'm Baptiste Devessier, a fullstack web developer and XState specialist based in Paris, France. I write articles, record video tutorials and make projects about web development and XState.";
+		"I'm Baptiste Devessier, a fullstack web and XState developer based in Paris, France. I write articles, record video tutorials, make side projects about web development and XState, and I work freelance when not doing projects for 42 Paris school.";
 
-	const title = 'Baptiste Devessier | Fullstack web developer and XState specialist';
+	const title = 'Baptiste Devessier | Fullstack web and XState developer';
 	const description = descriptionText;
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
@@ -90,7 +90,7 @@
 
 <Page class="pb-6" {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div>
-		<h1 class="text-4xl font-bold lowercase flex items-center flex-wrap font-[Comfortaa,cursive]">
+		<h1 class="text-4xl font-bold lowercase flex items-center flex-wrap font-cursive">
 			Baptiste
 			<TildIcon
 				class="w-5 h-4 relative"
@@ -101,9 +101,9 @@
 			Devessier
 		</h1>
 
-		<p class="mt-6 text-base text-gray-600 max-w-prose leading-relaxed">
-			{descriptionText}
-		</p>
+		<div class="mt-6 prose">
+			<p>{descriptionText}</p>
+		</div>
 
 		<ul class="flex items-center mt-8 gap-6">
 			{#each communicationMeans as { href, external, title, icon }}
