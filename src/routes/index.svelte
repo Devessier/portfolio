@@ -3,6 +3,7 @@
 	import { GithubIcon, MailIcon, TildIcon, TwitterIcon, VideoCameraIcon } from '$lib/Icons';
 	import type { WritingPreview } from '$lib/types';
 	import BlogPostsListBase from '$lib/BlogPostsListBase.svelte';
+	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 
 	export let latestArticles: WritingPreview[];
 
@@ -56,36 +57,6 @@
 			icon: MailIcon
 		}
 	];
-
-	const categories = [
-		[
-			'Front-end',
-			[
-				'HTML, CSS',
-				'JavaScript, TypeScript',
-				'Vue.js, Nuxt.js, Composition API',
-				'Svelte, SvelteKit',
-				'XState',
-				'TailwindCSS, Vuetify',
-				'GraphQL',
-				'Jamstack, SSR'
-			]
-		],
-		[
-			'Back-end',
-			[
-				'Node.js, TypeScript',
-				'AdonisJS',
-				'GraphQL',
-				'Golang',
-				'PostgreSQL',
-				'Temporal',
-				'RabbitMQ',
-				'Scraping, Puppeteer, Cheerio'
-			]
-		],
-		['Tools', ['Prettier, ESLint', 'Git', 'Docker', 'Fish', 'macOS', 'Visual Studio Code']]
-	];
 </script>
 
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
@@ -132,9 +103,7 @@
 		</div>
 
 		<div class="mt-10">
-			<a href="/writing/" class="text-red-600 hover:text-red-700 transition-colors font-medium">
-				See all articles →
-			</a>
+			<LinkWithAnimatedArrow href="/writing/">See all articles</LinkWithAnimatedArrow>
 		</div>
 	</div>
 </Page>

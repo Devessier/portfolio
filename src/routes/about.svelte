@@ -1,4 +1,5 @@
 <script>
+	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import Page from '$lib/Page/Page.svelte';
 
 	const title = 'Baptiste Devessier | About';
@@ -45,13 +46,8 @@
 	</div>
 
 	<div class="mt-10">
-		<a
-			href="/cv.pdf"
-			rel="external"
-			target="_blank"
-			class="text-red-600 hover:text-red-700 transition-colors font-medium"
-		>
-			See my CV →
-		</a>
+		<LinkWithAnimatedArrow href="/cv.pdf" rel="external" target="_blank">
+			See my CV
+		</LinkWithAnimatedArrow>
 	</div>
 </Page>
