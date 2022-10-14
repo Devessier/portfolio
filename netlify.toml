@@ -13,6 +13,12 @@
 
 [[redirects]]
     from = "/my-way"
-    to = "/my-journey"
+    to = "/about"
+    status = 301
+    force = true
+
+[[redirects]]
+    from = "/my-journey"
+    to = "/about"
     status = 301
     force = true
