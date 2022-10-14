@@ -9,33 +9,12 @@
 	rel={external === true ? 'external' : undefined}
 	target={external === true ? '_blank' : undefined}
 	sveltekit:prefetch
-	class:active-link={active}
 	on:click
+	class="relative py-2 overflow-x-hidden block tracking-widest font-medium
+	after:absolute after:w-2/5 after:h-2 after:inset-x-0 after:bottom-0 after:transition after:duration-300 after:transform after:ease-in-out after:bg-white
+	{active === true
+		? 'after:bg-red-500 translate-x-0'
+		: 'hover:after:bg-red-400 after:-translate-x-full hover:after:translate-x-0'}"
 >
 	<slot />
 </a>
-
-<style lang="postcss">
-	a {
-		@apply relative py-2 overflow-x-hidden block tracking-widest font-medium;
-	}
-
-	a::after {
-		@apply absolute w-2/5 h-2 inset-x-0 bottom-0 transition duration-300 transform ease-in-out -translate-x-full bg-white;
-
-		content: '';
-	}
-
-	a:hover::after {
-		@apply bg-red-400;
-	}
-
-	a.active-link::after {
-		@apply bg-red-500;
-	}
-
-	a:hover::after,
-	a.active-link::after {
-		@apply translate-x-0;
-	}
-</style>
