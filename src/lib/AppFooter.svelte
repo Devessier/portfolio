@@ -45,8 +45,10 @@
 
 <!-- The design of the footer has been inspired by the one of: https://www.swyx.io, https://www.joshwcomeau.com/ -->
 
-<footer class="bg-white pt-10 pb-20 border-t border-gray-200 grid grid-cols-1 lg:grid-cols-3 gap-2">
-	<div>
+<footer
+	class="bg-white pt-10 pb-20 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"
+>
+	<div class="flex justify-center lg:justify-start col-span-1 md:col-span-2 lg:col-span-1 pb-6">
 		<a href="/" class="inline-block">
 			<LogoIcon class="w-20 h-20 -my-4" />
 		</a>
