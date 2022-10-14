@@ -125,7 +125,7 @@
 	</div>
 
 	<div class="mt-24 md:mt-32">
-		<p class="text-lg font-bold uppercase">Latest articles</p>
+		<p class="text-3xl font-cursive">Latest articles</p>
 
 		<div class="mt-10">
 			<BlogPostsListBase articles={latestArticles} />
