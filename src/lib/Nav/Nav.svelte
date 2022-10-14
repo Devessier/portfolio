@@ -106,6 +106,9 @@
 					target={external === true ? '_blank' : undefined}
 					title={text}
 					sveltekit:prefetch
+					class="transition-colors duration-300 ease-in-out {segment === href
+						? 'text-red-500'
+						: ''}"
 				>
 					<Icon src={icon} class="w-6 h-6" />
 				</a>
