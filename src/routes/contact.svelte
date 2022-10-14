@@ -121,11 +121,15 @@
 						this={href === undefined ? 'div' : 'a'}
 						rel={href !== undefined ? 'external' : undefined}
 						{href}
-						class="group flex items-center text-sm font-medium transition-colors"
+						class="group flex items-center text-sm font-medium"
 					>
 						<svelte:component this={icon} class="w-6 h-6 stroke-current text-red-500" />
 
-						<span class="ml-4 {href !== undefined ? 'group-hover:text-red-500' : ''}">{text}</span>
+						<span
+							class="ml-4 {href !== undefined ? 'transition-colors group-hover:text-red-500' : ''}"
+						>
+							{text}
+						</span>
 					</svelte:element>
 				</li>
 			{/each}
