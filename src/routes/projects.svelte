@@ -22,7 +22,7 @@
 	];
 	const twitter = [];
 
-	type LinkType = 'GitHub' | 'Website' | 'Article series' | 'Talk';
+	type LinkType = 'GitHub' | 'Website' | 'Article series' | 'Article' | 'Talk';
 
 	interface Project {
 		title: string;
@@ -98,6 +98,49 @@
 			]
 		},
 		{
+			title: 'SCXML interpreter',
+			imageSrc: '/img/scxml-interpreter.jpg',
+			imageRatio: 69.15142991092358,
+			description: [
+				'An online interpreter for SCXML state machines powered by XState, and using @xstate/inspect to visualize their execution.',
+				'It uses some core functions of XState to compile a SCXML machine – as a string – into a real XState machine.',
+				'The application is built with Vue 3 and all the logic code that powers the interpreter lives in a XState machine.'
+			],
+			links: [
+				{
+					type: 'GitHub',
+					href: 'https://github.com/Devessier/scxml-interpreter'
+				},
+				{
+					type: 'Website',
+					href: 'https://scxml-interpreter.netlify.app'
+				},
+				{
+					type: 'Article',
+					href: '/writing/interpret-scxml-state-machines-with-xstate/'
+				}
+			]
+		},
+		{
+			title: 'Petite Game',
+			imageSrc: '/img/adonisjs-petite-game.gif',
+			imageRatio: 55.125,
+			description: [
+				'A little game to demonstrate how XState can be used front-end with a back-end framework such as Laravel, Ruby on Rails or AdonisJS, that renders plain HTML pages, and where JavaScript is only used to enhance them.',
+				'The XState machine that makes the game work is started when the page renders in the browser, and it interacts with Petite Vue – a minimal version of Vue – to listen to click events and to update the DOM.'
+			],
+			links: [
+				{
+					type: 'GitHub',
+					href: 'https://github.com/Devessier/adonisjs-petitevue-xstate'
+				},
+				{
+					type: 'Website',
+					href: 'https://adonis-petitevue-xstate.cleverapps.io'
+				}
+			]
+		},
+		{
 			title: 'RedTetris',
 			imageSrc: '/img/red-tetris-multiplayer.jpeg',
 			imageRatio: 69.15142991092358,
@@ -124,6 +167,7 @@
 			GitHub: 'See the project on Github',
 			Website: 'Go to the website',
 			'Article series': 'Read the article series',
+			Article: 'Read the article',
 			Talk: 'Watch the talk'
 		};
 
