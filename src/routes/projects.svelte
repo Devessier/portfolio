@@ -22,7 +22,7 @@
 	];
 	const twitter = [];
 
-	type LinkType = 'GitHub' | 'Website' | 'Article series';
+	type LinkType = 'GitHub' | 'Website' | 'Article series' | 'Talk';
 
 	interface Project {
 		title: string;
@@ -78,6 +78,26 @@
 			]
 		},
 		{
+			title: 'Temporal Electronic Signature',
+			imageSrc: '/img/temporal-electronic-signature.gif',
+			imageRatio: 68,
+			description: [
+				'Temporal is a tool to create workflows with plain code. They released the alpha version of their TypeScript SDK in November 2021. The great thing is that if TypeScript code can run, XState can too.',
+				'I created a fake electronic signature application where the workflow of the signature is managed by a XState machine, and I had the chance to present it during an official Temporal meetup.',
+				'The front-end part is built with Svelte and the whole logic code lives inside a XState machine too.'
+			],
+			links: [
+				{
+					type: 'GitHub',
+					href: 'https://github.com/Devessier/temporal-electronic-signature'
+				},
+				{
+					type: 'Talk',
+					href: 'https://www.youtube.com/watch?v=GpbOkDjpeYU&t=1615s'
+				}
+			]
+		},
+		{
 			title: 'RedTetris',
 			imageSrc: '/img/red-tetris-multiplayer.jpeg',
 			imageRatio: 69.15142991092358,
@@ -103,7 +123,8 @@
 		const texts: Record<LinkType, string> = {
 			GitHub: 'See the project on Github',
 			Website: 'Go to the website',
-			'Article series': 'Read the article series'
+			'Article series': 'Read the article series',
+			Talk: 'Watch the talk'
 		};
 
 		return texts[linkType];
@@ -118,7 +139,7 @@
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<h1 class="text-5xl font-cursive">Projects</h1>
 
-	<section class="grid grid-cols-1 gap-16 lg:gap-24 mt-10">
+	<section class="grid grid-cols-1 gap-16 md:gap-24 lg:gap-32 mt-10">
 		{#each formattedProjects as { title, imageSrc, imageRatio, description, links }}
 			<article class="grid grid-cols-1 lg:grid-cols-6 gap-16">
 				<div class="col-span-1 lg:col-span-2 space-y-8">
@@ -155,7 +176,7 @@
 							src={imageSrc}
 							alt=""
 							loading="lazy"
-							class="object-center object-cover absolute inset-0 w-full h-full"
+							class="object-center object-cover absolute inset-0 w-full"
 						/>
 					</div>
 				</div>
