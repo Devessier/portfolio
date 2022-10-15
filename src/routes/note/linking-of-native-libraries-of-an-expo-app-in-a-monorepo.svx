@@ -1,0 +1,10 @@
+---
+title: Linking of native libraries of an Expo app in a monorepo
+datetime: 2022-06-28T12:54:30.489Z
+---
+
+In a monorepo, uses of a native library can be separated from the codebase of the Expo application: all the code of the application can be extracted in a package consumed by different applications, like Expo and Next.js, as recommended by [Solito](https://solito.dev/).
+
+If the native library is not installed in the `package.json` of the Expo application itself, it won't be linked and the application won't work when in production—it may work during development.
+
+So, the native library *can* be installed in the package where it's used, but it *must* be installed in the Expo application.

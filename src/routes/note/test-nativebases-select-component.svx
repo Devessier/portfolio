@@ -1,0 +1,80 @@
+---
+title: Test NativeBase's `Select` component
+datetime: 2022-03-12T17:11:37.794Z
+---
+
+I tried to test the [`Select`](https://docs.nativebase.io/select) component of NativeBase, but it took me some time to succeed. I am testing a React Native application, with Jest's React Native preset.
+
+Here is the code using `Select` component:
+
+```tsx
+import React, { useState } from 'react';
+import { Select } from 'native-base';
+
+function App() {
+    const [selectedValue, setSelectedValue] = useState('Paris');
+
+    return (
+        <Select
+            // 👇 We'll use the placeholder to get the current value of the select
+            placeholder="Select your city"
+            // 👇 We'll use the accessibilityLabel to open the select
+            accessibilityLabel="Select your city"
+            selectedValue={selectedValue}
+            onValueChange={setSelectedValue}
+        >
+            {/*
+                👇 Each item will be targetable by its label,
+                which will be rendered in a <Text /> component
+            */}
+            <Select.Item label="Paris" value="Paris" />
+            <Select.Item label="Berlin" value="Berlin" />
+            <Select.Item label="London" value="London" />
+        </Select>
+    );
+}
+```
+
+Now, in a test, we can assert the current value of the select:
+
+```tsx
+import React from 'react';
+import { render, waitFor } from '@testing-library/react-native';
+
+test('Assert current value of the select', async () => {
+    const screen = render(<App />);
+
+    // 👇 A <TextInput /> rendered internally contains the current value
+    const selectInput = await screen.findByPlaceholderText(/select.*country/i);
+    await waitFor(() => {
+        expect(selectInput).toHaveProp('value', 'Paris');
+    });
+});
+```
+
+And we can change the value of the select:
+
+```tsx
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+
+test('Change value of the select', async () => {
+    const screen = render(<App />);
+
+    // Open the select
+    fireEvent(
+        await screen.findByLabelText(/select.*country/i),
+        'click', // 👈 We must use `click` instead of `press`
+    );
+
+    // Click on an option by its label
+    fireEvent(await screen.findByText('London'), 'click'); // 👈 We must use `click` event too
+
+    const selectInput = await screen.findByPlaceholderText(/select.*country/i);
+    await waitFor(() => {
+        expect(selectInput).toHaveProp('value', 'London');
+    });
+});
+```
+
+I could not determine the reason, but the inner components of the select listen to `click` event instead of `press` event.

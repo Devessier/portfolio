@@ -1,0 +1,28 @@
+---
+title: Override version of a dependency of another dependency with npm
+datetime: 2022-03-26T19:38:17.144Z
+---
+
+I am using *[shiki-twoslash](https://github.com/shikijs/twoslash)* to highlight code snippets on my blog, and to provide type annotations for JavaScript and TypeScript code. I've been trying to write blocks of Svelte code, but highlighting was failing once I used Svelte's features belong pure HTML elements, such as [if blocks](https://svelte.dev/tutorial/if-blocks).
+
+After several tries, I finally found that *shiki-twoslash* was using an old version of *[shiki](https://github.com/shikijs/shiki)*, the tool that actually highlights code.
+
+I've been able to tell *shiki-twoslash* to use the newest version of *shiki* thanks to [`overrides`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#overrides) propery of `package.json`:
+
+```json
+{
+    "devDependencies": {
+        // shiki-twoslash depends on shiki
+        "shiki-twoslash": "^3.0.2"
+    },
+    "overrides": {
+        // Override shiki version for all dependencies (and their children) that use it
+        "shiki": "^0.10.1",
+
+        // Or only override the version used by shiki-twoslash
+        "shiki-twoslash": {
+            "shiki": "^0.10.1"
+        }
+    }
+}
+```
