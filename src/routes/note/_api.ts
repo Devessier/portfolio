@@ -4,8 +4,6 @@ import { basename } from 'path';
 export function getNotes(): NotePreview[] {
 	const svxFiles = import.meta.globEager('./*.svx');
 
-	console.log('svxFiles', svxFiles);
-
 	const importedFiles: NotePreview[] = Object.entries(svxFiles)
 		.filter(([path]) => {
 			const fileIsHidden = basename(path).startsWith('_');
