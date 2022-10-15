@@ -1,11 +1,9 @@
-<script>
+<script lang="ts">
 	import Page from '$lib/Page/Page.svelte';
-	import Carousel from '$lib/Carousel/Carousel.svelte';
-	import { GithubIcon, LinkIcon } from '$lib/Icons';
-	import Image from '$lib/Image/Image.svelte';
+	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 
 	const title = 'Baptiste Devessier | Projects';
-	const description = 'My projects for 42 School, my startup ArtisansFiables and my side projects';
+	const description = 'My code projects about web development and XState.';
 	const canonical = 'https://baptiste.devessier.fr/projects/';
 	const schemas = [];
 	const facebook = [
@@ -24,205 +22,144 @@
 	];
 	const twitter = [];
 
-	const projects = [
+	type LinkType = 'GitHub' | 'Website' | 'Article series';
+
+	interface Project {
+		title: string;
+		description: string[];
+		imageSrc: string;
+		imageRatio: number;
+		links: { type: LinkType; href: string }[];
+	}
+
+	const projects: Project[] = [
 		{
-			title: 'ArtisansFiables',
-			pictures: [
-				{
-					src: 'artisansfiables-quote-requests',
-					alt: 'Quote requests received by an artisan through ArtisansFiables platform',
-					ratio: 58.3705
-				},
-				{
-					src: 'artisansfiables-cloud',
-					alt: 'Cloud for artisans users of ArtisansFiables',
-					ratio: 58.3705
-				},
-				{
-					src: 'artisansfiables-reliable-artisan',
-					alt: 'A quote request to carry out building work',
-					ratio: 58.3705
-				}
+			title: 'Turing',
+			imageSrc: '/img/turing.gif',
+			imageRatio: 64,
+			description: [
+				'A Turing machine visualizer built with XState, Vue 3 and TailwindCSS. All the logic code of the visualizer lives in a XState machine.',
+				'The configuration of the machine and its input can be edited, and once submitted, they are sent to an Erlang server that computes the execution.',
+				'The visualizer displays the steps of the execution with smooth animations.'
 			],
-			intro: 'Startup.',
-			description: `
-				A service that automatically collects all the legal attestations of artisans.
-				Individuals can also find a reliable artisan to carry out their building work
-				or verify the reliability of an artisan they know.
-				The website is built with Nuxt.js, GraphQL, Apollo, Node.js, Golang, RabbitMQ, PostgreSQL, etc.
-			`,
-			date: 'February 2019 - today',
 			links: [
 				{
-					title: 'See the organization on Github',
-					href: 'https://github.com/ArtisansFiables',
-					icon: GithubIcon
+					type: 'GitHub',
+					href: 'https://github.com/AdonisEnProvence/Turing'
 				},
 				{
-					title: 'Go to the website',
-					href: 'https://artisansfiables.fr',
-					icon: LinkIcon
+					type: 'Website',
+					href: 'https://turing.adonisenprovence.com'
+				},
+				{
+					type: 'Article series',
+					href: '/tags/turing-visualizer/'
+				}
+			]
+		},
+		{
+			title: 'MusicRoom',
+			imageSrc: 'https://github.com/AdonisEnProvence/MusicRoom/raw/master/docs/mtv-demo.gif',
+			imageRatio: 66.125,
+			description: [
+				'An iOS, Android and Web application to listen to music collaboratively in real-time.',
+				'Client-side the application is built with React Native (Expo) and XState. The backend is built with AdonisJS.',
+				'The logic of the music player and the collaborative part are managed by XState.'
+			],
+			links: [
+				{
+					type: 'GitHub',
+					href: 'https://github.com/AdonisEnProvence/MusicRoom'
+				},
+				{
+					type: 'Website',
+					href: 'https://musicroom.adonisenprovence.com'
 				}
 			]
 		},
 		{
 			title: 'RedTetris',
-			pictures: [
-				{
-					src: 'red-tetris-home',
-					alt: 'RedTetris',
-					ratio: 52.3958
-				},
-				{
-					src: 'red-tetris-games',
-					alt: 'RedTetris',
-					ratio: 52.3958
-				},
-				{
-					src: 'red-tetris-waiting-room',
-					alt: 'RedTetris',
-					ratio: 52.3958
-				},
-				{
-					src: 'red-tetris-solo',
-					alt: 'RedTetris',
-					ratio: 52.3958
-				},
-				{
-					src: 'red-tetris-game-over',
-					alt: 'RedTetris',
-					ratio: 52.3958
-				},
-				{
-					src: 'red-tetris-multiplayer',
-					alt: 'RedTetris',
-					ratio: 52.3958
-				}
+			imageSrc: '/img/red-tetris-multiplayer.jpeg',
+			imageRatio: 69.15142991092358,
+			description: [
+				'A Tetris multiplayer game built with XState, Vue 3, TailwindCSS and Node.js.',
+				'Each client is connected to the backend through a WebSocket (Socket.io) to enable real-time. Client-side the WebSocket connection is orchestrated by XState.',
+				'All the front-end logic of the game is managed by XState, from username selection form to keypresses during a game.'
 			],
-			intro: 'Projet 42.',
-			description: `
-				A Tetris multiplayer game built with Vue 3, the Composition API, TailwindCSS, XState, Node.js and Socket.io.
-				All the front-end logic is represented by a XState State Machine.
-				Thanks to that we can know instantly in which logical state the application is.
-				During this project I discovered Vue 3 and the Composition API and I will not be able to help myself from using them.
-            `,
-			date: 'February-March 2021',
 			links: [
 				{
-					title: 'See the project on Github',
-					href: 'https://github.com/Claude-42/red-tetris',
-					icon: GithubIcon
+					type: 'GitHub',
+					href: 'https://github.com/Claude-42/red-tetris'
 				},
 				{
-					title: 'Go to the website',
-					href: 'https://claude-red-tetris.netlify.app',
-					icon: LinkIcon
-				}
-			]
-		},
-		{
-			title: 'ThunderTube',
-			pictures: [
-				{
-					src: 'hypertube-home',
-					alt: 'List of movies on ThunderTube',
-					ratio: 58.3705
-				},
-				{
-					src: 'hypertube-movie',
-					alt: 'Description of a movie on ThunderTube',
-					ratio: 58.3705
-				}
-			],
-			intro: 'Projet 42.',
-			description: `
-				A modern streaming website built with Vue.js, TailwindCSS and Node.js.
-				We got inspiration from Netflix and Canal+ to bring a good UX.
-			`,
-			date: 'February-March 2020',
-			links: [
-				{
-					title: 'See the project on Github',
-					href: 'https://github.com/ThunderTube/HyperTube',
-					icon: GithubIcon
-				},
-				{
-					title: 'Go to the website',
-					href: 'https://hypertube-app.herokuapp.com',
-					icon: LinkIcon
+					type: 'Website',
+					href: 'https://claude-red-tetris.netlify.app'
 				}
 			]
 		}
 	];
+
+	function formatLinkType(linkType: LinkType): string {
+		const texts: Record<LinkType, string> = {
+			GitHub: 'See the project on Github',
+			Website: 'Go to the website',
+			'Article series': 'Read the article series'
+		};
+
+		return texts[linkType];
+	}
+
+	$: formattedProjects = projects.map(({ links, ...props }) => ({
+		...props,
+		links: links.map(({ type, href }) => ({ href, text: formatLinkType(type) }))
+	}));
 </script>
 
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<h1 class="text-5xl font-cursive">Projects</h1>
 
-	<section class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
-		{#each projects as { title, pictures, intro, description, links }}
-			<div class="flex transform md:even:translate-y-12">
-				<article class="flex flex-col flex-grow p-4 border border-gray-300">
-					<header class="mb-6">
-						<h2 class="text-xl font-semibold inline-block relative">
+	<section class="grid grid-cols-1 gap-16 lg:gap-24 mt-10">
+		{#each formattedProjects as { title, imageSrc, imageRatio, description, links }}
+			<article class="grid grid-cols-1 lg:grid-cols-6 gap-16">
+				<div class="col-span-1 lg:col-span-2 space-y-8">
+					<header>
+						<h2
+							class="text-2xl font-semibold inline-block relative after:absolute after:inset-x-0 after:h-2 after:bg-red-400 after:w-2/5 after:bottom-[-6px]"
+						>
 							{title}
 						</h2>
 					</header>
 
-					<Carousel
-						items={pictures}
-						let:item={{ src, alt, ratio }}
-						let:index
-						let:zoom
-						let:container
-						class="mb-4"
-					>
-						<Image
-							{src}
-							{alt}
-							{ratio}
-							sizes="(max-width: 768px) 100vw, 50vw"
-							root={container}
-							class="cursor-pointer"
-							on:click={() => zoom(index)}
-						/>
+					<div class="prose">
+						{#each description as paragraph}
+							<p>{paragraph}</p>
+						{/each}
+					</div>
 
-						<div slot="zoom" class="w-full">
-							<Image let:item={{ src, alt }} {src} {alt} {ratio} root={container} />
-						</div>
-					</Carousel>
-
-					<p class="mb-4">
-						<span class="text-red-700 uppercase font-semibold">
-							{intro}
-						</span>
-						{@html description}
-					</p>
-
-					<footer class="flex items-end flex-grow">
-						<ul class="flex items-center justify-start">
-							{#each links as { href, title, icon }}
-								<li {title} class="mr-2 last:mr-0">
-									<a {href} class="flex items-center justify-center p-2 text-red-500">
-										<span class="sr-only">{title}</span>
-
-										<svelte:component this={icon} class="w-6 h-6 stroke-current" />
-									</a>
+					<footer>
+						<ul class="space-y-2">
+							{#each links as { href, text }}
+								<li>
+									<LinkWithAnimatedArrow {href}>{text}</LinkWithAnimatedArrow>
 								</li>
 							{/each}
 						</ul>
 					</footer>
-				</article>
-			</div>
+				</div>
+
+				<div class="col-span-1 lg:col-span-4 relative">
+					<div class="w-full overflow-hidden bg-gray-100">
+						<div class="relative w-full" style="padding-bottom: {imageRatio}%" />
+
+						<img
+							src={imageSrc}
+							alt=""
+							loading="lazy"
+							class="object-center object-cover absolute inset-0 w-full h-full"
+						/>
+					</div>
+				</div>
+			</article>
 		{/each}
 	</section>
 </Page>
-
-<style lang="postcss">
-	h2::after {
-		@apply absolute inset-x-0 h-1 bg-red-400 w-2/5;
-
-		content: '';
-		bottom: -2px;
-	}
-</style>
