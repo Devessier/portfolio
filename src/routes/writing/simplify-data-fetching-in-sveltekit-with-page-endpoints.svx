@@ -9,16 +9,7 @@ Since SvelteKit landed, we can create JavaScript (or TypeScript) files in `src/r
 
 Endpoints were mostly used to return data needed by pages. An endpoint was usually mapped to a page, and looked like this:
 
-```ts twoslash
-declare type BlogPost = {
-  title: string;
-  slug: string;
-  description: string;
-  datetime: string;
-  tags: string[];
-};
-declare function getBlogPosts(): Promise<BlogPost[]>;
-// ---cut---
+```ts
 // src/routes/writing/index.json.ts
 
 import type { RequestHandler } from '@sveltejs/kit';
