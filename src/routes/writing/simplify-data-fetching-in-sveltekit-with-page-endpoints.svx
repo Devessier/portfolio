@@ -1,0 +1,111 @@
+---
+title: Simplify data fetching in SvelteKit with page endpoints
+description: Page endpoints are a new way to simplify fetching data from endpoints in SvelteKit. They reduce the amount of code needed to fetch data, and prevent to forget handling HTTP errors.
+datetime: 2022-03-27T11:45:13.554Z
+tags: ['Svelte', 'SvelteKit']
+---
+
+Since SvelteKit landed, we can create JavaScript (or TypeScript) files in `src/routes` folder that export functions corresponding to HTTP verbs, called [endpoints](https://kit.svelte.dev/docs/routing#endpoints-standalone-endpoints). For instance, they can be used to [serve a RSS feed](/writing/generate-rss-feed-with-sveltekit/).
+
+Endpoints were mostly used to return data needed by pages. An endpoint was usually mapped to a page, and looked like this:
+
+```ts twoslash
+declare type BlogPost = {
+  title: string;
+  slug: string;
+  description: string;
+  datetime: string;
+  tags: string[];
+};
+declare function getBlogPosts(): Promise<BlogPost[]>;
+// ---cut---
+// src/routes/writing/index.json.ts
+
+import type { RequestHandler } from '@sveltejs/kit';
+
+type GetResponseBody = {
+  articles: BlogPost[];
+}
+
+export const get: RequestHandler<never, GetResponseBody> = async () => {
+	const blogPosts = await getBlogPosts();
+
+	return {
+		// 👇 Return data need by the page, here a list of articles.
+		body: {
+			articles: blogPosts
+		}
+	};
+};
+```
+
+And in the page, we had to fetch the data from the endpoint:
+
+```svelte
+<!-- src/pages/writing/index.svelte -->
+
+<script context="module" lang="ts">
+	import type { Load } from '@sveltejs/kit';
+	import type { WritingPreview } from '$lib/types';
+
+	// 👇 Export a `load` function to fetch article list when page is loaded.
+	export const load: Load = async ({ fetch }) => {
+		const response = await fetch('/writing.json');
+		// 👇 We need to handle errors, such as endpoint not found.
+		if (response.ok === false) {
+			return {
+				error: new Error('Could not get article list'),
+				status: 500
+			};
+		}
+
+		const { articles } = await response.json();
+		return {
+			props: {
+				articles: articles as WritingPreview[]
+			}
+		};
+	};
+</script>
+
+<script lang="ts">
+// 👇 The list of articles we fetched from the endpoint.
+export let articles: WritingPreview[];
+</script>
+
+<ul>
+	{#each articles as article}
+		<li>
+			<a href={`/writing/${article.slug}`}>
+				{article.title}
+			</a>
+		</li>
+	{/each}
+</ul>
+```
+
+We had to write a lot of code to fetch article list inside `load` function and we had to handle explicitly HTTP errors. This is this part of the code that is now simplified.
+
+## Using page endpoints
+
+First, we need to rename the endpoint file from `src/routes/writing/index.json.ts` to `src/routes/writing/index.ts`. Please note we removed `.json` from the name. The endpoint, which is now called a *page endpoint*, needs to have the same name as the page it is mapped to, except the extension. Otherwise, the file is **not** modified.
+
+Now, in the page, we can delete all the code related to article list fetching inside `load` function:
+
+```svelte
+<!-- src/pages/writing/index.svelte -->
+
+<!-- No more script[context="module"] with load function -->
+
+<script lang="ts">
+// The load function is now implicit.
+// 👇 We receive all the keys of the body as properties
+export let articles: WritingPreview[];
+</script>
+
+<!-- ... -->
+```
+
+The boilerplate we had to write to make a request to the endpoint is now gone!
+
+You can read more about [page endpoints](https://kit.svelte.dev/docs/routing#endpoints-page-endpoints) in SvelteKit documentation. The [issue which led to the implementation of this feature](https://github.com/sveltejs/kit/issues/3532) is also quite interesting. [Remix](https://remix.run/) seems to have been an inspiration for it. What is really cool is that not only `GET` method is supported, but all HTTP verbs are, which allows to handle form submissions in a really neat way. But this will be the subject of another blog post!

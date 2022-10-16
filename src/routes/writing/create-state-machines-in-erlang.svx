@@ -1,0 +1,390 @@
+---
+title: Create state machines in Erlang
+description: Erlang is a functional language that implements pattern matching. We can make use of this great feature to create declarative state machines.
+datetime: 2021-12-15T23:14:17.637Z
+tags: ['Erlang', 'State Machines']
+---
+
+What is a state machine? In its simplest form, a state machine is an *abstract machine* that has a finite set of *states* and is at any time in only one of them. It goes from one state to another one in reaction to an *input*, also called an *event*, and this transformation is called a *transition*.
+
+## Implement state machines from hands
+
+Let's imagine a chat system with really basic authentication: a user can be either logged in or logged out, and can receive messages only when logged in.
+
+When in logged in state, user can log out; when in logged out state, user can log in.
+
+These interactions are schematized below.
+
+![Schema of chat system with authentication states](/chat%20erlang%20system.png)
+
+Let's implement this state machine in Erlang without any library, by making great use of pattern matching.
+
+### The State Handlers
+
+We create a module named `fsm_auth`.
+
+```erlang
+-module(fsm_auth).
+
+logged_in(_Event, _Context) ->
+    ok.
+
+logged_out(_Event, _Context) ->
+    ok.
+```
+
+We create two functions, each one representing a state. These *state handlers* will be called when an event is received by the state, respectively when it's in `logged_in` state and in `logged_out` state. The `_Context` is some data, shared across state handlers. We will use it to keep track of received messages.
+
+Let's create a function clause for each state handler, so that we can switch between `logged_in` and `logged_out` states in response to `log_out` and `log_in` events.
+
+```erlang {2-3,7-8}
+-module(fsm_auth).
+
+logged_in(log_out, _Context) ->
+    {next_state, logged_out};
+logged_in(_Event, _Context) ->
+    ok.
+
+logged_out(log_in, _Context) ->
+    {next_state, logged_in};
+logged_out(_Event, _Context) ->
+    ok.
+```
+
+If in `logged_in` state we receive a `log_out` event, we will go to `logged_out`. Conversely, if in `logged_out` state we receive `log_in` event, we will go to `logged_in`.
+
+We express a *transition* by using a tuple with as first entry the atom `next_state` and as second entry, the state to go to.
+
+If we receive an event we do not want to catch, we want to stay in the current state. We can use `keep_state` to do this:
+
+```erlang {5,10}
+-module(fsm_auth).
+
+logged_in(log_out, _Context) ->
+    {next_state, logged_out};
+logged_in(_Event, _Context) ->
+    {keep_state}.
+
+logged_out(log_in, _Context) ->
+    {next_state, logged_in};
+logged_out(_Event, _Context) ->
+    {keep_state}.
+```
+
+Now that we scaffolded our state handlers and designed a beggining of API, it's time to implement an *interpreter* that will listen to events, call matching state handlers and understand their return value to update the machine state.
+
+### The Interpreter
+
+```erlang
+-module(fsm_auth).
+
+-export([loop/0]).
+
+%%
+%% State handlers previously defined
+%%
+
+call_state_handler(State, Context, Event) ->
+    case State of
+        logged_in ->
+            logged_in(Event, Context);
+        logged_out ->
+            logged_out(Event, Context)
+    end.
+
+loop() ->
+    InitialState = logged_out,
+    InitialContext = #{},
+
+    loop(InitialState, InitialContext).
+
+loop(State, Context) ->
+    receive
+        {event, Event} ->
+            HandlerReturn = call_state_handler(State, Context, Event),
+            case HandlerReturn of
+                {keep_state} ->
+                    loop(State, Context);
+                {next_state, NewState} ->
+                    loop(NewState, Context)
+            end
+    end.
+```
+
+We create a function `loop/0` that calls `loop/2`, which is our event loop with the initial state and the initial context:
+
+```erlang
+loop() ->
+    InitialState = logged_out,
+    InitialContext = #{},
+
+    loop(InitialState, InitialContext).
+```
+
+The default state is `logged_out` and the context in an empty dictionnary.
+
+In `loop/2` we take the current state and the current context as parameters. We are waiting for messages and keep only those matching `{event, Event}` pattern:
+
+```erlang
+loop(State, Context) ->
+    receive
+        {event, Event} ->
+            % ...
+    end.
+```
+
+It means that events will have to be sent to the machine process by using this pattern:
+
+```erlang
+Machine ! {event, Event}
+```
+
+For example, to send `log_in` event, we would have to write that statement:
+
+```erlang
+Machine ! {event, log_in}
+```
+
+Then we call `call_state_handler` that calls the appropriate state handler with the event and the context.
+
+```erlang {3}
+loop(State, Context) ->
+    receive
+        {event, Event} ->
+            HandlerReturn = call_state_handler(State, Context, Event),
+            % ...
+    end.
+```
+
+Finally in `loop/2` we match `HandlerReturn` against `{keep_state}` and `{next_state, NewState}`. If `{keep_state}` matches, we call `loop/2` without changing neither the state nor the context. If `{next_state, NewState}` matches we call `loop/2` with the new state and we keep the context.
+
+```erlang {4-9}
+loop(State, Context) ->
+    receive
+        {event, Event} ->
+            HandlerReturn = call_state_handler(State, Context, Event),
+            case HandlerReturn of
+                {keep_state} ->
+                    loop(State, Context);
+                {next_state, NewState} ->
+                    loop(NewState, Context)
+            end
+    end.
+```
+
+Now we need to spawn `loop/0` and make our state machine a real actor.
+
+```erlang
+-module(fsm_auth).
+
+-export([start/0, loop/0]).
+
+%%
+%% Rest of the code
+%%
+
+start() ->
+    spawn(fsm_auth, loop, []).
+```
+
+We create `start/0` function that spawns `fsm_auth:loop/0` function and returns the PID of the actor.
+
+Let's add some logs to ensure our machine works correctly.
+
+```erlang {29}
+-module(fsm_auth).
+
+-export([start/0, loop/0]).
+
+logged_in(log_out, _Context) ->
+    {next_state, logged_out};
+logged_in(_Event, _Context) ->
+    {keep_state}.
+
+logged_out(log_in, _Context) ->
+    {next_state, logged_in};
+logged_out(_Event, _Context) ->
+    {keep_state}.
+
+call_state_handler(State, Context, Event) ->
+    case State of
+        logged_in ->
+            logged_in(Event, Context);
+        logged_out ->
+            logged_out(Event, Context)
+    end.
+
+loop() ->
+    InitialState = logged_out,
+    InitialContext = #{},
+
+    loop(InitialState, InitialContext).
+
+loop(State, Context) ->
+    io:format("State: ~p with context: ~p~n", [State, Context]),
+
+    receive
+        {event, Event} ->
+            HandlerReturn = call_state_handler(State, Context, Event),
+            case HandlerReturn of
+                {keep_state} ->
+                    loop(State, Context);
+                {next_state, NewState} ->
+                    loop(NewState, Context)
+            end
+    end.
+
+start() ->
+    spawn(fsm_auth, loop, []).
+```
+
+After that we can play with our state machine by using Erlang interpreter, `erl`. 
+
+```txt
+1> c(fsm_auth).
+{ok,fsm_auth}
+2> Machine = fsm_auth:start().
+State: logged_out with context: #{}
+<0.86.0>
+3> Machine ! {event, log_out}.
+State: logged_out with context: #{}
+{event,log_out}
+4> Machine ! {event, log_in}. 
+State: logged_in with context: #{}
+{event,log_in}
+5> Machine ! {event, unknown_event}.
+State: logged_in with context: #{}
+{event,unknown_event}
+```
+
+### Receive messages
+
+Now that we have a working state machine, let's implement messages receiving, only in `logged_in` state.
+
+```erlang {2-3}
+-module(fsm_auth).
+
+logged_in({send_message, Message}, #{messages := Messages} = Context) ->
+    {keep_state, Context#{messages := [Message | Messages]}};
+logged_in(log_out, _Context) ->
+    {next_state, logged_out};
+logged_in(_Event, Context) ->
+    {keep_state, Context}.
+```
+
+We add a clause to `logged_in` function to match `send_message` event. We update `messages` property from `Context` dict and preprend the received message. Now we return `keep_state` with the updated context.
+
+As a consequence we have to update the interpreter:
+
+```erlang {7-8}
+loop(State, Context) ->
+    io:format("State: ~p with context: ~p~n", [State, Context]),
+
+    receive
+        {event, Event} ->
+            HandlerReturn = call_state_handler(State, Context, Event),
+            case HandlerReturn of
+                {keep_state, NewContext} ->
+                    loop(State, NewContext);
+                {next_state, NewState} ->
+                    loop(NewState, Context)
+            end
+    end.
+```
+
+We update the initial context so that it contains an empty list of messages:
+
+```erlang {2}
+loop() ->
+    InitialState = logged_out,
+    InitialContext = #{messages => []},
+
+    loop(InitialState, InitialContext).
+```
+
+We now have the following module:
+
+```erlang
+-module(fsm_auth).
+
+-export([start/0, loop/0]).
+
+logged_in({send_message, Message}, #{messages := Messages} = Context) ->
+    {keep_state, Context#{messages := [Message | Messages]}};
+logged_in(log_out, _Context) ->
+    {next_state, logged_out};
+logged_in(_Event, Context) ->
+    {keep_state, Context}.
+
+logged_out(log_in, _Context) ->
+    {next_state, logged_in};
+logged_out(_Event, Context) ->
+    {keep_state, Context}.
+
+call_state_handler(State, Context, Event) ->
+    case State of
+        logged_in ->
+            logged_in(Event, Context);
+        logged_out ->
+            logged_out(Event, Context)
+    end.
+
+loop() ->
+    InitialState = logged_out,
+    InitialContext = #{messages => []},
+
+    loop(InitialState, InitialContext).
+
+loop(State, Context) ->
+    io:format("State: ~p with context: ~p~n", [State, Context]),
+
+    receive
+        {event, Event} ->
+            HandlerReturn = call_state_handler(State, Context, Event),
+            case HandlerReturn of
+                {keep_state, NewContext} ->
+                    loop(State, NewContext);
+                {next_state, NewState} ->
+                    loop(NewState, Context)
+            end
+    end.
+
+start() ->
+    spawn(fsm_auth, loop, []).
+```
+
+We can test it with `erl` interpreter:
+
+```md {5-6,8,11-12,14-17}
+1> c(fsm_auth).
+{ok,fsm_auth}
+2> Machine = fsm_auth:start().
+State: logged_out with context: #{messages => []}
+<0.86.0>
+3> Machine ! {event, {send_message, "Erlang is so cool!"}}.
+State: logged_out with context: #{messages => []}
+{event,{send_message,"Erlang is so cool!"}}
+4> Machine ! {event, log_in}.
+State: logged_in with context: #{messages => []}
+{event,log_in}
+5> Machine ! {event, {send_message, "Erlang is so cool!"}}.
+State: logged_in with context: #{messages => ["Erlang is so cool!"]}
+{event,{send_message,"Erlang is so cool!"}}
+6> Machine ! {event, {send_message, "Actor model too!"}}.
+State: logged_in with context: #{messages =>
+                                     ["Actor model too!",
+                                      "Erlang is so cool!"]}
+{event,{send_message,"Actor model too!"}}
+```
+
+Great! When we are in `logged_out` state and we receive a message, it's discarded. But when we are in `logged_in` state, messages are put in the context. 
+
+## Conclusion
+
+Erlang's implementation of the Actor Model is fabulous and amazing to use.
+
+Thanks to Erlang's pattern matching, it's easy to write declarative state machines.
+
+By combining both features, we get a powerful tool to build predictable actors systems where actors behaviours have to be made explicit.
+
+You can find the code of this article [on Github](https://github.com/Devessier/erlang-state-machines/blob/b6f8a3f5ac241c14d1b4c09e7e07b23222c6eafe/src/fsm_auth.erl).

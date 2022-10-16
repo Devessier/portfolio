@@ -1,0 +1,383 @@
+---
+title: Parallel states and events with XState
+description: Parallel states are an advanced feature of statecharts that allows to run a set of child states concurrently. We can even synchronize them easily by using normal XState events.
+datetime: 2021-10-08T22:22:08.916Z
+tags: ['XState']
+---
+
+<script>
+    import XStateViz from '$lib/XStateViz.svelte'
+</script>
+
+Parallel states bring a lot of useful patterns to state machines. Thanks to them you can have a set of child states that are active at the same time. You can truly have several little state machines that run concurrently, although they are integrated in a bigger state machine that controls when they are run and when they are stopped.
+
+## Uploading front and back of a document
+
+Let's take an example. We want to implement a form that allows users to upload independently the front and the back of a paper document. We can represent such a form that way:
+
+```ts
+import { createMachine } from "xstate";
+
+createMachine({
+  id: "parallel-states-events",
+
+  initial: "idle",
+
+  states: {
+    idle: {
+      on: {
+        GO_TO_FORM: {
+          target: "form",
+        },
+      },
+    },
+
+    form: {
+      type: "parallel",
+
+      states: {
+        uploadFrontOfDocument: {
+          initial: "idle",
+
+          states: {
+            idle: {
+              on: {
+                SET_FRONT_DOCUMENT: {
+                  target: "uploading",
+                },
+              },
+            },
+
+            uploading: {
+              after: {
+                5_000: {
+                  target: "done",
+                },
+              },
+            },
+
+            done: {
+              type: "final",
+            },
+          },
+        },
+
+        uploadBackOfDocument: {
+          initial: "idle",
+
+          states: {
+            idle: {
+              on: {
+                SET_BACK_DOCUMENT: {
+                  target: "uploading",
+                },
+              },
+            },
+
+            uploading: {
+              after: {
+                5_000: {
+                  target: "done",
+                },
+              },
+            },
+
+            done: {
+              type: "final",
+            },
+          },
+        },
+      },
+    },
+  },
+});
+```
+
+<XStateViz id="fe343a48-27ca-4fb7-9277-3fdf128b04a9" />
+
+As we can see in the visualizer, uploading the front and uploading the back are two separate operations. This is great.
+
+### With cancellation
+
+Going back to our uploading system, let's imagine we want to add cancellation. Users should be able to cancel the uploading of the front and the back of the document at the same time: whatever is the uploading status of the both parts, pressing a *Cancel* button must cancel the uploading of both.
+
+This is where parallel states are amazing. By quoting [SCXML specification](https://www.w3.org/TR/scxml/#N10199), *the child states [of a parallel state] execute in parallel in the sense that any event that is processed is processed in each child state independently*. It means that if there are two active parallel states, such as `uploadFrontOfDocument` and `uploadBackOfDocument`, if the state machine receives a `CANCEL` event, both parallel states will receive this event and will be able to catch it independently.
+
+Therefore we can implement cancellation that way:
+
+```ts
+import { createMachine } from "xstate";
+
+createMachine({
+  id: "parallel-states-events-with-cancellation",
+
+  initial: "idle",
+
+  states: {
+    idle: {
+      on: {
+        GO_TO_FORM: {
+          target: "form",
+        },
+      },
+    },
+
+    form: {
+      type: "parallel",
+
+      states: {
+        uploadFrontOfDocument: {
+          initial: "idle",
+
+          states: {
+            idle: {
+              on: {
+                SET_FRONT_DOCUMENT: {
+                  target: "uploading",
+                },
+
+                CANCEL: {
+                  target: "cancelling",
+                },
+              },
+            },
+
+            uploading: {
+              after: {
+                5_000: {
+                  target: "done",
+                },
+              },
+
+              on: {
+                CANCEL: {
+                  target: "cancelling",
+                },
+              },
+            },
+
+            cancelling: {
+              after: {
+                5_000: {
+                  target: "cancelled",
+                },
+              },
+            },
+
+            cancelled: {
+              type: "final",
+            },
+
+            done: {
+              type: "final",
+
+              on: {
+                CANCEL: {
+                  target: "cancelling",
+                },
+              },
+            },
+          },
+        },
+
+        uploadBackOfDocument: {
+          initial: "idle",
+
+          states: {
+            idle: {
+              on: {
+                SET_BACK_DOCUMENT: {
+                  target: "uploading",
+                },
+
+                CANCEL: {
+                  target: "cancelling",
+                },
+              },
+            },
+
+            uploading: {
+              after: {
+                5_000: {
+                  target: "done",
+                },
+              },
+
+              on: {
+                CANCEL: {
+                  target: "cancelling",
+                },
+              },
+            },
+
+            cancelling: {
+              after: {
+                5_000: {
+                  target: "cancelled",
+                },
+              },
+            },
+
+            cancelled: {
+              type: "final",
+            },
+
+            done: {
+              type: "final",
+
+              on: {
+                CANCEL: {
+                  target: "cancelling",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+});
+```
+
+<XStateViz id="6bbaf688-d957-48ed-93e5-ee8ab4bb335e" />
+
+As we can see, `idle`, `uploading` and `done` states can be cancelled, which means they will leave their place to `cancelling` state, that goes to `cancelled` after some time. And `CANCEL` events are received by both parallel states at the same time. Such a nice way to implement cancellation!
+
+## Synchronize parallel states
+
+But there is more. If events received by a state machine are sent to all active parallel states, that also means that parallel states can communicate with each other. This can be achieved with `send` action that declaratively sends an event to the state machine itself. Let's illustrate that behavior with a state machine that waits for some user interaction and that concurrently fetches the status of the operation, probably to a back-end.
+
+```ts
+import { createMachine, DoneInvokeEvent, send, assign } from "xstate";
+
+interface Context {
+  pollingIndex: number;
+}
+
+type Status = "PENDING" | "SUCCESS";
+
+createMachine<Context>(
+  {
+    id: "parallel-states-events-sibling",
+
+    context: {
+      pollingIndex: 0,
+    },
+
+    type: "parallel",
+
+    states: {
+      pollStatus: {
+        initial: "fetching",
+
+        states: {
+          fetching: {
+            invoke: {
+              src: "fetchStatus",
+
+              onDone: [
+                {
+                  cond: "isPendingStatus",
+
+                  target: "debouncing",
+                },
+
+                {
+                  target: "success",
+                },
+              ],
+            },
+          },
+
+          debouncing: {
+            entry: "incrementPollingIndex",
+
+            after: {
+              2_000: {
+                target: "fetching",
+              },
+            },
+          },
+
+          success: {
+            type: "final",
+          },
+        },
+
+        onDone: {
+          actions: send({
+            type: "STATUS_SUCCESSFUL",
+          }),
+        },
+      },
+
+      waitingForUserInteraction: {
+        initial: "idle",
+
+        states: {
+          idle: {
+            on: {
+              SUCCESSFUL_USER_ACTION: {
+                target: "success",
+              },
+            },
+          },
+
+          success: {
+            after: {
+              1_000: {
+                target: "cleanupState",
+              },
+            },
+          },
+
+          cleanupState: {
+            type: "final",
+          },
+        },
+
+        on: {
+          STATUS_SUCCESSFUL: {
+            target: ".success",
+          },
+        },
+      },
+    },
+  },
+  {
+    services: {
+      fetchStatus: async ({ pollingIndex }, _event): Promise<Status> => {
+        if (pollingIndex < 3) {
+          return "PENDING";
+        }
+
+        return "SUCCESS";
+      },
+    },
+
+    guards: {
+      isPendingStatus: (_, event) => {
+        const { data } = event as DoneInvokeEvent<Status>;
+
+        return data === "PENDING";
+      },
+    },
+
+    actions: {
+      incrementPollingIndex: assign({
+        pollingIndex: ({ pollingIndex }) => pollingIndex + 1,
+      }),
+    },
+  }
+);
+```
+
+<XStateViz id="a9a0b18f-c8f8-4713-a633-91d08dcd2195" />
+
+In `pollStatus` state we go to `pollStatus.fetching` state every two seconds thanks to `pollStatus.debouncing` state. Each time `pollStatus.debouncing` state is entered, we increment `pollingIndex` value from context. It allows us to fake a changing status in `fetchStatus` service, that is invoked in `pollStatus.fetching` state. If result of `fetchStatus` service is successful, we send a `STATUS_SUCCESSFUL` event to the state machine itself.
+
+In `waitingForUserInteraction` state we handle possible user interaction. If no successful action is taken by the user, we wait for `STATUS_SUCCESSFUL` event to be sent by `pollStatus` parallel state, and then we go to `waitingForUserInteraction.success` state and some time after, to `waitingForUserInteraction.cleanupState`. That way if the operation is accomplished in another tab or on another device, the state machine is synchronised and can go to the next step.
+
+## Conclusion
+
+Thanks to parallel states, we can execute states concurrently and represent the profound concurrent nature of the world with code. Parallel states can even be synchronized by using normal events. Here we limited our demonstration to at most two parallel states, but there are technically no limit to their count. If you find yourself using two much unrelated parallel states, you should probably take a look at [spawning actors](https://xstate.js.org/docs/guides/actors.html) and especially [spawning machines](https://xstate.js.org/docs/guides/actors.html#spawning-machines).

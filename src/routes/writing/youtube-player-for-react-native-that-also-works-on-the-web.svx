@@ -1,0 +1,404 @@
+---
+title: YouTube player for React Native that also works on the Web
+description: The de facto library to use a YouTube player with React Native is react-native-youtube-iframe. Although is works perfectly on native platforms, it has some issues when used on the Web.
+datetime: 2021-08-02T19:10:22.982Z
+tags:
+  - Front-end
+  - React Native
+  - Expo
+---
+
+Recently I tried to integrate the really great [react-native-youtube-iframe](https://github.com/LonelyCpp/react-native-youtube-iframe) library in an Expo application that needs to work for native platforms and for the Web. I had to create custom controls and to play videos from a playlist.
+
+To make *react-native-youtube-iframe* work for the Web, I had to install [react-native-web-webview](https://github.com/react-native-web-community/react-native-web-webview). Thanks to this library we can use WebViews with React Native Web. *react-native-youtube-iframe* uses it internally.
+
+From my experience, *react-native-youtube-iframe* works perfectly on native platforms. I could control which video to play, and I could pause and play the player programmatically. On the Web, the player itself also works. We can play and pause videos manually.
+
+The biggest issue I faced is that it is currently not possible to control the player programmatically on the Web. This is due to the fact that to communicate with the WebView that hosts the YouTube player, *react-native-youtube-iframe* asks *react-native-web-webview* to inject JavaScript code inside the WebView, and currently, *react-native-web-webview* does not support this feature. It is a known bug from [*react-native-web-webview*](https://github.com/react-native-web-community/react-native-web-webview/issues/35) side and also from *[react-native-youtube-iframe](https://github.com/LonelyCpp/react-native-youtube-iframe/issues/70#issuecomment-735846647)* but in the meantime there is no recommended solution. We will have to find one ourselves.
+
+## Find a solution
+
+We can not use *react-native-youtube-iframe* as the player on the Web but we can still use it on native platforms. React Native provides a way to write [code that differs according to the platform](https://reactnative.dev/docs/platform-specific-code).
+
+We will use `Platform.select` to choose which library to load.
+
+Create `components/Player/index.tsx`:
+
+```tsx
+import { Platform } from "react-native";
+
+export default Platform.select({
+  native: () => require('./native').default,
+  default: () => require('./web').default,
+})()
+```
+
+This component is kind of a proxy. If the application runs on a native platform, it will load the `native` file, otherwise it will load the `web` file.
+
+The objective is to have these two files exporting a component with the same API, so that we can use them interchangeably. Upper components using our YouTube component should not have to care about its actual implementation.
+
+On the Web we will use [react-youtube](https://github.com/tjallingt/react-youtube).
+
+## The Contract
+
+The two components we want to create, one using *react-native-youtube-iframe*, the other one using *react-youtube*, will have to conform to the same contract, that is, they must have the same public API surface.
+
+Let's elaborate the contract we expect these both component to conform to.
+
+Create `components/Player/contract.ts`:
+
+```tsx
+export interface PlayerProps {
+  height: number;
+  width: number;
+  videoId: string;
+  playing: boolean;
+}
+
+export interface PlayerRef {
+  getDuration(): Promise<number>;
+}
+```
+
+We expect each component to take four mandatory props, `height`, `width`, `videoId` and `playing`. We expect references to these components to have a method, `getDuration`, that resolves to a number representing the duration of the current track.
+
+Now that we established the contact, let's begin with the native player.
+
+## Native Player
+
+Let's begin `components/Player/native.tsx`:
+
+```tsx
+import { forwardRef } from "react";
+import { PlayerProps, PlayerRef } from "./contract";
+
+const NativePlayer = forwardRef<PlayerRef, PlayerProps>(({}) => {
+  return null;
+});
+
+export default NativePlayer;
+```
+
+The `NativePlayer` component needs to customise the reference it will receive. Indeed, we need to add a `getDuration` method that interacts with the native player. To do that, we need to use [forwardRef](https://reactjs.org/docs/forwarding-refs.html). With `forwardRef`, we can catch the reference provided by the upper component and do things with it, such as passing it down to a specific child component, or customising it. With React Hooks, the way to customise a reference is to use [useImperativeHandle](https://reactjs.org/docs/hooks-reference.html#useimperativehandle).
+
+Before digging deeper with references, let's use *react-native-youtube-iframe* and pass it some props.
+
+It's the moment to install *react-native-youtube-iframe*:
+
+```bash
+yarn add react-native-youtube-iframe
+```
+
+Now update `components/Player/native.tsx`:
+
+```tsx
+import React, { forwardRef } from "react";
+import { PlayerProps, PlayerRef } from "./contract";
+import YoutubePlayer from "react-native-youtube-iframe";
+
+const NativePlayer = forwardRef<PlayerRef, PlayerProps>(
+  ({ width, height, videoId, playing }) => {
+    return (
+      <YoutubePlayer
+        videoId={videoId}
+        height={height}
+        width={width}
+        play={playing}
+      />
+    );
+  }
+);
+
+export default NativePlayer;
+```
+
+Here we pass down props `NativePlayer` receives. If you don't feel confortable with this code, check [FrontendMasters](https://frontendmasters.com/courses/) courses about React. FrontendMasters has a lot of extremely good content and you can have [six free months if you are a student](https://frontendmasters.com/welcome/github-student-developers/).
+
+Now that props are passed to the player, we need to take care of adding a method to the reference.
+
+Firstly, let's create a reference to the *react-native-youtube-iframe* player and provide it to the player. This is through this reference that we will access the duration of the currently played track.
+
+```tsx
+import React, { forwardRef, useRef } from "react";
+import { PlayerProps, PlayerRef } from "./contract";
+import YoutubePlayer, { YoutubeIframeRef } from "react-native-youtube-iframe";
+
+const NativePlayer = forwardRef<PlayerRef, PlayerProps>(
+  ({ width, height, videoId, playing }) => {
+    const playerRef = useRef<YoutubeIframeRef>(null);
+
+    return (
+      <YoutubePlayer
+        ref={playerRef}
+        videoId={videoId}
+        height={height}
+        width={width}
+        play={playing}
+      />
+    );
+  }
+);
+
+export default NativePlayer;
+```
+
+And now let's customise the reference forwarded to `NativePlayer`:
+
+```tsx
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
+import YoutubePlayer, { YoutubeIframeRef } from "react-native-youtube-iframe";
+import { PlayerComponent, PlayerProps, PlayerRef } from "./contract";
+
+const NativePlayer: PlayerComponent = forwardRef<PlayerRef, PlayerProps>(
+  ({ width, height, videoId, playing }, ref) => {
+    const playerRef = useRef<YoutubeIframeRef>(null);
+
+    useImperativeHandle(ref, () => ({
+      async getDuration() {
+        const duration = await playerRef.current?.getDuration();
+        if (duration === undefined) {
+          throw new Error(
+            "Could not get duration from react-native-youtube-iframe"
+          );
+        }
+
+        return duration;
+      },
+    }));
+
+    return (
+      <YoutubePlayer
+        ref={playerRef}
+        videoId={videoId}
+        height={height}
+        width={width}
+        play={playing}
+      />
+    );
+  }
+);
+
+export default NativePlayer;
+```
+
+With `useImperativeHandle` we say that the value of the reference will now be an object with a single method, `getDuration`. In the definition of the method `getDuration`, we use the reference to the `react-native-youtube-iframe` player and its own method `getDuration`.
+
+Here we have to deal with two React references. The first one, called `ref`, and the second one, called `playerRef`. `ref` is the reference passed by the parent component that use our player. `playerRef` is the reference to the real player, here *react-native-youtube-iframe*, and that we only care in the implementation of our custom player, never outside. In summary, `ref` is the reference passed by consumers of our component, and they will use it to programatically trigger actions, and `playerRef` is the reference we use inside our implementation to interact with the YouTube player library.
+
+Now let's implement the Web player.
+
+## Web Player
+
+Let's create `components/Player/web.tsx`:
+
+```tsx
+import React, {
+  useRef,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
+import YouTube, { Options } from "react-youtube";
+import { PlayerComponent, PlayerProps, PlayerRef } from "./contract";
+import { YoutubeIframePlayer } from "./youtube-iframe";
+
+const WebPlayer: PlayerComponent = forwardRef<PlayerRef, PlayerProps>(
+  ({ width, height, videoId, playing }, ref) => {
+    const playerRef = useRef<YoutubeIframePlayer>();
+
+    useImperativeHandle(ref, () => ({
+      getDuration() {
+        const duration = playerRef.current?.getDuration();
+        if (duration === undefined) {
+          throw new Error("Could not get duration from react-youtube");
+        }
+
+        return Promise.resolve(duration);
+      },
+    }));
+
+    useEffect(() => {
+      if (playing === true) {
+        playerRef.current?.playVideo();
+      } else {
+        playerRef.current?.pauseVideo();
+      }
+    }, [playing, playerRef]);
+
+    const playerOptions: Options = {
+      height: String(height),
+      width: String(width),
+    };
+
+    function setPlayerRef(ref: YouTube) {
+      if (ref === null) {
+        return;
+      }
+
+      playerRef.current = ref.getInternalPlayer() as YoutubeIframePlayer;
+    }
+
+    return (
+      <YouTube ref={setPlayerRef} videoId={videoId} opts={playerOptions} />
+    );
+  }
+);
+
+export default WebPlayer;
+```
+
+And install *react-youtube*:
+
+```bash
+yarn add react-youtube
+```
+
+Contrary to *react-native-youtube-iframe*, to access play/pause controls we must call `getInternalPlayer` method on *react-youtube* reference, that returns the YouTube player used internally. This can be done by [passing a callback ref instead of a ref](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node). When the reference needs to be set, React will call the callback with the reference and we can do whatever we want with it. In our case, we want to retrieve the YouTube player through `getInternalPlayer` and then assign it to `playerRef` reference. We need one extra step then with *react-native-youtube-iframe*. Furthermore, the return type of `getInternalPlayer` is `any`. This is not really handy to work with so we need to fix that. What `getInternalPlayer` returns is an [official YouTube player instance](https://developers.google.com/youtube/iframe_api_reference). There are [official types for the YouTube player](https://www.npmjs.com/package/@types/youtube) but they need to be set globally on the project and I do not want to be able to access `YT` from everywhere in my application. As a consequence I decided to copy and paste only the definitions I needed from the official typings repository.
+
+Let's create `components/Player/youtube-iframe.ts`:
+
+```tsx
+/**
+ * Copy pasted from https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/youtube/index.d.ts
+ */
+export interface YoutubeIframePlayer {
+  /**
+   * Plays the currently cued/loaded video.
+   */
+  playVideo(): void;
+
+  /**
+   * Pauses the currently playing video.
+   */
+  pauseVideo(): void;
+
+  /**
+   * @returns Elapsed time in seconds since the video started playing.
+   */
+  getCurrentTime(): number;
+
+  /**
+   * @returns Duration in seconds of the currently playing video.
+   */
+  getDuration(): number;
+}
+```
+
+I kept only methods of `YoutubeIframePlayer` that interest me: play and pause, get current elapsed time and get the duration of the current track.
+
+There is one more specificity of *react-youtube* over *react-native-youtube-iframe*: the player does not expect a prop to control the playing state of the video but let's its user control it imperatively. Therefore we reproduced a declarative approach by using a `useEffect` hook.
+
+```tsx
+useEffect(() => {
+  if (playing === true) {
+    playerRef.current?.playVideo();
+  } else {
+    playerRef.current?.pauseVideo();
+  }
+}, [playing, playerRef]);
+```
+
+If the `playing` prop is true, we imperatively play the track, otherwise we pause it.
+
+We set a `getDuration` method to the parent reference the same way we did for native platforms, with the exception that now `playerRef.current?.getDuration()` returns a number, not a promise. Therefore we need to wrap it in a resolve promise using `[Promise.resolve()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve)`.
+
+Now that we have both a native player and a web player, let's see if they work properly.
+
+## Demonstration Time
+
+Let's update the `App.tsx` file to use our custom player and show several buttons to control the player:
+
+```tsx
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useRef } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import Player from "./components/Player";
+import { PlayerRef } from "./components/Player/contract";
+
+export default function App() {
+  const playerRef = useRef<PlayerRef>(null);
+  const [playerPlaying, setPlayerPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+
+  async function handleComputeDuration() {
+    const player = playerRef.current;
+    if (player === null) {
+      return;
+    }
+    const duration = await player.getDuration();
+
+    setDuration(duration);
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text>Open up App.tsx to start working on your app!</Text>
+
+      <Player
+        ref={playerRef}
+        width={300}
+        height={200}
+        videoId="eSzNNYk7nVU"
+        playing={playerPlaying}
+      />
+
+      <Button
+        title={`Press me to ${playerPlaying ? 'pause' : 'play'}`}
+        onPress={() => {
+          setPlayerPlaying(!playerPlaying);
+        }}
+      />
+
+      <Text>Duration of the current track: {duration} seconds</Text>
+
+      <Button
+        title="Compute duration of the current track"
+        onPress={handleComputeDuration}
+      />
+
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+```
+
+To see if it works, let's start the Expo application:
+
+```bash
+yarn start
+```
+
+We want to test if it works for both native platforms and for the Web. Launch the Android/iOS simulator as well as the Web bundler.
+
+![/img/CleanShot_2021-08-01_at_18.02.412x.png](/img/CleanShot_2021-08-01_at_18.02.412x.png)
+
+Screenshot of Expo instructions to start simulators
+
+Press `a` or `i` to launch for Android or for iOS and `w` to launch the Web bundler.
+
+I will try the application on iOS and on the Web.
+
+![/img/CleanShot%202021-08-02%20at%2023.31.01.gif](/img/CleanShot%202021-08-02%20at%2023.31.01.gif)
+
+Successful demonstration on iOS simulator
+
+The test works on iOS simulator. We can play and pause the video. We can also get its duration.
+
+![/img/CleanShot%202021-08-02%20at%2023.33.28.gif](/img/CleanShot%202021-08-02%20at%2023.33.28.gif)
+
+Successful demonstration on Firefox
+
+The test also works on the Web.
+
+## Conclusion
+
+React Native is a lovely way to write applications that work on native platforms and on the Web, with a single and common codebase. Despite most of the time you do not have to care where your application runs, sometimes you need to write code specific to some platforms. You can reduce the dependency to the platform by isolating it and by creating an abstraction on top of it so that it stays in a black box. This is what we did, to have a YouTube player we can control on native platforms and on the Web.

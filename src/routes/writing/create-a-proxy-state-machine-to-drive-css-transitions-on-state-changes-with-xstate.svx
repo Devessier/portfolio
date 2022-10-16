@@ -1,0 +1,385 @@
+---
+title: Create a proxy state machine to drive CSS transitions on state changes with XState
+description: 'In order to add some behaviors to a state machine, we can change it, or we can add another machine in front of it to delegate some responsibilities. In this article I present the machine we added in front of our main machine to manage the load button of our Turing machine visualizer.'
+datetime: 2022-09-01T11:26:34.208Z
+tags: ['Turing visualizer', 'XState', 'Vue']
+---
+
+<script>
+    import ArticleOfTuringVisualizerSeriesData from './_series/ArticleOfTuringVisualizerSeriesData.svelte'
+    import AppAlert from '$lib/AppAlert.svelte'
+    import ContentImageWithShadow from '$lib/ContentImageWithShadow.svelte'
+    import SeriesListOfArticles from '$lib/SeriesListOfArticles.svelte'
+    import CurrentPositionInSeries from '$lib/CurrentPositionInSeries.svelte'
+</script>
+
+<ArticleOfTuringVisualizerSeriesData articleTitle={title} let:articleIndex let:linkToPreviousArticle>
+
+<CurrentPositionInSeries indexInSeries={articleIndex} />
+
+In the [Turing machine visualizer](https://turing.adonisenprovence.com/) we built with [Paul Rastoin](https://prastoin.netlify.app/), we tried to make cool animations, like for load button:
+
+<ContentImageWithShadow>
+
+![Submit button transitions to loading state and then success state](/img/turing/submit-button-successful-state.gif)
+
+</ContentImageWithShadow>
+
+In previous articles, [we implemented the request that sends input and machine configuration to server for execution](/writing/orchestrate-request-for-server-side-execution-of-turing-machine-with-xstate/). This request is started when `vizMachine`, the machine driving the visualizer, receives a `Load` event:
+
+```ts {5-8, 17-19}
+const vizMachine = createMachine({
+    // ...
+    initial: "Idle",
+    states: {
+        "Idle": {},
+        "Executing machine and input": {
+            // Make request to server to execute the machine
+            // ...
+        },
+        "Received response": {
+            entry: "Allow to play execution steps",
+        },
+        "Failed to execute machine with input": {
+            entry: "Allow to play execution steps",
+        },
+    },
+    on: {
+        Load: {
+            target: ".Executing machine and input",
+        },
+    },
+    // ...
+});
+```
+
+
+Until now, we assumed that `Load` event was sent to `vizMachine` when clicking on the `Load` button.
+
+Indeed, the origin of the event is the user clicking on the button, but there is a step in-between: `submitButtonMachine`.
+
+```ts
+const submitButtonMachine = createMachine({
+    schema: {
+        events: {} as
+            | { type: "Load" }
+            | { type: "Finished loading" }
+            | { type: "Erred" },
+    },
+    initial: "Idle",
+    states: {
+        Idle: {},
+        Loading: {},
+        Success: {},
+        Error: {},
+    },
+});
+```
+
+This machine is invoked by `vizMachine` as a long-running service, that is kept alive for all the lifetime of `vizMachine` (so until the application is closed):
+
+```ts
+const vizMachine = createMachine({
+    // Root state of the machine
+    invoke: {
+        src: "Start submit button machine",
+        id: "Submit button",
+    },
+    // ...
+}, {
+    services: {
+        "Start submit button machine": submitButtonMachine,
+    },
+});
+```
+
+In `vizMachine`, we can reference the invoked machine by its *id* (`Submit button`), especially for sending events to it. We'll talk about that soon.
+
+`submitButtonMachine` is a proxy, and the first thing it needs to do is forwarding events to its parent machine.
+
+## Forward `Load` event to parent
+
+When in `Idle` state and receiving a `Load` event, the machine forwards the `Load` event to its parent:
+
+```ts {8-11, 19-21}
+import { sendParent } from "xstate";
+
+const submitButtonMachine = createMachine({
+    // ...
+    initial: "Idle",
+    states: {
+        Idle: {
+            on: {
+                Load: {
+                    actions: "Forward button has been clicked to parent",
+                    target: "Loading",
+                },
+            },
+        },
+        Loading: { /** */ },
+        // ...
+    },
+}, {
+    actions: {
+        "Forward button has been clicked to parent": sendParent({
+            type: "Load",
+        }),
+    },
+});
+```
+
+[`sendParent`](https://xstate.js.org/docs/guides/communication.html#sending-events) action is used to send events to the parent machine, that is, the machine that invoked the current one.
+
+To summarize, when user clicks on *Load* button, `Load` event is received in `Idle` state and the machine forwards it to its parent, that makes a request to the server.
+
+You may have noticed that when `Idle` state receives a `Load` event, it targets `Loading` state. This is because this machine is meant to orchestrate the animation of load button. And when the request starts, the loading state must be triggered too. We'll check if these states are active with Vue code to determine which styles to apply.
+
+Note that while the state is `Loading`, the machine does not listen to `Load` event. That way, we allow only one request at a time.
+
+## Wait for response from parent
+
+When user clicks on load button, `submitButtonMachine` enters `Loading` state. But it must not stay in this state forever. If the request succeeds on parent machine, `submitButtonMachine` must go to `Success` state, and if it fails, it must go to `Error` state.
+
+To know if the request was successful or not, we need to wait for a response from the parent:
+
+```ts {5-14}
+const submitButtonMachine = createMachine({
+    // ...
+    initial: "Idle",
+    states: {
+        Idle: { /** */ },
+        Loading: {
+            on: {
+                "Finished loading": {
+                    target: "Success",
+                },
+                Erred: {
+                    target: "Error",
+                },
+            },
+        },
+        Success: { /** */ },
+        Error: { /** */ },
+    },
+});
+```
+
+And in parent machine we send to `submitButtonMachine` the events it expects when response arrives:
+
+```ts {6, 19, 25, 37-54}
+import { send } from "xstate";
+
+const vizMachine = createMachine({
+    // Root state of the machine
+    invoke: {
+        src: "Start submit button machine",
+        id: "Submit button",
+    },
+    // ...
+    initial: "Sending request",
+    states: {
+        "Idle": {},
+        "Executing machine and input": {
+            // Make request to server to execute the machine
+            // ...
+        },
+        "Received response": {
+            entry: [
+                "Allow to play execution steps",
+                "Exit loading state from submit button",
+            ],
+        },
+        "Failed to execute machine with input": {
+            entry: [
+                "Allow to play execution steps",
+                "Enter error state from submit button",
+            ],
+        },
+    },
+    on: {
+        Load: {
+            target: ".Executing machine and input",
+        },
+    },
+    // ...
+}, {
+    actions: {
+        "Exit loading state from submit button": send(
+            {
+                type: "Finished loading",
+            },
+            {
+                // Use id of service
+                to: "Submit button",
+            }
+        ),
+        "Enter error state from submit button": send(
+            {
+                type: "Erred",
+            },
+            {
+                // Use id of service
+                to: "Submit button",
+            }
+        ),
+    },
+});
+```
+
+To send an event to an invoked service, we use the `send` action and provide an option object with `to` property that is the identifier of the service.
+
+Apart from the fact that events are exchanged between different machines, the base contract of statecharts remains: events are sent and listened to.
+
+Finally, we make `Success` and `Error` states active for two seconds and then target `Idle` state:
+
+```ts {6-19}
+const submitButtonMachine = createMachine({
+    // ...
+    initial: "Idle",
+    states: {
+        Idle: { /** */ },
+        Loading: { /** */ },
+        Success: {
+            after: {
+                "2000": {
+                    target: "Idle",
+                },
+            },
+        },
+        Error: {
+            after: {
+                "2000": {
+                    target: "Idle",
+                },
+            },
+        },
+    },
+});
+```
+
+Success and error states of the button will only be shown for two seconds, and then we'll go back to normal style.
+
+## Use invoked machine in Vue
+
+On Vue side we need to access the current state of `submitButtonMachine`, but it's invoked by `vizMachine` and not started as a standalone machine. So how do we do?
+
+All invoked services of a machine are available on [`state.children`](https://xstate.js.org/docs/guides/communication.html#referencing-services) object, referenced by their id:
+
+```ts
+import { computed } from "vue";
+import { ActorRefFrom } from "xstate";
+import { useMachine } from "@xstate/vue";
+import { vizMachine, submitButtonMachine } from "./machines";
+
+type SubmitButtonActorRef = ActorRefFrom<typeof submitButtonMachine>;
+
+const { state } = useMachine(vizMachine);
+
+const submitButtonService = computed(() => {
+    // In current XState version (v4), services need to be type-casted
+    return state.value.children["Submit button"] as SubmitButtonActorRef;
+});
+```
+
+From here we can use [`useActor`](https://xstate.js.org/docs/packages/xstate-vue/#useactor-actor-getsnapshot) hook to access the current state of `submitButtonService`:
+
+```ts {2, 13-16}
+import { computed } from "vue";
+import { ActorRefFrom } from "xstate";
+import { useMachine, useActor } from "@xstate/vue";
+import { vizMachine, submitButtonMachine } from "./machines";
+
+type SubmitButtonActorRef = ActorRefFrom<typeof submitButtonMachine>;
+
+const { state } = useMachine(vizMachine);
+
+const submitButtonService = computed(() => {
+    return state.value.children["Submit button"] as SubmitButtonActorRef;
+});
+
+const {
+    state: submitButtonState,
+    send: submitButtonSend,
+} = useActor(submitButtonService);
+```
+
+`useActor` subscribes to all state changes of a service and returns a computed property always containing the last state value.
+
+And let Vue apply CSS transitions based on the state of `submitButtonMachine`:
+
+```svelte
+<button
+    type="button"
+    :disabled="submitButtonState.matches('Idle') === false"
+    :class="[
+        submitButtonState.matches('Success')
+        ? 'text-green-800 ...'
+        : submitButtonState.matches('Error')
+        ? 'text-red-800 ...'
+        : 'text-yellow-800 ...',
+    ]"
+    @click="submitButtonSend({ type: 'Load' })"
+>
+    <Transition
+        mode="out-in"
+        enter-active-class="duration-300 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="duration-200 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+    >
+        <span
+            v-if="submitButtonState.matches('Idle') === true"
+            key="idle"
+        >
+            Load
+        </span>
+
+        <span
+            v-else-if="submitButtonState.matches('Loading') === true"
+            key="loading"
+        >
+            Processing...
+        </span>
+
+        <span
+            v-else-if="submitButtonState.matches('Error') === true"
+            key="error"
+        >
+            Failed
+        </span>
+
+        <span
+            v-else
+            key="success"
+        >
+            Loaded
+        </span>
+    </Transition>
+</button>
+```
+
+Here's the result when request fails:
+
+![Submit button transitions to loading state and then failure state](/img/turing/submit-button-failure-state.gif)
+
+## Summary
+
+We learned that state machines can be invoked by other state machines, and that parent and child machines can communicate between each other. This is another form of separation of concerns than parallel states, [we used to combine visualizer controls and request making managements](/writing/orchestrate-request-for-server-side-execution-of-turing-machine-with-xstate/).
+
+We used a machine in front of another one to add a small enhancement, that does not affect the biggest machine. The main machine remains the same, but the overall system is enhanced.
+
+On Vue side, we can access invoked services and get their current state, and communicate directly with them, as if they were the primary state machine.
+
+---
+
+So that was the last article of the series about Turing machine visualizer showcase! I hope you enjoyed it.
+
+From here, go use XState on your own projects! Once you get it, you can't stop from using it.
+
+The [code of the visualizer](https://github.com/AdonisEnProvence/Turing/tree/master/viz) is on GitHub.
+
+<SeriesListOfArticles />
+
+</ArticleOfTuringVisualizerSeriesData>
