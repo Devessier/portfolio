@@ -17,11 +17,11 @@
 	});
 	$: formattedDatetime = formatDate(datetime);
 
-	const pageTitle = `Baptiste Devessier | ${title}`;
+	$: pageTitle = title;
 	const description = '';
 	$: canonical = `https://baptiste.devessier.fr/note/${sluggifiedTitle}/`;
 	const schemas = [];
-	const facebook = [
+	$: facebook = [
 		{
 			name: 'og:url',
 			content: canonical
