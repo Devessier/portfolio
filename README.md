@@ -1,33 +1,38 @@
-# portfolio
+# create-svelte
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5590a821-cd8c-4557-8082-4690b9dcdea1/deploy-status)](https://app.netlify.com/sites/baptiste-devessier/deploys)
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-This is my portfolio. I used [Svelte](https://svelte.dev), [SvelteKit](https://kit.svelte.dev) and [TailwindCSS](https://tailwindcss.com) to build it 🎉.
+## Creating a project
 
-It's a PWA ([Progressive Web Application](https://web.dev/what-are-pwas/)) that can be used offline :
-
-![LightHouse results](https://raw.githubusercontent.com/Devessier/portfolio/master/lighthouse-results.png)
-
-This website is also my personal blog.
-
-## Drone
-
-I created a [tool to help me automate some tasks](./drone.js). It can be run with the following command:
-
-### Create an article
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```bash
-node drone generate-article 'The title of the blog post'
+# create a new project in the current directory
+npm create svelte@latest
+
+# create a new project in my-app
+npm create svelte@latest my-app
 ```
 
-### Refresh article publication date
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
-node drone update-article-datetime 'The title of the blog post'
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
 ```
 
-### Create a note
+## Building
+
+To create a production version of your app:
 
 ```bash
-node drone create-note
+npm run build
 ```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
