@@ -1,7 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-	content: ['./src/**/*.{html,js,svelte,ts}', './svelte.config.js'],
+	content: ['./src/**/*.{html,js,svelte,ts}', './svelte.config.js', './mdsvex.config.js'],
 	theme: {
 		extend: {
 			fontFamily: {

@@ -5,6 +5,8 @@ import { APP_URL } from '$lib/env';
 import { getBlogPosts } from '../writing/_api';
 import { urlcat } from '$lib/url';
 
+export const prerender = true
+
 // This function will be called when SvelteKit server
 // receives a GET request for `/feed.xml`.
 export const GET: RequestHandler = ({ setHeaders }) => {
