@@ -87,7 +87,7 @@
 
 <nav class="py-6">
 	<div class="flex items-center justify-between">
-		<a href="/" sveltekit:prefetch class="text-2xl tracking-wider main-link-font">
+		<a href="/" class="text-2xl tracking-wider main-link-font">
 			<LogoIcon class="w-20 h-20" title="Accueil" />
 		</a>
 
@@ -104,7 +104,6 @@
 					rel={external === true ? 'external' : undefined}
 					target={external === true ? '_blank' : undefined}
 					title={text}
-					sveltekit:prefetch
 					class="transition-colors duration-300 ease-in-out {$page.url.pathname === href
 						? 'text-red-500'
 						: ''}"

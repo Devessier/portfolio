@@ -83,7 +83,6 @@
 					<a
 						{href}
 						{title}
-						sveltekit:prefetch
 						rel={external === true ? 'external' : undefined}
 						class="inline-block -m-1 p-1 text-zinc-500 hover:text-zinc-600 transition-colors"
 					>

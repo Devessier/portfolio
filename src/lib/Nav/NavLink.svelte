@@ -8,7 +8,6 @@
 	{href}
 	rel={external === true ? 'external' : undefined}
 	target={external === true ? '_blank' : undefined}
-	sveltekit:prefetch
 	on:click
 	class="relative py-2 overflow-x-hidden block tracking-widest font-medium
 	after:absolute after:w-2/5 after:h-2 after:inset-x-0 after:bottom-0 after:transition after:duration-300 after:transform after:ease-in-out after:bg-white

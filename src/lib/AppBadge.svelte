@@ -8,7 +8,7 @@
 </script>
 
 {#if href !== undefined}
-	<a {href} sveltekit:prefetch class={rootClasses}>
+	<a {href} class={rootClasses}>
 		<slot />
 	</a>
 {:else}
