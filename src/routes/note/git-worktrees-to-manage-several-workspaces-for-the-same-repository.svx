@@ -1,0 +1,44 @@
+---
+title: Git Worktrees to manage several workspaces for the same repository
+datetime: 2022-01-26T22:10:48.212Z
+---
+
+Today, David Khourshid shared on Twitter that [he likes having several copies of the same repository on his computer](https://twitter.com/DavidKPiano/status/1486322809424994310) to be able try some things out without impacting his current work.
+
+Then he shared a link to [Git Worktree documentation](https://git-scm.com/docs/git-worktree), that seems to be a really good way to solve this issue.
+
+We can create a worktree from the current branch:
+
+```bash
+$ git worktree add ../path-to-new-worktree
+```
+
+This command will create a directory at the specified path as well as a branch whose name is the last part of the path, here `path-to-new-worktree`.
+
+The created directory will contain *only* all tracked files from the origin branch, not files that are gitignored. As a consequence, dependencies would have to be installed on the new directory.
+
+We can also explicitly provide a name to the branch to create:
+
+```bash
+$ git worktree add -b branch-name ../path-to-new-worktree
+```
+
+It is also possible to create a worktree from an existing branch, instead of defaulting to the current branch:
+
+```bash
+$ git worktree add ../path-to-new-worktree existing-branch
+```
+
+And to combine both:
+
+```bash
+$ git worktree add -b branch-name ../path-to-new-worktree existing-branch
+```
+
+Every commit made on a worktree will be visible to other worktrees as they take place in the same repository.
+
+After work has been done on a worktree, we can delete it by its path (`./` also works):
+
+```bash
+$ git worktree remove ../path-to-new-worktree
+```

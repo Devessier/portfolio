@@ -1,0 +1,32 @@
+---
+title: Storing verification tokens into database
+datetime: 2022-06-28T14:22:24.628Z
+---
+
+I use the following method to verify the email of users of my applications:
+
+1. Generate a token (with [nanoid](https://github.com/ai/nanoid))
+1. Store the token into database, attached to the user to verify
+1. Send a link containing the token to the user
+1. When link is clicked, verify the account of the user attached to the token received as parameter
+
+The issue with this solution is that if somebody gets read access to the database, they can verify the account of users as tokens are stored in plain-text.
+
+To prevent that, tokens need to be hashed before being stored in database. We then have the following steps:
+
+1. Generate a token
+1. Hash and store the token into database
+1. Send a link containing the **plain-text** token to the user
+1. When link is clicked, hash the token received as parameter, and compare it to hashed tokens stored in database, and verify the account of the user owning the token
+
+There is one subtle thing to take into account: the hash algorithm should not use a random salt. The hash of the same token should always produce the exact same string, so that hashed token can be found back when querying the database with an exact string match. As a consequence, neither bcrypt nor argon can be used (when they should for password hashing), as they use a random salt to improve security.
+
+Instead, SHA-256 can be a good option. [Node.js `crypto` module](https://nodejs.org/api/crypto.html) can be used to generate such a hash:
+
+```ts twoslash
+// @types: @types/node
+import { createHash } from 'crypto';
+
+const token = '...';
+const hash = createHash('sha256').update(token).digest('base64');
+```

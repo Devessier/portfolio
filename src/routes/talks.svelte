@@ -35,7 +35,7 @@
 	const twitter = [];
 </script>
 
-<Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<TalksPostsList {talks}>
 		<svelte:fragment slot="title">Talks</svelte:fragment>
 

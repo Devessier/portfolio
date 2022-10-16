@@ -1,5 +1,5 @@
-<script>
-	export let title;
+<script lang="ts">
+	export let title: string | undefined = undefined;
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" {...$$props}>

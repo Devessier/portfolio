@@ -81,7 +81,7 @@
 	type="submit"
 	{disabled}
 	class="relative px-4 py-2 rounded shadow focus:outline-none
-    transition-colors duration-150 {shake ? 'shake' : ''}
+    transition-colors duration-150 text-sm font-medium {shake ? 'shake' : ''}
     {className}"
 	style="animation-delay: {shakeDelay}ms"
 	on:animationend={() => (shake = false)}

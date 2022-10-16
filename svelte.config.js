@@ -31,7 +31,7 @@ const config = {
 
 		mdsvex({
 			layout: {
-				notes: './src/routes/notes/_NotesLayout.svelte',
+				note: './src/routes/note/_NoteLayout.svelte',
 				_: './src/lib/BlogLayout.svelte'
 			},
 			rehypePlugins: [

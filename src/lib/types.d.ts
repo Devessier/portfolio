@@ -44,3 +44,9 @@ export interface TalkPreviewFormatted {
 	tags: string[];
 	link: string;
 }
+
+export type NotePreview = {
+	title: string;
+	slug: string;
+	datetime: string;
+};

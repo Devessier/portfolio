@@ -39,7 +39,7 @@
 	$: formattedDate = formatDate(datetime);
 </script>
 
-<Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div class="max-w-prose text-lg mx-auto">
 		<div class="flex items-center justify-center flex-wrap mb-2">
 			{#each formattedTags as { title, slug }}
