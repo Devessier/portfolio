@@ -1,0 +1,13 @@
+origins:
+  - owner: Devessier
+    repo: xstate-wait-for
+  - files:
+      - ./src/**/*.ts
+      - ./src/**/*.html
+
+targets:
+  - src/routes/writing
+
+features:
+  enable_source_link: false
+  enable_code_block: true
