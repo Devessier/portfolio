@@ -45,9 +45,9 @@
 					href="/note/{slug}/"
 					class="inline-block w-full transition duration-300 ease-in-out hover:bg-zinc-50 p-6 rounded-2xl"
 				>
-					<h3>{title}</h3>
+					<h3 class="text-lg font-medium">{title}</h3>
 
-					<div class="text-red-700 mt-2">
+					<div class="text-red-700 mt-2 text-sm font-medium italic">
 						<time {datetime}>{formattedDatetime}</time>
 					</div>
 				</a>
