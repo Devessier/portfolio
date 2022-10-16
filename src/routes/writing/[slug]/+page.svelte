@@ -65,6 +65,6 @@
 	</div>
 
 	<div class="mt-6 prose prose-red prose-lg text-gray-500 mx-auto break-words">
-		<Content />
+		<svelte:component this={Content} />
 	</div>
 </Page>
