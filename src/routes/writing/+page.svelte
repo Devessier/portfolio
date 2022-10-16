@@ -1,9 +1,10 @@
 <script lang="ts">
-	import Page from '$lib/Page/Page.svelte';
+	import Page from '$lib/Page.svelte';
 	import BlogPostsList from '$lib/BlogPostsList.svelte';
-	import type { WritingPreview } from '$lib/types';
+	import type { PageData } from './$types';
 
-	export let articles: WritingPreview[];
+	export let data: PageData;
+	$: articles = data.articles;
 
 	const title = 'Baptiste Devessier | Writing';
 	const description = 'My articles about Web Development';

@@ -1,5 +1,5 @@
 import type { WritingPreview } from '$lib/types';
-import type { PageServerLoad } from '../../.svelte-kit/types/src/routes/$types';
+import type { PageServerLoad } from './$types';
 import { getBlogPosts } from './writing/_api';
 
 interface GetResult {

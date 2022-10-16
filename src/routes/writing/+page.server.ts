@@ -1,4 +1,4 @@
-import type { RequestHandler } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 import type { WritingPreview } from '$lib/types';
 import { getBlogPosts } from './_api';
 
@@ -6,12 +6,10 @@ type GetResult = {
 	articles: WritingPreview[];
 };
 
-export const get: RequestHandler<never, GetResult> = () => {
+export const load: PageServerLoad<GetResult> = () => {
 	const blogPosts = getBlogPosts();
 
 	return {
-		body: {
-			articles: blogPosts
-		}
+        articles: blogPosts
 	};
 };
