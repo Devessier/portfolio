@@ -4,7 +4,7 @@
 
 	const title = 'Baptiste Devessier | About';
 	// Using description pattern of https://kentcdodds.com/about
-	const description = 'Get to know Baptiste Devessier';
+	const description = 'Get to know Baptiste Devessier.';
 	const canonical = 'https://baptiste.devessier.fr/about/';
 	const schemas = [];
 	const facebook = [
@@ -34,9 +34,9 @@
 		</p>
 
 		<p>
-			I am a student of <a href="https://42.fr/en/homepage/">42 Paris school</a>, a general
-			programming school, where I can discover other branches of development, and where I can also
-			work on web projects.
+			I am a fifth and final year student at <a href="https://42.fr/en/homepage/">42 Paris school</a
+			>, a general programming school, where I can discover other branches of development, and where
+			I can also work on web projects.
 		</p>
 
 		<p>
