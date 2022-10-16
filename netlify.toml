@@ -1,0 +1,24 @@
+[build]
+    command = "npm run build"
+    publish = "build/"
+    functions = "functions/"
+    environment = { VITE_APP_URL = "https://baptiste.devessier.fr/", NODE_VERSION = "16" }
+
+[dev]
+    framework = "#custom"
+    command = "npm run dev"
+    targetPort = 3000
+    port = 8888
+    publish = "dist/"
+
+[[redirects]]
+    from = "/my-way"
+    to = "/about"
+    status = 301
+    force = true
+
+[[redirects]]
+    from = "/my-journey"
+    to = "/about"
+    status = 301
+    force = true
