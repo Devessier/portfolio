@@ -45,7 +45,7 @@
 		<meta name="twitter:creator" content="@BDevessier" />
 		<meta name="twitter:image" content="https://baptiste.devessier.fr/twitter-logo.jpg" />
 
-		%svelte.head%
+		%sveltekit.head%
 
 		<script
 			async
@@ -54,9 +54,9 @@
 			src="https://plausible.io/js/plausible.js"
 		></script>
 	</head>
-	<body class="font-sans">
-		<div id="svelte" class="flex flex-col min-h-screen px-6 lg:px-16 max-w-7xl mx-auto">
-			%svelte.body%
+	<body data-sveltekit-prefetch class="font-sans">
+		<div id="sveltekit" class="flex flex-col min-h-screen px-6 lg:px-16 max-w-7xl mx-auto">
+			%sveltekit.body%
 		</div>
 	</body>
 </html>

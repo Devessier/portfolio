@@ -12,7 +12,7 @@
 		},
 		{
 			text: 'RSS',
-			href: '/feed.xml/'
+			href: '/feed.xml'
 		},
 		{
 			text: 'Privacy Policy',

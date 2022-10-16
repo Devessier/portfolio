@@ -2,7 +2,7 @@ import type { NotePreview } from '$lib/types';
 import { basename } from 'path';
 
 export function getNotes(): NotePreview[] {
-	const svxFiles = import.meta.globEager('./*.svx');
+	const svxFiles = import.meta.glob('./*.svx', { eager: true });
 
 	const importedFiles: NotePreview[] = Object.entries(svxFiles)
 		.filter(([path]) => {
@@ -11,8 +11,9 @@ export function getNotes(): NotePreview[] {
 
 			return shouldKeepFile === true;
 		})
-		.map(([path, { metadata }]) => {
-			const { title, datetime } = metadata as Omit<NotePreview, 'slug'>;
+		.map(([path, data]) => {
+			const { metadata } = data as { metadata: Omit<NotePreview, 'slug'> }
+			const { title, datetime } = metadata;
 
 			return {
 				title,

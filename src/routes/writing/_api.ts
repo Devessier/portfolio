@@ -2,7 +2,7 @@ import type { WritingPreview } from '$lib/types';
 import { basename } from 'path';
 
 export function getBlogPosts(): WritingPreview[] {
-	const svxFiles = import.meta.globEager('./*.svx');
+	const svxFiles = import.meta.glob('./*.svx', { eager: true });
 
 	const importedFiles: WritingPreview[] = Object.entries(svxFiles)
 		.filter(([path]) => {
@@ -11,8 +11,10 @@ export function getBlogPosts(): WritingPreview[] {
 
 			return shouldKeepFile === true;
 		})
-		.map(([path, { metadata }]) => {
-			const { title, description, datetime, tags } = metadata as Omit<WritingPreview, 'slug'>;
+		.map(([path, data]) => {
+			const { metadata } = data as { metadata: Omit<WritingPreview, 'slug'> }
+			
+			const { title, description, datetime, tags } = metadata;
 
 			return {
 				title,

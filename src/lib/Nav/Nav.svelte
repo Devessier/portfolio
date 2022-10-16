@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { fade } from 'svelte/transition';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { VideoCamera, Rss, Mail } from '@steeze-ui/heroicons';
 	import { MenuIcon, LogoIcon } from '$lib/Icons';
 
 	import NavLink from './NavLink.svelte';
-
-	export let segment: string;
 
 	// Should be changed if the default configuration of TailwindCSS is not used anymore.
 	const BREAKPOINT = 768;
@@ -88,13 +87,13 @@
 
 <nav class="py-6">
 	<div class="flex items-center justify-between">
-		<a href="/" sveltekit:prefetch class="text-2xl tracking-wider main-link-font">
+		<a href="/" class="text-2xl tracking-wider main-link-font">
 			<LogoIcon class="w-20 h-20" title="Accueil" />
 		</a>
 
 		<div class="items-center hidden md:flex space-x-6">
 			{#each textLinks as { href, external, text }}
-				<NavLink {href} {external} active={segment === href}>
+				<NavLink {href} {external} active={$page.url.pathname === href}>
 					{text}
 				</NavLink>
 			{/each}
@@ -105,8 +104,7 @@
 					rel={external === true ? 'external' : undefined}
 					target={external === true ? '_blank' : undefined}
 					title={text}
-					sveltekit:prefetch
-					class="transition-colors duration-300 ease-in-out {segment === href
+					class="transition-colors duration-300 ease-in-out {$page.url.pathname === href
 						? 'text-red-500'
 						: ''}"
 				>
@@ -132,7 +130,12 @@
 			transition:fade={{ duration: 200 }}
 		>
 			{#each links as { href, text, external }}
-				<NavLink {href} {external} active={segment === href} on:click={() => (showNavBar = false)}>
+				<NavLink
+					{href}
+					{external}
+					active={$page.url.pathname === href}
+					on:click={() => (showNavBar = false)}
+				>
 					{text}
 				</NavLink>
 			{/each}

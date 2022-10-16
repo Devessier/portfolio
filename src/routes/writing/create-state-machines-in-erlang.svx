@@ -15,7 +15,7 @@ When in logged in state, user can log out; when in logged out state, user can lo
 
 These interactions are schematized below.
 
-![Schema of chat system with authentication states](/chat%20erlang%20system.png)
+![Schema of chat system with authentication states](/img/chat%20erlang%20system.png)
 
 Let's implement this state machine in Erlang without any library, by making great use of pattern matching.
 

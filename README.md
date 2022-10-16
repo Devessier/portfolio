@@ -6,7 +6,7 @@ This is my portfolio. I used [Svelte](https://svelte.dev), [SvelteKit](https://k
 
 It's a PWA ([Progressive Web Application](https://web.dev/what-are-pwas/)) that can be used offline :
 
-![LightHouse results](https://raw.githubusercontent.com/Devessier/portfolio/master/lighthouse-results.png)
+![LightHouse results](./lighthouse-results.png)
 
 This website is also my personal blog.
 
