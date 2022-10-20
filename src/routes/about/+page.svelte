@@ -34,9 +34,9 @@
 		</p>
 
 		<p>
-			I am a fifth and final year student at <a href="https://42.fr/en/homepage/">42 Paris school</a
-			>, a general programming school, where I can discover other branches of development, and where
-			I can also work on web projects.
+			I've studied at <a href="https://42.fr/en/homepage/">42 Paris school</a>, a general
+			programming school, where I discovered other branches of development, and where I could also
+			work on web projects.
 		</p>
 
 		<p>
@@ -45,9 +45,13 @@
 		</p>
 	</div>
 
-	<div class="mt-10">
-		<LinkWithAnimatedArrow href="/cv.pdf" rel="external" target="_blank">
-			See my CV
+	<div class="mt-10 flex flex-col items-start gap-y-4">
+		<LinkWithAnimatedArrow href="/cv-en.pdf" rel="external" target="_blank">
+			See my English resume
+		</LinkWithAnimatedArrow>
+
+		<LinkWithAnimatedArrow href="/cv-fr.pdf" rel="external" target="_blank">
+			See my French resume
 		</LinkWithAnimatedArrow>
 	</div>
 </Page>

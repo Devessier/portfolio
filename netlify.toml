@@ -22,3 +22,9 @@
     to = "/about"
     status = 301
     force = true
+
+[[redirects]]
+    from = "/cv.pdf"
+    to = "/cv-en.pdf"
+    status = 301
+    force = true
