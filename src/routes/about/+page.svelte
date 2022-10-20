@@ -29,8 +29,8 @@
 
 	<div class="prose mt-10">
 		<p>
-			Hi, I'm Baptiste Devessier! I am a fullstack web and XState developer from France. I
-			discovered web development when I was 15 years old and since then it's my thing.
+			Hi, I'm Baptiste Devessier! I am a full stack web and XState freelance consultant from France.
+			I discovered web development when I was 15 years old and since then it's my thing.
 		</p>
 
 		<p>

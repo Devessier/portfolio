@@ -9,9 +9,9 @@
 	$: latestArticles = data.latestArticles;
 
 	const descriptionText =
-		"I'm Baptiste Devessier, a fullstack web and XState developer based in Paris, France. I write articles, record video tutorials, make side projects about web development and XState, and I work freelance when not doing projects for 42 Paris school.";
+		"I'm Baptiste Devessier, a full stack web and XState freelance consultant. When I'm not consulting on freelance projects, you will find me writing articles, recording video tutorials and working on my own side projects.";
 
-	const title = 'Baptiste Devessier | Fullstack web and XState developer';
+	const title = 'Baptiste Devessier | Full stack web and XState freelance consultant';
 	const description = descriptionText;
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
