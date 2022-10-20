@@ -11,12 +11,16 @@
 			href: '/about/'
 		},
 		{
-			text: 'RSS',
-			href: '/feed.xml'
+			text: 'Projects',
+			href: '/projects/'
 		},
 		{
-			text: 'Privacy Policy',
-			href: '/privacy-policy/'
+			text: 'Writing',
+			href: '/writing/'
+		},
+		{
+			text: 'RSS',
+			href: '/feed.xml'
 		}
 	];
 
