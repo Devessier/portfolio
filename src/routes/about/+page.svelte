@@ -34,9 +34,9 @@
 		</p>
 
 		<p>
-			I am a fifth and final year student at <a href="https://42.fr/en/homepage/">42 Paris school</a
-			>, a general programming school, where I can discover other branches of development, and where
-			I can also work on web projects.
+			I've studied at <a href="https://42.fr/en/homepage/">42 Paris school</a>, a general
+			programming school, where I discovered other branches of development, and where I could also
+			work on web projects.
 		</p>
 
 		<p>
