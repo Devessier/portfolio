@@ -29,18 +29,18 @@
 
 	<div class="prose mt-10">
 		<p>
-			Hi, I'm Baptiste Devessier! I am a full stack web and XState freelance consultant from France.
+			Hi, I'm Baptiste Devessier! I'm a full stack web and XState freelance consultant from France.
 			I discovered web development when I was 15 years old and since then it's my thing.
 		</p>
 
 		<p>
-			I've studied at <a href="https://42.fr/en/homepage/">42 Paris school</a>, a general
-			programming school, where I discovered other branches of development, and where I could also
-			work on web projects.
+			I studied at <a href="https://42.fr/en/homepage/">42 Paris school</a>, a general programming
+			school, where I discovered other branches of development, and where I could also work on web
+			projects.
 		</p>
 
 		<p>
-			I build applications and websites as a freelancer and specialize in my favorite tool: XState.
+			I build applications and websites as a freelancer and specialized in my favorite tool: XState.
 			Feel free to <a href="/contact/">contact me</a> if you want us to work together.
 		</p>
 	</div>
