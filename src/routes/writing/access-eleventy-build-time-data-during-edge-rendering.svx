@@ -1,0 +1,105 @@
+---
+title: Access Eleventy build time data during Edge rendering
+description: Blog post description
+datetime: 2022-11-25T15:53:51.420Z
+tags: ['Eleventy']
+---
+
+Eleventy is a static site generator, that makes it really simple to build fully static websites. It does not lock in a specific template engine, and several can be used in the same codebase.
+
+By default, Eleventy can only build a static site: HTML pages are build during deploy, and then HTML pages must be served statically, from a CDN or whatever. It means that all users will see the same pages. But sometimes we may want to customize these pages per request.
+
+My use case was to preselect a value of a `select` HTML element based on the value of a query parameter.
+
+If the link is `/pricing?offer=one`, I want to select `one` option from the `select`.
+
+Say the `/pricing` page is built from the Nunjucks file `/pricing.njk`:
+
+```html
+---
+layout: layouts/base
+
+offers:
+  - name: Core
+    price: 10
+  - name: Select
+    price: 25
+  - name: Plus
+    price: 40
+---
+
+<form name="pricing" method="POST" data-netlify="true">
+  <div>
+    <label for="offer">
+      Offer
+    </label>
+
+    <select id="offer" name="offer" required>
+      <option value="">
+        Select an offer
+      </option>
+
+      {% for offer in offers %}
+        <option value="{{ offer.name }}">
+          {{ offer.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button type="submit">Send</button>
+</form>
+```
+
+We build a list of options from an array defined in the frontmatter of the page (`offers`):
+
+```html
+{% for offer in offers %}
+  <option value="{{ offer.name }}">
+    {{ offer.name }}
+  </option>
+{% endfor %}
+```
+
+---
+
+With Edge:
+
+```html
+---
+layout: layouts/base
+
+offers:
+  - name: Core
+    price: 10
+  - name: Select
+    price: 25
+  - name: Plus
+    price: 40
+---
+
+<form name="pricing" method="POST" data-netlify="true">
+  <div>
+    <label for="offer">
+      Offer
+    </label>
+
+    <select id="offer" name="offer" required>
+      {# Need to group everything necessary in the edge function here #}
+      {% set data_for_edge = { pricing: pricing, slug: slug } %}
+      {% edge "njk", data_for_edge %}
+        <option value="">Sélectionner une offre</option>
+
+        {% set selected_offer = eleventy.edge.query.offer %}
+        {% for tier in pricing.tiers %}
+          {% set sluggified_tier = tier.name | slug %}
+          <option value="{{ tier.name }}" {{ "selected" if selected_offer === sluggified_tier else "" }}>{{ tier.name }}</option>
+        {% endfor %}
+      {% endedge %}
+    </select>
+  </div>
+
+  <button type="submit">Send</button>
+</form>
+```
+
