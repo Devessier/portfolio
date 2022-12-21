@@ -22,8 +22,20 @@ function generateBlogPostTemplate(blogPostName) {
 	`;
 }
 
+function generateNoteTemplate(noteName) {
+	return outdent`
+		---
+		title: ${noteName}
+		datetime: ${new Date().toISOString()}
+		---
+
+		Hi from **${noteName}**!
+
+	`;
+}
+
 const WRITING_DIRECTORY = new URL('src/routes/writing', import.meta.url);
-const NOTES_FILES = new URL('src/routes/notes/index.svx', import.meta.url);
+const NOTES_DIRECTORY = new URL('src/routes/note', import.meta.url);
 
 prog
 	.command('generate-article <title>')
@@ -68,31 +80,20 @@ prog
 	});
 
 prog
-	.command('create-note')
+	.command('create-note <title>')
 	.describe('Create a note')
-	.action(async () => {
-		const SEPARATOR = '<!-- NOTES -->\n';
-		const notesContent = await readFile(NOTES_FILES, 'utf8');
-		const [setupContent, oldNotes] = notesContent.split(`\n${SEPARATOR}`);
+	.example("create-note 'Always set expiration parameter with AWS S3'")
+	.action(async (title) => {
+		const template = generateNoteTemplate(title);
+		const slug = slugify(title, {
+			lower: true
+		});
 
-		const newNotesContent = [
-			setupContent,
-			SEPARATOR,
-			outdent`
-				<Note datetime="${new Date().toISOString()}">
+		const notePath = join(NOTES_DIRECTORY.pathname, `${slug}.svx`);
 
-				## New note
+		await writeFile(notePath, template);
 
-				Write something here...
-
-				</Note>
-			`,
-			oldNotes
-		];
-
-		await writeFile(NOTES_FILES, newNotesContent.join('\n'));
-
-		console.log(`Open ${NOTES_FILES.pathname}`);
+		console.log(`Note has been generated at ${notePath}`);
 	});
 
 prog

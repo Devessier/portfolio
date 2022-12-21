@@ -1,0 +1,16 @@
+---
+title: Always set validity duration of presigned URLs with AWS S3 SDK
+datetime: 2022-12-21T16:15:10.546Z
+---
+
+I was using [Drive module of AdonisJS](https://docs.adonisjs.com/guides/drive) to generate a presigned URL for a document, without configuring when the document would expire – I was assuming that the default behavior would be to generate a URL that never expires. It appeared that the presigned URL was expiring 15 minutes after its generation.
+
+Drive module is using [`getSignedUrl`](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrl-property) function from AWS S3 JavaScript SDK, which defaults to a validity of 15 minutes.
+
+It's necessary to set a validity duration suitable for your project. This is how to do it with Drive module of AdonisJS:
+
+```ts
+const presignedUrl = await Drive.getSignedUrl(path, {
+    expiresIn: '6 hours',
+})
+```
