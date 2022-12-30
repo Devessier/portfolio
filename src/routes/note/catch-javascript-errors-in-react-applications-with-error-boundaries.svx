@@ -1,0 +1,37 @@
+---
+title: Catch JavaScript errors in React applications with an Error Boundary
+datetime: 2022-12-30T22:37:22.547Z
+---
+
+In a React application, errors thrown during rendering process must be caught by an *Error Boundary*: a class component that catches such errors and determines what to render.
+
+An Error Boundary is usually put at the top the application, but we may want to add several Error Boundaries to our application to customize what to render for specific parts.
+
+From https://reactjs.org/docs/error-boundaries.html:
+
+```tsx
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // 👇 Log the error (with Sentry, etc.)
+    console.error('React error', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+
+    return this.props.children;
+  }
+}
+```
