@@ -21,22 +21,26 @@ Other standards have been developed to serve the same purpose, such as [Atom](ht
 
 I did not want to generate the feed by concatenating strings, so I searched a library that does it for me and I found [feed](https://github.com/jpmonette/feed). With a nice TypeScript API, you can generate a RSS Feed, an Atom Feed or a [JSON Feed](https://en.wikipedia.org/wiki/JSON_Feed).
 
-SvelteKit has the concept of file-based routing. Routes are declared in `src/routes` directory, the name of the route being the name of the file, minus the extension. SvelteKit allows to create pages that way, but also [*endpoints*](https://kit.svelte.dev/docs#routing-endpoints), that is, modules that export functions matching HTTP methods.
+SvelteKit has the concept of file-based routing. Routes are declared in `src/routes` directory. Pages are declared in a `+page.svelte` file, and colocated with files that do data fetching for this page, either called `+page.ts` or `+page.server.ts`, where `+page.server.ts` only runs on the server, while `+page.ts` runs on the browser and on the server (but should not depend on sensitive credentials, like a private API key, otherwise you need to run it only on the server).
 
-I created `src/routes/feed.xml.ts` endpoint with the following code:
+SvelteKit also allows creating [*endpoints*](https://kit.svelte.dev/docs/routing#server), that is, HTTP endpoints that can do anything, like responding to a PUT request, or sending a JSON file or an image computed at runtime.
+
+I created `src/routes/feed.xml/+server.ts` file with the following code:
 
 <!--SNIPSTART blog-feed-xml-->
 ```ts
-import type { RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { Feed } from 'feed';
-import type { Locals } from '$lib/types';
 import { APP_URL } from '$lib/env';
-import { getBlogPosts } from './writing/_api';
+import { getBlogPosts } from '../writing/_api';
 import { urlcat } from '$lib/url';
+
+// To also prerender this *page*, as SvelteKit treats it as a page regarding prerendering.
+export const prerender = true;
 
 // This function will be called when SvelteKit server
 // receives a GET request for `/feed.xml`.
-export const get: RequestHandler<Locals, unknown, string> = () => {
+export const GET: RequestHandler = ({ setHeaders }) => {
 	// We get the list of all the blog posts.
 	// The list is ordered by publication date. The most recent post is at the top.
 	const blogPosts = getBlogPosts();
@@ -70,20 +74,19 @@ export const get: RequestHandler<Locals, unknown, string> = () => {
 		});
 	}
 
-	return {
-		headers: {
-			// The Atom feed is XML.
-			'Content-Type': 'application/atom+xml'
-		},
-		body: feed.atom1() // We create an Atom feed!
-	};
+	setHeaders({
+		// The Atom feed is XML.
+		'Content-Type': 'application/atom+xml'
+	});
+
+	return new Response(feed.atom1());
 };
 ```
 <!--SNIPEND-->
 
-Please note the name of the endpoint file. Provided that a ESM module is in `src/routes` directory and ends with `.js` or `.ts`, it is an endpoint for SvelteKit. It means that you could even create endpoints named `image.jpg.ts` or `document.pdf.ts` to dynamically construct images, PDF documents or whatever. It can also handle other HTTP methods, such as `POST` or `DELETE`. Pretty cool, isn't it?
+Please note the path to the endpoint file. We can create endpoints that return any kind of data. If we create an endpoint whose path is `src/routes/image.jpg/+server.ts`, it can compute an image dynamically and return it. We can also handle other HTTP methods, like `POST` or `DELETE`. Though, if the form is also managed by SvelteKit, [form actions](https://kit.svelte.dev/docs/form-actions) may be a better solution. Pretty cool, isn't it?
 
-Next, I add an `alternate` tag in my `src/app.html` file. This will allow RSS autodiscovery. All pages will be built on top of the base `app.html` file.
+Next step, I add an `alternate` tag in my `src/app.html` file. This will allow RSS autodiscovery. All pages will be built on top of the base `app.html` file.
 
 <!--SNIPSTART blog-feed-xml-alternate-->
 ```html
@@ -93,10 +96,10 @@ Next, I add an `alternate` tag in my `src/app.html` file. This will allow RSS au
 
 I statically build my portfolio on Netlify by using [@sveltejs/adapter-static](https://github.com/sveltejs/kit/tree/master/packages/adapter-static). It means that there will be no server to listen to requests made to endpoints on production. But this is fine...
 
-When a build is launched, SvelteKit will build the JavaScript code that makes the application work, start a server to intercept requests and will start crawling each link between pages. Because there will be a link to `/feed.xml` on each of them, SvelteKit will visit this URL and save the generated XML file. The RSS Feed file will be generated automatically during each build!
+When a build is launched, SvelteKit will build the JavaScript code that makes the application work, start a server to intercept requests and will start crawling each link between pages. Because there will be a link to `/feed.xml` on each of them, SvelteKit will visit this URL and save the generated XML file, as `prerender` option is set to true in `src/routes/feed.xml/+server.ts` file. The RSS Feed file will be generated automatically during each build!
 
 ## Final note
 
 I have to admit that I am now considering starting to use RSS as a way to be kept informed. I downloaded [NetNewsWire](https://netnewswire.com/) and began to add RSS feeds. For now, this is a great discovery!
 
-SvelteKit is really flexible and this is amazing to build sites with it. Endpoints API is so generic that you can use it to handle forms submittings as well as the generation of a RSS Feed. If you have not yet, try [SvelteKit](https://kit.svelte.dev/)!
+SvelteKit is really flexible and this is amazing to build sites with it. Endpoints API is so generic that you can use it to handle HTTP requests from the outside as well as the generation of an RSS Feed. If you have not yet, try [SvelteKit](https://kit.svelte.dev/)!
