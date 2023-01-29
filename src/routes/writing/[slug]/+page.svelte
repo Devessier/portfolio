@@ -10,6 +10,7 @@
 	$: title = data.title;
 	$: description = data.description;
 	$: datetime = data.datetime;
+	$: last_updated_datetime = data.last_updated_datetime;
 	$: tags = data.tags;
 	$: Content = data.content;
 
@@ -39,6 +40,8 @@
 	}));
 
 	$: formattedDate = formatDate(datetime);
+	$: formattedLastUpdatedDatetime =
+		last_updated_datetime === undefined ? undefined : formatDate(last_updated_datetime);
 </script>
 
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
@@ -51,9 +54,19 @@
 			{/each}
 		</div>
 
-		<time {datetime} class="block mb-4 text-red-700 text-center italic font-medium text-sm">
-			{formattedDate}
-		</time>
+		<div class="mb-4 text-center italic text-sm flex flex-col">
+			<time {datetime} class="text-red-700 font-medium mb-1">
+				{formattedDate}
+			</time>
+
+			{#if last_updated_datetime !== undefined}
+				<p class="text-gray-500">
+					Last modified on <time datetime={last_updated_datetime}>
+						{formattedLastUpdatedDatetime}
+					</time>
+				</p>
+			{/if}
+		</div>
 
 		<h1
 			class="text-3xl text-center font-cursive leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
