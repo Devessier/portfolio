@@ -2,6 +2,7 @@
 title: Generate RSS Feed with SvelteKit
 description: RSS Feeds let readers know about new content on your website. SvelteKit provides endpoints that can be used to generate RSS feeds.
 datetime: 2021-12-25T22:17:07.070Z
+last_updated_datetime: 2023-01-29T17:41:43.857Z
 tags: ['SvelteKit', 'RSS']
 ---
 

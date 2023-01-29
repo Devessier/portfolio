@@ -5,16 +5,23 @@ type GetResult = {
 	title: string;
 	description: string;
 	datetime: string;
+	last_updated_datetime?: string;
 	tags: string[];
 	content: ComponentType;
 };
 
 export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
 	const {
-		metadata: { title, description, datetime, tags },
+		metadata: { title, description, datetime, last_updated_datetime, tags },
 		default: content
 	}: {
-		metadata: { title: string; description: string; datetime: string; tags: string[] };
+		metadata: {
+			title: string;
+			description: string;
+			datetime: string;
+			last_updated_datetime?: string;
+			tags: string[];
+		};
 		default: ComponentType;
 	} = await import(`../${slug}.svx`);
 
@@ -22,6 +29,7 @@ export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
 		title,
 		description,
 		datetime,
+		last_updated_datetime,
 		tags,
 		content
 	};
