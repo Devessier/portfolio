@@ -28,3 +28,9 @@
     to = "/cv-en.pdf"
     status = 301
     force = true
+
+[[redirects]]
+    from = "/note/catch-javascript-errors-in-react-applications-with-error-boundaries/"
+    to = "/note/catch-javascript-errors-in-react-applications-with-an-error-boundary/"
+    status = 301
+    force = true
