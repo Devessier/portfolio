@@ -5,6 +5,14 @@
 
 	const talks: TalkPreview[] = [
 		{
+			title: 'What is XState?',
+			description:
+				'What XState is and how we can use it to improve the code of front-end applications.',
+			datetime: '2023-01-25T17:00:00Z',
+			tags: ['XState'],
+			link: 'https://youtu.be/uX-3RnsOzSc'
+		},
+		{
 			title: 'Temporal + XState',
 			description:
 				'How to use Temporal TypeScript SDK and XState to create declarative workflows with explicit behaviours.',
