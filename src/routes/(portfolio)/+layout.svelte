@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.postcss';
+	import '../../app.postcss';
 	import Nav from '$lib/Nav/Nav.svelte';
 	import AppFooter from '$lib/AppFooter.svelte';
 	import { onMount } from 'svelte';

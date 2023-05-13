@@ -12,7 +12,7 @@ export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
 		metadata: { title, datetime },
 		default: content
 	}: {
-		metadata: { title: string; datetime: string; };
+		metadata: { title: string; datetime: string };
 		default: ComponentType;
 	} = await import(`../${slug}.svx`);
 

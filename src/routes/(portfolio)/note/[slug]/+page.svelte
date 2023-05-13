@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Page from '$lib/Page.svelte';
-	import '../../shiki.css';
+	import '../../../shiki.css';
 	import { formatDate } from '$lib/format-date';
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import slugify from 'slugify';

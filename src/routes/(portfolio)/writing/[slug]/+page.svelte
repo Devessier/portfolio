@@ -4,7 +4,7 @@
 	import { formatDate } from '$lib/format-date';
 	import { slugify } from '$lib/slugify';
 	import type { PageData } from './$types';
-	import '../../shiki.css';
+	import '../../../shiki.css';
 
 	export let data: PageData;
 	$: title = data.title;
