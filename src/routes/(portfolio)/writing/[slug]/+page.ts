@@ -11,10 +11,11 @@ type GetResult = {
 };
 
 export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
+	const allWritings = import.meta.glob('../*.svx');
 	const {
 		metadata: { title, description, datetime, last_updated_datetime, tags },
 		default: content
-	}: {
+	} = (await allWritings[`../${slug}.svx`]()) as {
 		metadata: {
 			title: string;
 			description: string;
@@ -23,7 +24,7 @@ export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
 			tags: string[];
 		};
 		default: ComponentType;
-	} = await import(`../${slug}.svx`);
+	};
 
 	return {
 		title,

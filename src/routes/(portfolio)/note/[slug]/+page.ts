@@ -8,13 +8,14 @@ type GetResult = {
 };
 
 export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
+	const allNotes = import.meta.glob('../*.svx');
 	const {
 		metadata: { title, datetime },
 		default: content
-	}: {
-		metadata: { title: string; datetime: string; };
+	} = (await allNotes[`../${slug}.svx`]()) as {
+		metadata: { title: string; datetime: string };
 		default: ComponentType;
-	} = await import(`../${slug}.svx`);
+	};
 
 	return {
 		title,

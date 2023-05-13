@@ -10,6 +10,6 @@ export const load: PageServerLoad<GetResult> = () => {
 	const blogPosts = getBlogPosts();
 
 	return {
-        articles: blogPosts
+		articles: blogPosts
 	};
 };
