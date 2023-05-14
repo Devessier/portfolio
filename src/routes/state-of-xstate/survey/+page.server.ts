@@ -1,13 +1,9 @@
 import { createShikiHighlighter, renderCodeToHTML } from 'shiki-twoslash';
-import { readFileSync } from 'fs';
 import outdent from 'outdent';
 import type { PageServerLoad } from './$types';
+import NightOwlTheme from '$lib/themes/Night Owl-color-theme.json' assert { type: 'json' };
 
-const NightOwlTheme = JSON.parse(
-	readFileSync(new URL('../../../../themes/Night Owl-color-theme.json', import.meta.url), 'utf-8')
-);
-
-const highlighter = await createShikiHighlighter({ theme: NightOwlTheme });
+const highlighter = await createShikiHighlighter({ theme: NightOwlTheme as any });
 
 export const load: PageServerLoad<{ code: string }> = async () => {
 	const code = outdent`

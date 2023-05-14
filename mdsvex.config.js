@@ -7,7 +7,7 @@ import { lex, parse } from 'fenceparser';
 import { createShikiHighlighter, runTwoSlash, renderCodeToHTML } from 'shiki-twoslash';
 import { h } from 'hastscript';
 
-const NightOwlTheme = JSON.parse(readFileSync('./themes/Night Owl-color-theme.json'));
+const NightOwlTheme = JSON.parse(readFileSync('./src/lib/themes/Night Owl-color-theme.json'));
 
 const escape_svelty = (str) =>
 	str
@@ -16,10 +16,9 @@ const escape_svelty = (str) =>
 
 const highlighter = await createShikiHighlighter({ theme: NightOwlTheme });
 
-
 const config = defineConfig({
 	extensions: ['.svx'],
-	
+
 	rehypePlugins: [
 		rehypeSlugPlugin,
 		rehypeExternalLinks,
