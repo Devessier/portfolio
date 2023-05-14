@@ -21,10 +21,12 @@
 	});
 </script>
 
-<Nav />
+<div class="flex flex-col min-h-screen px-6 lg:px-16 max-w-7xl mx-auto">
+	<Nav />
 
-<main class="relative flex flex-col flex-grow h-full">
-	<slot />
-</main>
+	<main class="relative flex flex-col flex-grow h-full">
+		<slot />
+	</main>
 
-<AppFooter />
+	<AppFooter />
+</div>
