@@ -21,20 +21,16 @@ export const load: PageServerLoad<{ code: string }> = async () => {
     states: {
       'Checking authentication': {
         invoke: {
-          src: 'Load authentication token',
-          onDone: [
-            {
-              target: "Fetching user's information",
-            },
-          ],
-          onError: [
-            {
-              target: 'Unauthenticated',
-            },
-          ],
+          src: 'Load authentication state',
+          onDone: {
+            target: 'Authenticated',
+          },
+          onError: {
+            target: 'Unauthenticated',
+          },
         },
       },
-      "Fetching user's information": { /** */ },
+      'Authenticated': { /** */ },
       'Unauthenticated': { /** */ },
     },
   });
