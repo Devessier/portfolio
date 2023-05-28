@@ -186,6 +186,9 @@
 					The report will tell how other teams use XState to build better software. It will also
 					advise about best practices shared across the community.
 				</p>
+				<p class="mt-6 text-lg leading-8 text-gray-600">
+					Please, feel free to share the survey with other fellow XState enthusiasts.
+				</p>
 			</div>
 		</div>
 
