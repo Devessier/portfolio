@@ -34,8 +34,8 @@ function generateNoteTemplate(noteName) {
 	`;
 }
 
-const WRITING_DIRECTORY = new URL('src/routes/writing', import.meta.url);
-const NOTES_DIRECTORY = new URL('src/routes/note', import.meta.url);
+const WRITING_DIRECTORY = new URL('src/routes/(portfolio)/writing', import.meta.url);
+const NOTES_DIRECTORY = new URL('src/routes/(portfolio)/note', import.meta.url);
 
 prog
 	.command('generate-article <title>')
