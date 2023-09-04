@@ -1,0 +1,24 @@
+---
+title: Refer to a class definition instead of one of its instances in TypeScript
+datetime: 2023-09-04T10:56:14.699Z
+---
+
+In TypeScript, when using a class as a type, it types as an instance of this class.
+
+```ts twoslash
+class Animal {}
+
+let dog: Animal // `dog` is typed as an instance of the `Animal` class
+```
+
+To be able to type as the class definition itself, and not one of its instances, we need to use the `keyof` operator.
+
+```ts twoslash
+class Animal {}
+
+let classDefinition: typeof Animal
+```
+
+Declaring a class in TypeScript creates two things: a constructor (the class definition, aka. `typeof Animal`) and an interface for instances of the class (the type `Animal`).
+
+I found the solution to my problem on [2ality article about classes as values in TypeScript](https://2ality.com/2020/04/classes-as-values-typescript.html#the-type-operator-typeof).
