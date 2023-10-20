@@ -183,14 +183,12 @@
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<h1 class="text-5xl font-cursive">Projects</h1>
 
-	<section class="grid grid-cols-1 gap-16 md:gap-24 lg:gap-32 mt-10">
-		{#each formattedProjects as { title, imageSrc, imageRatio, description, links }}
+	<section class="grid grid-cols-1 gap-16 md:gap-24 lg:gap-48 mt-16">
+		{#each formattedProjects as { title, imageSrc, imageRatio, description, links }, index}
 			<article class="grid grid-cols-1 xl:grid-cols-6 gap-16">
 				<div class="col-span-1 xl:col-span-2 space-y-8">
 					<header>
-						<h2
-							class="text-2xl font-semibold inline-block relative after:absolute after:inset-x-0 after:h-2 after:bg-red-400 after:w-2/5 after:bottom-[-6px]"
-						>
+						<h2 class="text-2xl font-semibold inline-block relative">
 							{title}
 						</h2>
 					</header>
