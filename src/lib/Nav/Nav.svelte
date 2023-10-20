@@ -105,7 +105,7 @@
 					target={external === true ? '_blank' : undefined}
 					title={text}
 					class="transition-colors duration-300 ease-in-out {$page.url.pathname === href
-						? 'text-red-500'
+						? 'text-red-600'
 						: ''}"
 				>
 					<Icon src={icon} class="w-6 h-6" />
