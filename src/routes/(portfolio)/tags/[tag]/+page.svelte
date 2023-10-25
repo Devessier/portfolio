@@ -30,7 +30,7 @@
 	const twitter = [];
 </script>
 
-<Page class="pb-16" {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<BlogPostsList {articles}>
 		<svelte:fragment slot="title">
 			Writing about {formattedTag}

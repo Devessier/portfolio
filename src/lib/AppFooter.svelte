@@ -26,6 +26,11 @@
 
 	const externalLinks = [
 		{
+			text: 'Newsletter',
+			href: 'https://newsletter.baptiste.devessier.fr',
+			external: true
+		},
+		{
 			text: 'GitHub',
 			href: 'https://github.com/Devessier',
 			external: true

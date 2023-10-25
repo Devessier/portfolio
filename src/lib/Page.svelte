@@ -13,6 +13,6 @@
 
 <SEO {title} {description} {canonical} {schemas} {facebook} {twitter} />
 
-<div class="w-full mt-2 lg:mt-10 pb-24 {className}">
+<div class="w-full mt-2 lg:mt-10 {className}">
 	<slot />
 </div>
