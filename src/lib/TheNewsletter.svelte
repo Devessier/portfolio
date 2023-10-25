@@ -23,7 +23,15 @@
 					>Free XState report</TheNewsletterBadge
 				> + <TheNewsletterBadge>Free course on XState</TheNewsletterBadge>
 			</p>
-			<form class="mx-auto mt-10 flex flex-col sm:flex-row max-w-md gap-x-4 gap-y-2">
+			<form
+				action="https://buttondown.email/api/emails/embed-subscribe/baptiste-devessier"
+				method="post"
+				target="popupwindow"
+				on:submit={() => {
+					window.open('https://newsletter.baptiste.devessier.fr', 'popupwindow');
+				}}
+				class="mx-auto mt-10 flex flex-col sm:flex-row max-w-md gap-x-4 gap-y-2"
+			>
 				<label for="email-address" class="sr-only">Email address</label>
 				<input
 					id="email-address"
