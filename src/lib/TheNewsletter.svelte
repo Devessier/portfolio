@@ -16,13 +16,12 @@
 				Get monthly insights, personal stories, and in-depth information about what I find helpful
 				in web development as a freelancer.
 			</p>
-			<p class="mx-auto mt-4 max-w-xl text-center text-lg leading-8 text-gray-300">
+			<p
+				class="mx-auto mt-4 max-w-xl text-center text-lg leading-8 text-gray-300 flex flex-wrap justify-center gap-y-2 gap-x-1"
+			>
 				<TheNewsletterBadge>Email advice once a month</TheNewsletterBadge> + <TheNewsletterBadge
 					>Free XState report</TheNewsletterBadge
 				> + <TheNewsletterBadge>Free course on XState</TheNewsletterBadge>
-
-				<!-- Subscribe today to gain instant access to the <b>XState report</b> and receive
-				<b>a series of mini-courses on XState</b> over the next five weeks. -->
 			</p>
 			<form class="mx-auto mt-10 flex flex-col sm:flex-row max-w-md gap-x-4 gap-y-2">
 				<label for="email-address" class="sr-only">Email address</label>
