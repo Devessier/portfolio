@@ -3,6 +3,7 @@
 	import Nav from '$lib/Nav/Nav.svelte';
 	import AppFooter from '$lib/AppFooter.svelte';
 	import { onMount } from 'svelte';
+	import TheNewsletter from '$lib/TheNewsletter.svelte';
 
 	/**
 	 * Previously we were using a Service Worker.
@@ -27,6 +28,8 @@
 	<main class="relative flex flex-col flex-grow h-full">
 		<slot />
 	</main>
+
+	<TheNewsletter />
 
 	<AppFooter />
 </div>
