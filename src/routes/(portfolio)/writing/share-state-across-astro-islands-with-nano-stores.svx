@@ -1,0 +1,193 @@
+---
+title: Share state across Astro Islands with Nano Stores
+description: Astro Islands shouldn't share state by default because they don't necessarily have the same lifetime. However, when sharing data across some of them is required – like the authenticated user's data – Nano Stores is helpful.
+datetime: 2023-11-22T14:24:43.431Z
+tags: ['Astro', 'Nano Stores']
+---
+
+<script>
+    import YouTubePlayer from '$lib/YouTubePlayer.svelte'
+    import ContentImageWithShadow from '$lib/ContentImageWithShadow.svelte'
+</script>
+
+I built an e-commerce website with Astro for a demo, and users can add products to the cart as in any other e-commerce website. However, the button that allows users to add products to their cart is not on the same island as the navbar that displays the cart.
+
+Astro Islands should be considered independent mini-applications, which can not share states by leveraging usual technics like React Context. However, sharing state across Astro Islands is not impossible!
+
+<!-- <img id="demo-gif" src="/img/astro-nanostores-demo.gif" alt="User adding products to the cart on my e-commerce website demo" class="border-gray-300 border-2 rounded-md" width="800" height="649" /> -->
+
+<ContentImageWithShadow>
+<img id="demo-gif" src="/img/astro-nanostores-demo.gif" alt="User adding products to the cart on my e-commerce website demo" class="" width="800" height="649" />
+</ContentImageWithShadow>
+
+
+## Use a shared JavaScript module with Nano Stores
+
+The solution to this problem is to create a JavaScript module and import it into the components that need synchronization. This module should export reactive values so that components can subscribe to their changes.
+
+There is nothing magic here; this is how JavaScript works. A module is evaluated only once: the first time another module imports it. Subsequent imports will reach the cache of the JavaScript engine.
+
+Some frameworks expose APIs to create reactive values that several components can later consume, like `ref()` and `reactive()` for Vue 3. However, if you use many frameworks on your website, you may prefer to stick with a framework-agnostic solution usable with all of them. If your framework doesn't support that, or you are just curious to discover new things, now is the time!
+
+The official [Astro documentation recommends using Nano Stores](https://docs.astro.build/en/core-concepts/sharing-state/) because it's lightweight and provides adapters for all significant frameworks, like React, Vue, Solid.js, or Svelte.
+
+In my case, I created the file `shared/cart.ts` with the following content:
+
+```ts
+import { atom } from 'nanostores';
+import type { CartItem } from '../types';
+
+export const $cart = atom<CartItem[]>([]);
+
+export function setCart(cart: CartItem[]) {
+    $cart.set(cart);
+}
+```
+
+An `atom` is the most basic type of reactive value that [Nano Stores](https://github.com/nanostores/nanostores) supports. Think of an atom as a JavaScript variable declared with `let` that can be redeclared but with the additional feature that other parts of the code can be notified when its value changes.
+
+Nano Stores recommends prefixing atoms with a `$` (dollar) sign so it's easier to distinguish them from regular variables.
+
+Then, I call the `setCart` function when I receive the updated cart containing the selected product:
+
+```tsx
+function ProductPageAddToCartBase() {
+  const checkoutProductMutation = useMutation({
+    mutationFn: async (request: AddProductRequestBody) => { /** */ },
+    onSuccess: ({ cart }) => {
+      setCart(cart);
+    },
+  });
+
+  return (/** */);
+}
+```
+
+And I listen to changes in the cart with the `useStore` function exported by the adapter library for React:
+
+```tsx
+import { useStore } from '@nanostores/react';
+import { $cart } from '../shared/cart';
+
+function AppNavbar() {
+  const cart = useStore($cart);
+
+  const productCount = cart.reduce(
+    (count, product) => count + product.quantity,
+    0
+  );
+
+  return (
+    <span>{productCount}</span>
+  );
+}
+```
+
+## Animate things!
+
+The product count is now reactive and changes when the user adds products to the cart. But that's not interesting enough for my eyes. I want to see a subtle animation when the value of the cart changes.
+
+As you can see in the [GIF of the final result](#demo-gif), the cart icon and the product count should be purple for 2 seconds after adding a product. Let's manage timers with Nano Stores!
+
+I modified the `shared/cart.ts` file to the following:
+
+```tsx {5-30}
+import { atom } from 'nanostores';
+import type { CartItem } from '../types';
+
+export const $cart = atom<CartItem[]>([]);
+
+export const $cartAnimation = atom<{
+    isAnimating: boolean,
+    timerId: number | undefined
+}>({
+    isAnimating: false,
+    timerId: undefined,
+});
+
+export function setCart(cart: CartItem[]) {
+    $cart.set(cart);
+
+    clearTimeout($cartAnimation.get().timerId);
+
+    const timerId = setTimeout(() => {
+        $cartAnimation.set({
+            isAnimating: false,
+            timerId: undefined,
+        });
+    }, 2_000);
+
+    $cartAnimation.set({
+        isAnimating: true,
+        timerId,
+    });
+}
+```
+
+The `$cartAnimation` atom manages the animation. This atom holds a boolean indicating whether we should animate and keeps track of the identifier of the timer created with the `setTimeout` function so that it can be cleared before starting a new one. **Clearing the timeout is really important to prevent race conditions.** Otherwise, the following sequence of events may happen:
+
+```txt
+-> Set item
+  -> Start animating
+  -> Start timer #1
+-> Set item (after 1s)
+  -> Start animating
+  -> Start timer #2
+-> Timer #1 ends (after 2s)
+  -> Stop animation <== Unwanted operation!
+-> Timer #2 ends (after 3s)
+  -> Stop animation (which is already stopped)
+```
+
+We want to continue the animation until the user keeps adding products. Each update of the cart should restart the animation. To make it work correctly, we must clear any previous timer before starting a new one.
+
+In the navbar component, I can now use the `$cartAnimating` store to animate things:
+
+```tsx
+import { useStore } from '@nanostores/react';
+import { $cart, $cartAnimation } from '../shared/cart';
+
+function AppNavbar() {
+  const cart = useStore($cart);
+  const cartAnimation = useStore($cartAnimation);
+
+  const productCount = cart.reduce(
+    (count, product) => count + product.quantity,
+    0
+  );
+
+  return (
+    <ShoppingBagIcon
+      className={clsx(
+        "h-6 w-6 flex-shrink-0 transition-colors",
+        cartAnimation.isAnimating === true
+          ? "text-indigo-700"
+          : "text-gray-400 group-hover:text-gray-500"
+      )}
+      aria-hidden="true"
+    />
+    <span
+      className={clsx(
+        "ml-2 text-sm font-medium transition-colors",
+        cartAnimation.isAnimating === true
+          ? "text-indigo-700"
+          : "text-gray-700 group-hover:text-gray-800"
+      )}
+    >
+      {productCount}
+    </span>
+  );
+}
+```
+
+## Wrap up
+
+Because Nano Stores is easy to use and lightweight, it's an excellent companion for Astro websites that want to load as few JavaScript as possible on pages.
+
+Putting Nano Stores in a stateful JavaScript module is the simplest way to cross-communicate between Astro Islands. Give this technique a try in your next Astro project!
+
+Maxi Ferreira wrote [a thorough guide on Astro's Islands architecture](https://frontendatscale.com/blog/islands-architecture-state/) and uses Nano Stores. Check it!
+
+Do you prefer the video format? I have a step-by-step video for you covering this exact topic!
+
+<YouTubePlayer videoId="0Jt0ivvKWHs" />
