@@ -73,11 +73,11 @@
 		>
 			{title}
 		</h1>
-
-		<p class="mt-8 text-xl text-gray-500 leading-8">{description}</p>
 	</div>
 
-	<div class="mt-6 prose prose-red prose-lg text-gray-500 mx-auto break-words">
+	<div class="mt-6 prose prose-red prose-lg mx-auto break-words">
+		<p>{description}</p>
+
 		<svelte:component this={Content} />
 	</div>
 </Page>
