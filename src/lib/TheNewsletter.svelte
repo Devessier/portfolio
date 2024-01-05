@@ -23,6 +23,12 @@
 					>Free XState report</TheNewsletterBadge
 				> + <TheNewsletterBadge>Free course on XState</TheNewsletterBadge>
 			</p>
+			<p class="mt-10 text-center text-gray-300 text-lg">
+				Want to see what it looks like?
+				<a href="https://newsletter.baptiste.devessier.fr/archive/" class="underline">
+					View the previous issues.
+				</a>
+			</p>
 			<form
 				action="https://buttondown.email/api/emails/embed-subscribe/baptiste-devessier"
 				method="post"
