@@ -27,7 +27,7 @@ In the [Turing machine visualizer](https://turing.adonisenprovence.com/) we buil
 
 In previous articles, [we implemented the request that sends input and machine configuration to server for execution](/writing/orchestrate-request-for-server-side-execution-of-turing-machine-with-xstate/). This request is started when `vizMachine`, the machine driving the visualizer, receives a `Load` event:
 
-```ts {5-8, 17-19}
+```ts
 const vizMachine = createMachine({
     // ...
     initial: "Idle",
@@ -101,7 +101,7 @@ In `vizMachine`, we can reference the invoked machine by its *id* (`Submit butto
 
 When in `Idle` state and receiving a `Load` event, the machine forwards the `Load` event to its parent:
 
-```ts {8-11, 19-21}
+```ts
 import { sendParent } from "xstate";
 
 const submitButtonMachine = createMachine({
@@ -142,7 +142,7 @@ When user clicks on load button, `submitButtonMachine` enters `Loading` state. B
 
 To know if the request was successful or not, we need to wait for a response from the parent:
 
-```ts {5-14}
+```ts
 const submitButtonMachine = createMachine({
     // ...
     initial: "Idle",
@@ -166,7 +166,7 @@ const submitButtonMachine = createMachine({
 
 And in parent machine we send to `submitButtonMachine` the events it expects when response arrives:
 
-```ts {6, 19, 25, 37-54}
+```ts
 import { send } from "xstate";
 
 const vizMachine = createMachine({
@@ -232,7 +232,7 @@ Apart from the fact that events are exchanged between different machines, the ba
 
 Finally, we make `Success` and `Error` states active for two seconds and then target `Idle` state:
 
-```ts {6-19}
+```ts
 const submitButtonMachine = createMachine({
     // ...
     initial: "Idle",
@@ -283,7 +283,7 @@ const submitButtonService = computed(() => {
 
 From here we can use [`useActor`](https://xstate.js.org/docs/packages/xstate-vue/#useactor-actor-getsnapshot) hook to access the current state of `submitButtonService`:
 
-```ts {2, 13-16}
+```ts
 import { computed } from "vue";
 import { ActorRefFrom } from "xstate";
 import { useMachine, useActor } from "@xstate/vue";
