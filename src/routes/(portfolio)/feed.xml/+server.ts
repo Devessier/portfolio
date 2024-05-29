@@ -2,7 +2,7 @@
 import type { RequestHandler } from './$types';
 import { Feed } from 'feed';
 import { APP_URL } from '$lib/env';
-import { getBlogPosts } from '../writing/_api';
+import { getSvxBlogPosts } from '../writing/_api';
 import { urlcat } from '$lib/url';
 
 // To also prerender this *page*, as SvelteKit treats it as a page regarding prerendering.
@@ -10,10 +10,10 @@ export const prerender = true;
 
 // This function will be called when SvelteKit server
 // receives a GET request for `/feed.xml`.
-export const GET: RequestHandler = ({ setHeaders }) => {
+export const GET: RequestHandler = async ({ setHeaders }) => {
 	// We get the list of all the blog posts.
 	// The list is ordered by publication date. The most recent post is at the top.
-	const blogPosts = getBlogPosts();
+	const blogPosts = getSvxBlogPosts();
 
 	// We create the feed, with author's information.
 	const feed = new Feed({

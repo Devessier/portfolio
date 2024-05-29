@@ -9,8 +9,8 @@ type GetResult = {
 	articles: WritingPreview[];
 };
 
-export const load: PageServerLoad<GetResult> = ({ params: { tag } }) => {
-	const blogPosts = getBlogPosts();
+export const load: PageServerLoad<GetResult> = async ({ params: { tag } }) => {
+	const blogPosts = await getBlogPosts();
 
 	const articles: WritingPreview[] = [];
 	let prettyTagName: string | undefined;

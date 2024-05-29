@@ -1,7 +1,9 @@
 import type { WritingPreview } from '$lib/types';
 import { basename } from 'path';
+import RssParser from 'rss-parser';
+import * as cheerio from 'cheerio';
 
-export function getBlogPosts(): WritingPreview[] {
+export function getSvxBlogPosts(): WritingPreview[] {
 	const svxFiles = import.meta.glob('./*.svx', { eager: true });
 
 	const importedFiles: WritingPreview[] = Object.entries(svxFiles)
@@ -30,4 +32,42 @@ export function getBlogPosts(): WritingPreview[] {
 		);
 
 	return importedFiles;
+}
+
+const rssParser = new RssParser();
+
+async function getNewsletterBlogPosts(): Promise<WritingPreview[]> {
+	const newsletterRssFeed = await rssParser.parseURL(
+		'https://newsletter.baptiste.devessier.fr/rss.xml'
+	);
+
+	return Promise.all(
+		newsletterRssFeed.items.map(async (item) => {
+			const pageRes = await fetch(item.link!);
+
+			const $ = cheerio.load(await pageRes.text());
+
+			const description = $('h2.description').text();
+
+			return {
+				external: true,
+				title: item.title!,
+				description,
+				datetime: item.isoDate!,
+				tags: [],
+				url: item.link!
+			};
+		})
+	);
+}
+
+export async function getBlogPosts(): Promise<WritingPreview[]> {
+	const blogPosts = [...getSvxBlogPosts(), ...(await getNewsletterBlogPosts())];
+
+	blogPosts.sort(
+		({ datetime: firstDatetime }, { datetime: secondDatetime }) =>
+			-firstDatetime.localeCompare(secondDatetime)
+	);
+
+	return blogPosts;
 }

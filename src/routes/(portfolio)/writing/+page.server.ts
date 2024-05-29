@@ -6,8 +6,8 @@ type GetResult = {
 	articles: WritingPreview[];
 };
 
-export const load: PageServerLoad<GetResult> = () => {
-	const blogPosts = getBlogPosts();
+export const load: PageServerLoad<GetResult> = async () => {
+	const blogPosts = await getBlogPosts();
 
 	return {
 		articles: blogPosts

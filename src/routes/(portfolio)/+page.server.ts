@@ -6,8 +6,8 @@ interface GetResult {
 	latestArticles: WritingPreview[];
 }
 
-export const load: PageServerLoad<GetResult> = () => {
-	const blogPosts = getBlogPosts();
+export const load: PageServerLoad<GetResult> = async () => {
+	const blogPosts = await getBlogPosts();
 	const latestArticles = blogPosts.slice(0, 3);
 
 	return {

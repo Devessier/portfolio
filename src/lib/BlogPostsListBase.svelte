@@ -19,21 +19,28 @@
 
 {#if articles.length > 0}
 	<ul class="grid grid-cols-1 gap-y-16">
-		{#each formattedArticles as { title, description, slug, datetime, formattedDatetime, tags }}
-			<li class="flex flex-col max-w-prose">
+		{#each formattedArticles as { title, description, external, slug, url, datetime, formattedDatetime, tags }}
+			<li class="flex flex-col items-start max-w-prose">
 				<time {datetime} class="text-red-700 italic font-medium text-sm">
 					{formattedDatetime}
 				</time>
 
-				<a href="/writing/{slug}/" class="mt-2">
-					<h2 class="text-2xl leading-8 font-semibold hover:underline">
+				<h2 class="text-2xl leading-8 font-semibold hover:underline">
+					<a
+						href={external === true ? url : `/writing/${slug}/`}
+						rel={external === true ? 'external' : undefined}
+						target={external === true ? '_blank' : undefined}
+						class="mt-2"
+					>
 						{title}
-					</h2>
-				</a>
+					</a>
+				</h2>
 
-				<p class="mt-4 text-gray-600 leading-7">
-					{description}
-				</p>
+				{#if typeof description === 'string'}
+					<p class="mt-4 text-gray-600 leading-7">
+						{description}
+					</p>
+				{/if}
 
 				<div class="flex mt-4 gap-2 flex-wrap">
 					{#each tags as { title, slug }}

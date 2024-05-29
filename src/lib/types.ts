@@ -8,25 +8,45 @@ export interface Locals {
 
 export type WritingPreview = {
 	title: string;
-	slug: string;
-	description: string;
+	description?: string;
 	datetime: string;
 	tags: string[];
-};
+} & (
+	| {
+			external: true;
+			url: string;
+			slug?: undefined;
+	  }
+	| {
+			external?: undefined;
+			url?: undefined;
+			slug: string;
+	  }
+);
 
 export interface Tag {
 	title: string;
 	slug: string;
 }
 
-export interface ArticlePreview {
+export type ArticlePreview = {
 	title: string;
-	description: string;
+	description?: string;
 	datetime: string;
 	formattedDatetime: string;
-	slug: string;
 	tags: Tag[];
-}
+} & (
+	| {
+			external: true;
+			url: string;
+			slug: undefined;
+	  }
+	| {
+			external: undefined;
+			url: undefined;
+			slug: string;
+	  }
+);
 
 export interface TalkPreview {
 	title: string;
