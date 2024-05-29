@@ -190,4 +190,4 @@ Maxi Ferreira wrote [a thorough guide on Astro's Islands architecture](https://f
 
 Do you prefer the video format? I have a step-by-step video for you covering this exact topic!
 
-<YouTubePlayer videoId="0Jt0ivvKWHs" />
+<YouTubePlayer videoId="0Jt0ivvKWHs" thumbnailQuality="high" />

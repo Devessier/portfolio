@@ -80,7 +80,7 @@
 		}
 	}
 
-	const youtubeChannelUrl = 'https://www.youtube.com/channel/UCHkj5xmIUA357RS944tY5Tg';
+	const youtubeChannelUrl = 'https://youtube.com/@baptistedevessier';
 	const communicationMeans = [
 		{
 			href: 'https://github.com/Devessier',

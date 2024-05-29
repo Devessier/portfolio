@@ -42,7 +42,7 @@
 		},
 		{
 			text: 'YouTube',
-			href: 'https://www.youtube.com/channel/UCHkj5xmIUA357RS944tY5Tg',
+			href: 'https://youtube.com/@baptistedevessier',
 			external: true
 		},
 		{

@@ -4,12 +4,13 @@
 	import BlogPostsListBase from '$lib/BlogPostsListBase.svelte';
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import type { PageData } from './$types';
+	import YouTubePlayer from '$lib/YouTubePlayer.svelte';
 
 	export let data: PageData;
 	$: latestArticles = data.latestArticles;
 
 	const descriptionText =
-		"I'm Baptiste Devessier, a full stack web and XState freelance consultant. When I'm not consulting on freelance projects, you will find me writing articles, recording video tutorials and working on my own side projects.";
+		"I'm Baptiste Devessier, a full stack web and XState freelance consultant. When I'm not consulting on freelance projects, you will find me recording video tutorials, writing articles, and working on my own side projects.";
 
 	const title = 'Baptiste Devessier | Full stack web and XState freelance consultant';
 	const description = descriptionText;
@@ -31,7 +32,7 @@
 	];
 	const twitter = [];
 
-	const youtubeChannelUrl = 'https://www.youtube.com/channel/UCHkj5xmIUA357RS944tY5Tg';
+	const youtubeChannelUrl = 'https://youtube.com/@baptistedevessier';
 	const communicationMeans = [
 		{
 			href: 'https://github.com/Devessier',
@@ -93,6 +94,24 @@
 				</li>
 			{/each}
 		</ul>
+	</div>
+
+	<div class="mt-24 max-w-xl">
+		<p class="text-3xl font-cursive">Last video</p>
+
+		<p class="mr-4 text-gray-600 mt-2">
+			I'm currently focusing on making videos on YouTube. Check out my latest video and my channel.
+		</p>
+
+		<div class="mt-10">
+			<YouTubePlayer videoId={data.lastVideo.id} thumbnailQuality="high" />
+		</div>
+
+		<div class="mt-10">
+			<LinkWithAnimatedArrow rel="external" target="_blank" href={youtubeChannelUrl}>
+				See all videos
+			</LinkWithAnimatedArrow>
+		</div>
 	</div>
 
 	<div class="mt-24 md:mt-32">

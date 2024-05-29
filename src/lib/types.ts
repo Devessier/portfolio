@@ -24,6 +24,10 @@ export type WritingPreview = {
 	  }
 );
 
+export interface YoutubeVideo {
+	id: string;
+}
+
 export interface Tag {
 	title: string;
 	slug: string;
