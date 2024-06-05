@@ -1,13 +1,6 @@
 <script lang="ts">
 	import Page from '$lib/Page.svelte';
-	import {
-		GithubIcon,
-		MailIcon,
-		TildIcon,
-		TwitterIcon,
-		VideoCameraIcon,
-		MicrophoneIcon
-	} from '$lib/Icons';
+	import { TildIcon } from '$lib/Icons';
 	import BlogPostsListBase from '$lib/BlogPostsListBase.svelte';
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import type { PageData } from './$types';
@@ -38,38 +31,6 @@
 	const twitter = [];
 
 	const youtubeChannelUrl = 'https://youtube.com/@baptistedevessier';
-	const communicationMeans = [
-		{
-			href: 'https://github.com/Devessier',
-			external: true,
-			title: 'My GitHub profile',
-			icon: GithubIcon
-		},
-		{
-			href: 'https://twitter.com/BDevessier',
-			external: true,
-			title: 'My Twitter account',
-			icon: TwitterIcon
-		},
-		{
-			href: youtubeChannelUrl,
-			external: true,
-			title: 'My YouTube channel',
-			icon: VideoCameraIcon
-		},
-		{
-			href: 'https://parlons-dev.com',
-			external: true,
-			title: 'My podcast Parlons Dev',
-			icon: MicrophoneIcon
-		},
-		{
-			href: '/contact/',
-			external: false,
-			title: 'Contact me',
-			icon: MailIcon
-		}
-	];
 </script>
 
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
@@ -89,31 +50,50 @@
 			<p>
 				I'm Baptiste Devessier, a full stack web and XState freelance consultant. When I'm not
 				consulting on freelance projects, you will find me recording screencasts for YouTube,
-				writing articles, and working on my own side projects.
+				writing articles, and working on my side projects.
 			</p>
+
+			<p>You can find me on many platforms:</p>
+
+			<ul>
+				<li>
+					I post my thoughts and the progress of my projects on <a
+						href="https://twitter.com/BDevessier"
+						rel="external"
+						target="_blank">Twitter</a
+					>
+				</li>
+				<li>
+					The code of my projects is open-source on <a
+						href="https://github.com/Devessier"
+						rel="external"
+						target="_blank">GitHub</a
+					>
+				</li>
+				<li>
+					My screencasts live on <a href={youtubeChannelUrl} rel="external" target="_blank"
+						>YouTube</a
+					>
+				</li>
+				<li>
+					I co-host <a href="https://parlons-dev.com/" target="_blank" rel="external">Parlons Dev</a
+					>, a French podcast about web development
+				</li>
+				<li>
+					And I try to be more active on <a
+						href="https://www.linkedin.com/in/baptiste-devessier/"
+						target="_blank"
+						rel="external">LinkedIn</a
+					>
+				</li>
+			</ul>
+
 			<p>
-				I'm also running <a href="https://parlons-dev.com/" target="_blank" rel="external"
-					>Parlons Dev</a
-				>, a French podcast about web development.
+				Are you looking for a web developer who loves building complex UIs? <a href="/contact/"
+					>Contact me.</a
+				>
 			</p>
 		</div>
-
-		<ul class="flex items-center mt-8 gap-6">
-			{#each communicationMeans as { href, external, title, icon }}
-				<li>
-					<a
-						{href}
-						{title}
-						rel={external === true ? 'external' : undefined}
-						class="inline-block -m-1 p-1 text-zinc-500 hover:text-zinc-600 transition-colors"
-					>
-						<span class="sr-only">{title}</span>
-
-						<svelte:component this={icon} class="w-6 h-6 stroke-current" />
-					</a>
-				</li>
-			{/each}
-		</ul>
 	</div>
 
 	<div class="mt-24 max-w-xl">
