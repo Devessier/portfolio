@@ -1,6 +1,13 @@
 <script lang="ts">
 	import Page from '$lib/Page.svelte';
-	import { GithubIcon, MailIcon, TildIcon, TwitterIcon, VideoCameraIcon } from '$lib/Icons';
+	import {
+		GithubIcon,
+		MailIcon,
+		TildIcon,
+		TwitterIcon,
+		VideoCameraIcon,
+		MicrophoneIcon
+	} from '$lib/Icons';
 	import BlogPostsListBase from '$lib/BlogPostsListBase.svelte';
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import type { PageData } from './$types';
@@ -9,11 +16,9 @@
 	export let data: PageData;
 	$: latestArticles = data.latestArticles;
 
-	const descriptionText =
-		"I'm Baptiste Devessier, a full stack web and XState freelance consultant. When I'm not consulting on freelance projects, you will find me recording video tutorials, writing articles, and working on my own side projects.";
-
 	const title = 'Baptiste Devessier | Full stack web and XState freelance consultant';
-	const description = descriptionText;
+	const description =
+		'Baptiste Devessier is a full stack web and XState freelance consultant. He also publishes screencasts on YouTube and writes articles.';
 	const canonical = 'https://baptiste.devessier.fr/';
 	const schemas = [];
 	const facebook = [
@@ -53,6 +58,12 @@
 			icon: VideoCameraIcon
 		},
 		{
+			href: 'https://parlons-dev.com',
+			external: true,
+			title: 'My podcast Parlons Dev',
+			icon: MicrophoneIcon
+		},
+		{
 			href: '/contact/',
 			external: false,
 			title: 'Contact me',
@@ -74,8 +85,17 @@
 			Devessier
 		</h1>
 
-		<div class="mt-6 prose">
-			<p>{descriptionText}</p>
+		<div class="mt-6 prose prose-red">
+			<p>
+				I'm Baptiste Devessier, a full stack web and XState freelance consultant. When I'm not
+				consulting on freelance projects, you will find me recording screencasts for YouTube,
+				writing articles, and working on my own side projects.
+			</p>
+			<p>
+				I'm also running <a href="https://parlons-dev.com/" target="_blank" rel="external"
+					>Parlons Dev</a
+				>, a French podcast about web development.
+			</p>
 		</div>
 
 		<ul class="flex items-center mt-8 gap-6">
