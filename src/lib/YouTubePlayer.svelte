@@ -4,16 +4,14 @@
 	export let thumbnailQuality: 'low' | 'high' | undefined = 'low';
 </script>
 
-<div class="grid grid-cols-1 aspect-video w-full">
-	{@html `
-		<lite-youtube
-			videoid="${videoId}"
-			${videoTitle === undefined ? '' : `title="${videoTitle}"`}
-			style="${
-				thumbnailQuality === 'high'
-					? `background-image: url('https://i.ytimg.com/vi/${videoId}/sddefault.jpg');`
-					: ''
-			}"
-		></lite-youtube>
-	`}
-</div>
+{@html `
+	<lite-youtube
+		videoid="${videoId}"
+		${videoTitle === undefined ? '' : `title="${videoTitle}"`}
+		style="${
+			thumbnailQuality === 'high'
+				? `background-image: url('https://i.ytimg.com/vi/${videoId}/sddefault.jpg');`
+				: ''
+		}"
+	></lite-youtube>
+`}

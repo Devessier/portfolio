@@ -104,7 +104,11 @@
 		</p>
 
 		<div class="mt-10">
-			<YouTubePlayer videoId={data.lastVideo.id} thumbnailQuality="high" />
+			<YouTubePlayer
+				videoId={data.lastVideo.id}
+				thumbnailQuality="high"
+				videoTitle={data.lastVideo.title}
+			/>
 		</div>
 
 		<div class="mt-10">
