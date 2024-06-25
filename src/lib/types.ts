@@ -26,6 +26,7 @@ export type WritingPreview = {
 
 export interface YoutubeVideo {
 	id: string;
+	title: string;
 }
 
 export interface Tag {

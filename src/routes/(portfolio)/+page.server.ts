@@ -21,14 +21,21 @@ export const load: PageServerLoad<GetResult> = async () => {
 	const lastVideo = youtubeChannelRssFeed.items[0];
 	const lastVideoUrl = new URL(lastVideo.link!);
 	const lastVideoId = lastVideoUrl.searchParams.get('v');
+	const lastVideoTitle = lastVideo.title;
+
 	if (lastVideoId === null) {
 		throw new Error('Expected to get the id of the video with the `v` query parameter.');
+	}
+
+	if (lastVideoTitle === undefined) {
+		throw new Error('Expected the title of the video to be defined');
 	}
 
 	return {
 		latestArticles,
 		lastVideo: {
-			id: lastVideoId
+			id: lastVideoId,
+			title: lastVideoTitle
 		}
 	};
 };
