@@ -1,5 +1,5 @@
 ---
-title: Unit test a state machine
+title: '#5 Unit test a state machine'
 description: Unit test state machines by leveraging their deterministic nature. Complete the coverage with integration and e2e testing.
 datetime: 2024-10-23T21:18:57.494Z
 tags: ['XState', 'XState Course', 'Newsletter']

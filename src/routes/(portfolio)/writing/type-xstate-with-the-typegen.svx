@@ -1,5 +1,5 @@
 ---
-title: Type XState with the Typegen
+title: '#3 Type XState with the Typegen'
 description: Use XState's Typegen to automatically generate strong types for your machines by enabling it in your code, naming actions, delays, guards, and services for better TypeScript integration. Rely on Stately's VS Code extension or XState CLI for development and production builds.
 datetime: 2024-10-23T21:06:51.194Z
 tags: ['XState', 'XState Course', 'Newsletter']

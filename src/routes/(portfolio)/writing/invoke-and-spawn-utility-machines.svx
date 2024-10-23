@@ -1,5 +1,5 @@
 ---
-title: Invoke and spawn utility machines
+title: '#4 Invoke and spawn utility machines'
 description: Rely on XState’s Actor model to manage concurrency by invoking or spawning actors. Invoke for guaranteed actors and spawn for dynamic ones like worker pools. Actors communicate through events, ensuring modular and scalable systems.
 datetime: 2024-10-23T21:14:09.662Z
 tags: ['XState', 'XState Course', 'Newsletter']

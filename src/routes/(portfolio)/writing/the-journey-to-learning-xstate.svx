@@ -1,5 +1,5 @@
 ---
-title: The journey to learning XState
+title: '#1 The journey to learning XState'
 description: Learn XState efficiently by exploring its documentation, taking courses, studying examples, and practicing with real projects to enhance your understanding and coding skills.
 datetime: 2024-10-23T20:53:03.010Z
 tags: ['XState', 'XState Course', 'Newsletter']
