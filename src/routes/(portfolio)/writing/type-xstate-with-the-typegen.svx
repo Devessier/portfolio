@@ -234,7 +234,7 @@ XState support of TypeScript has gotten so much better with the Typegen. It's a 
 
 I hope you were able to find my explanation useful to you.
 
-In the next post, you will learn how to invoke and spawn actors!
+[In the next post](/writing/invoke-and-spawn-utility-machines/), you will learn how to invoke and spawn actors!
 
 Best,  
 Baptiste

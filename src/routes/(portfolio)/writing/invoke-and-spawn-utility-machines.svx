@@ -1,0 +1,329 @@
+---
+title: Invoke and spawn utility machines
+description: Rely on XState’s Actor model to manage concurrency by invoking or spawning actors. Invoke for guaranteed actors and spawn for dynamic ones like worker pools. Actors communicate through events, ensuring modular and scalable systems.
+datetime: 2024-10-23T21:14:09.662Z
+tags: ['XState', 'Newsletter']
+---
+
+---
+
+Hey there!
+
+One of the greatest strengths of XState is its compliance with the Actor model. With the Actor model, pieces of logic can not mutate each other's state; they must communicate with *events*.
+
+We modeled a task queue as a state machine in a previous email course, as shown below:
+
+![Screenshot of the state task queue machine we built in a previous course](https://assets.buttondown.email/images/147104d1-1b6b-4fef-8f96-a46e21b0c343.png?w=1900&fit=max) 
+
+Such a machine can be helpful to process work sequentially on your front-end application or in a Node.js server. But it would be even more helpful when used as part of **a group of workers** so that tasks can be dispatched to them. It will allow concurrency while still restraining the number of workers.
+
+From a single task queue machine, we will create several instances to be used by the root state machine of our application. This can be achieved in XState by invoking or spawning the task queue machine.
+
+## Invoke one task queue
+
+Before implementing a whole worker pool, we must **invoke** a single worker inside the bigger state machine that manages our application.
+
+```ts
+import { createMachine, assign, sendTo } from "xstate";
+
+const appMachine = createMachine(
+  {
+    context: {
+      tasks: [],
+    },
+
+    invoke: {
+      src: "Task queue",
+      id: "Single task queue",
+    },
+
+    states: {
+      Idle: {
+        on: {
+          "Add task": {
+            actions: [
+              "Forward task to task queue",
+              "Assign task to context",
+            ],
+          },
+        },
+      },
+    },
+
+    initial: "Idle",
+  },
+  {
+    actions: {
+      "Forward task to task queue": sendTo(
+        "Single task queue",
+        (_context, event) => ({
+          type: "Add task to queue",
+          task: event.task,
+        })
+      ),
+      "Assign task to context": assign({
+        tasks: (context, event) =>
+          context.tasks.concat({
+            taskId: event.task.id,
+            status: "idle",
+          }),
+      }),
+    },
+    services: {
+      "Task queue": taskQueue,
+    },
+  }
+);
+```
+
+We invoke the task queue at the top-level state of the machine and give the service an identifier: `Single task queue`. When a task is added, we forward it to the task queue for processing with the `sendTo()` action and keep track of the task state in the context of the machine.
+
+The task queue machine will report the status of each task processing to the parent machine by sending `Update task status` events:
+
+```ts
+const taskQueue = createMachine(
+  {
+    initial: "Idle",
+
+    states: {
+      Idle: {
+        always: {
+          target: "Processing",
+          cond: "Task available",
+        },
+      },
+
+      Processing: {
+        invoke: {
+          src: "Process task",
+
+          onDone: {
+            target: "Idle",
+            actions: [
+              "Report task success to parent",
+            ],
+          },
+
+          onError: {
+            target: "Idle",
+            actions: [
+              "Report task failure to parent",
+            ],
+          },
+        },
+
+        entry: "Report task processing begins to parent",
+      },
+    },
+  },
+  {
+    actions: {
+      "Report task failure to parent": sendParent((context) => ({
+        type: "Update task status",
+        taskId: context.processedTask.id,
+        status: "failure",
+      })),
+      "Report task success to parent": sendParent((context) => ({
+        type: "Update task status",
+        taskId: context.processedTask.id,
+        status: "success",
+      })),
+      "Report task processing begins to parent": sendParent((context) => ({
+        type: "Update task status",
+        taskId: context.processedTask.id,
+        status: "pending",
+      })),
+    },
+  }
+);
+```
+
+Thanks to the `sendParent()` action, a state machine invoked (or spawned) by another can communicate with its parent.
+
+The parent machine can then listen to the `Update task status` event sent by its child as usual and update the task status in the context accordingly.
+
+```ts
+const appMachine = createMachine(
+  {
+    context: {
+      tasks: [],
+    },
+
+    invoke: {
+      src: "Task queue",
+      id: "Single task queue",
+    },
+
+    states: {
+      Idle: { /** */ },
+    },
+
+    initial: "Idle",
+
+    on: {
+      "Update task status": {
+        actions: "Assign new status to task in context",
+      },
+    },
+  },
+  {
+    actions: {
+      "Assign new status to task in context": assign({
+        tasks: (context, event) =>
+          context.tasks.map((task) => {
+            if (task.taskId !== event.taskId) {
+              return task;
+            }
+
+            return {
+              taskId: task.taskId,
+              status: event.status,
+            };
+          }),
+      }),
+    },
+  }
+);
+```
+
+## Invoke two task queues
+
+A single worker is great, but what about two? We would be able to share work amongst them. We can invoke several task queues and give them unique identifiers:
+
+```ts
+const appMachine = createMachine(
+  {
+    context: {
+      tasks: [],
+    },
+
+    invoke: [
+      {
+        src: "Task queue",
+        id: "Task queue 1",
+      },
+      {
+        src: "Task queue",
+        id: "Task queue 2",
+      },
+    ],
+
+    states: {
+      Idle: { /** */ },
+    },
+
+    initial: "Idle",
+
+    on: { /** */ },
+  },
+  {
+    actions: {
+      "Forward task to random task queue": sendTo(
+        () => {
+          const randomWorkerId = randomIntFromInterval(1, 2);
+
+          return `Task queue ${randomWorkerId}`;
+        },
+        (_context, event) => ({
+          type: "Add task to queue",
+          task: event.task,
+        })
+      ),
+    },
+  }
+);
+```
+
+The `invoke` property accepts arrays, and we can invoke several services from the same source. They will be independent instances of the task queue with a unique identifier.
+
+The only change we need to make is how we forward events to the task queue. Instead of a static reference to the task queue service, we pass a function to the `sendTo()` action that returns either `Task queue 1` or `Task queue 2`.
+
+Listening to events sent by the task queue services remains the same.
+
+## Spawn several task queues
+
+What if we want to change the number of workers dynamically? If we can't determine the services’ existence beforehand, it may be a sign that actors should be spawned instead of invoked. If we want to add more workers while the state machine runs, we should spawn the task queues.
+
+```ts
+import { createMachine, assign, spawn, sendTo } from "xstate";
+
+const appMachine = createMachine(
+  {
+    context: {
+      tasks: [],
+      workers: [],
+    },
+
+    states: {
+      Idle: {
+        on: {
+          "Add task": {
+            actions: [
+              "Forward task to random task queue",
+              "Assign task to context",
+            ],
+          },
+
+          "Create worker": {
+            actions: "Spawn a task queue",
+          },
+        },
+      },
+    },
+
+    initial: "Idle",
+
+    on: { /** */ },
+
+    entry: "Spawn a task queue",
+  },
+  {
+    actions: {
+      "Forward task to random task queue": sendTo(
+        (context) => {
+          return context.workers[
+            randomIntFromInterval(0, context.workers.length - 1)
+          ];
+        },
+        (_context, event) => ({
+          type: "Add task to queue",
+          task: event.task,
+        })
+      ),
+      "Spawn a task queue": assign({
+        workers: (context) =>
+          context.workers.concat(
+            spawn(taskQueue, {
+              name: `Task queue ${context.workers.length + 1}`,
+            })
+          ),
+      }),
+    },
+  }
+);
+```
+
+Workers are created by calling the `spawn()` action inside the `assign()` action. `spawn()` returns a reference to the actor, which should be stored in the context to be later referenced.
+
+Then, to forward a task to a random worker, we provide a function to `sendTo()` that returns a random worker from the `workers` array in the context. Note that we directly return the reference, which was returned by `spawn()` and stored in the context.
+
+We can name the actor we spawn in the second parameter the `spawn()` function takes. This can help debug systems of actors.
+
+## Wrap up
+
+The actor model is an excellent strength of XState, allowing complex and interconnected systems to be modeled. Actors can be created in two ways: invoking or spawning.
+
+Invocation is for unique actors. It's the way to go for actors that will exist for sure.
+
+Spawning is for actors that can be spawned conditionally, especially for lists of actors, like a pool of workers.
+
+According to the survey results, promises are the most invoked type of actor (89% of the respondents), while machines are the most spawned type of actor (63%). And 82% of the respondents spawn actors, whereas 97% invoke actors.
+
+Spawning is an advanced tool you'll use less often than invoking, but having it in your toolbar is excellent.
+
+I hope invoking and spawning actors holds no secrets for you anymore! [An example app of all these state machines](https://xstate-email-course-app.baptiste.devessier.fr) is live, and the code is on [GitHub](https://xstate-email-course-app.baptiste.devessier.fr/code).
+
+In the next post, for the last course of the series, you will learn how to unit test your state machines!
+
+Best,  
+Baptiste
