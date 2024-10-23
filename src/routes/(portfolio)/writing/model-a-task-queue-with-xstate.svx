@@ -1,0 +1,78 @@
+---
+title: Model a task queue with XState
+description: Implement a task queue in XState by processing tasks individually, queuing new tasks while busy, automatically triggering the next task with eventless transitions, and simplifying the design by globally handling task addition across all states.
+datetime: 2024-10-23T21:02:02.953Z
+tags: ['XState', 'Newsletter']
+---
+
+---
+
+Hey there!
+
+Let's say you are developing an application that needs to execute some tasks sequentially, like file uploads.
+
+You may have been using XState in your application for a long time and immediately think about XState to implement this feature. Or you may have been thinking about using XState for the first time, in which case this is a great reason to start XStating.
+
+The specifications of the task queue are:
+
+- Process tasks individually and start a new one as soon as the current one ends.
+- Add tasks to the queue at any time during the flow.
+
+## Process incoming tasks directly
+
+The state machine starts from the `Idle` state.
+
+When a task is received in the `Idle` state through the `Add task to queue` event, store the task in the context of the machine thanks to the `Add task to queue in context` action and then target the `Processing` state.
+
+Process the task with the `Process task` service invoked in the `Processing` state. This service picks the first task from the queue and processes it.
+
+Once the task is done, return to the `Idle` state and delete the processed task from the queue.
+
+[![First step of the state machine](https://assets.buttondown.email/images/e2b50f7d-ba34-4a6a-b8aa-0087d8e8f4fc.png?w=1932&fit=max)](https://stately.ai/registry/editor/f868185e-44c6-414a-940a-1682548db37e?mode=design&machineId=fc614762-57d3-4b76-8944-c1053e883cf6)
+
+## Enqueue tasks in the context when busy
+
+Even while processing a task, we want to queue new tasks we receive to process them later when the machine isn't busy anymore.
+
+We need to listen to the `Add task to queue` event in the `Processing` state and add the task to the queue when we receive this event. For that, we will use a *self-transition*. A self-transition is a transition that targets the source state itself. The state machine remains in its state with such a transition.
+
+By default, services are stopped when exiting a state. In our case, it means that the processing of the current task would be aborted.
+
+However, self-transitions don't re-enter by default. That way, we can avoid interrupting the current processing and stay in the `Processing` state. The transition will still be taken, and the `Assign task to queue in context` action will be called, but the current process won't be aborted.
+
+[![Second step of the state machine](https://assets.buttondown.email/images/b14a5154-dbca-434a-8b2b-78d0d2542b17.png?w=1932&fit=max)](https://stately.ai/registry/editor/f868185e-44c6-414a-940a-1682548db37e?mode=design&machineId=29b64a93-69c6-4480-80d9-5614d5fac472)
+
+You can opt-in to make a self-transition re-enter. A self-transition that **does** re-enter is useful when you **want** to restart a service. This is a powerful feature that comes cheaply with state machines.
+
+## Automatically process the next task when processing finishes
+
+Returning to the `Idle` state should automatically trigger the processing of the remaining tasks in the queue.
+
+This can be achieved thanks to an *eventless transition*: when the `Idle` state is entered, and each time the machine receives an event while in this state, the condition `Task available` is evaluated, and the transition may be taken if the guard evaluates to `true`.
+
+We no longer target the `Processing` state when receiving an `Add task to queue` event in the `Idle` state; the eventless transition does it automatically for us. Pretty neat!
+
+[![Third step of the state machine](https://assets.buttondown.email/images/d07f6bcc-7b14-46bc-abb6-32ca774d9de6.png?w=1930&fit=max)](https://stately.ai/registry/editor/f868185e-44c6-414a-940a-1682548db37e?mode=design&machineId=314e1992-18b5-4cde-9793-bb89ecc6735f)
+
+## Simplify the state machine
+
+The `Add task to queue` event can be factorized by listening to it globally on the root state. The machine will add tasks to the queue, whatever the current state is.
+
+When reaching the `Idle` state, the state machine checks for available tasks to process or waits for one. The eventless transition is the key to the magic of this state machine!
+
+[![Fourth step of the state machine](https://assets.buttondown.email/images/2f5e8c16-6946-4815-b09a-3ac112d8f274.png?w=1930&fit=max)](https://stately.ai/registry/editor/f868185e-44c6-414a-940a-1682548db37e?mode=design&machineId=f964c99a-68ca-45bb-a850-506ecdcdd58b)
+
+## Wrap up
+
+Working on small machines like this example is an excellent way to exercise your state machine modeling practice.
+
+If you'd like to go one step further, you can implement a variant of this task queue that can share work amongst several workers. Several ways to implement it, and many details can be considered.
+
+For instance, in which order should tasks be distributed to free workers? Should workers always be tried sequentially, or should there be some round-robin mechanism?
+
+Feel free to go with your solution! And please share it with me.
+
+In the next post, you will learn how XState Typegen works!
+
+Best,  
+Baptiste

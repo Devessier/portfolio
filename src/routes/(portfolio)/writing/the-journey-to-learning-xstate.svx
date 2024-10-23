@@ -50,7 +50,7 @@ XState is not magic; it remains JavaScript code.
 
 The hard part is to stick with it long enough to understand how things can be modeled to extract the logic from your components and how it can drastically improve the quality of your code – and even make you a better developer!
 
-In the next post, you will learn how to model a task queue with XState!
+[In the next post](/writing/model-a-task-queue-with-xstate/), you will learn how to model a task queue with XState!
 
 Best,  
 Baptiste
