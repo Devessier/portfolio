@@ -1,11 +1,7 @@
-<script>
-	import TheNewsletterBadge from './TheNewsletterBadge.svelte';
-</script>
-
 <div class="bg-white py-16 sm:py-32 -mx-6 sm:mx-0">
 	<div class="mx-auto">
 		<div
-			class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 shadow-2xl sm:rounded-3xl sm:px-24"
+			class="relative isolate overflow-hidden bg-gray-900 px-6 py-20 shadow-2xl sm:rounded-3xl sm:px-24"
 		>
 			<h2
 				class="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-white sm:text-4xl"
@@ -13,21 +9,7 @@
 				Join my mailing list
 			</h2>
 			<p class="mx-auto mt-2 max-w-xl text-center text-lg leading-8 text-gray-300">
-				Get monthly insights, personal stories, and in-depth information about what I find helpful
-				in web development as a freelancer.
-			</p>
-			<p
-				class="mx-auto mt-4 max-w-xl text-center text-lg leading-8 text-gray-300 flex flex-wrap justify-center gap-y-2 gap-x-1"
-			>
-				<TheNewsletterBadge>Email advice once a month</TheNewsletterBadge> + <TheNewsletterBadge
-					>Free XState report</TheNewsletterBadge
-				> + <TheNewsletterBadge>Free course on XState</TheNewsletterBadge>
-			</p>
-			<p class="mt-10 text-center text-gray-300 text-lg">
-				Want to see what it looks like?
-				<a href="https://newsletter.baptiste.devessier.fr/archive/" class="underline">
-					View the previous issues.
-				</a>
+				Get new articles directly in your inbox.
 			</p>
 			<form
 				action="https://buttondown.email/api/emails/embed-subscribe/baptiste-devessier"
