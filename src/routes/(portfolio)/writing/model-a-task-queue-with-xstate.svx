@@ -72,7 +72,7 @@ For instance, in which order should tasks be distributed to free workers? Should
 
 Feel free to go with your solution! And please share it with me.
 
-In the next post, you will learn how XState Typegen works!
+[In the next post](/writing/type-xstate-with-the-typegen/), you will learn how XState Typegen works!
 
 Best,  
 Baptiste

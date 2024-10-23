@@ -1,0 +1,240 @@
+---
+title: Type XState with the Typegen
+description: Use XState's Typegen to automatically generate strong types for your machines by enabling it in your code, naming actions, delays, guards, and services for better TypeScript integration. Rely on Stately's VS Code extension or XState CLI for development and production builds.
+datetime: 2024-10-23T21:06:51.194Z
+tags: ['XState', 'Newsletter']
+---
+
+---
+
+**Note: The Typegen was designed for XState v4 and is no longer necessary for XState v5. See the new official [recommendation about TypeScript](https://stately.ai/docs/typescript).**
+
+Hey there!
+
+Typegen is the official and recommended way to type your machines. It works either with [Stately's VS Code extension](https://marketplace.visualstudio.com/items?itemName=statelyai.stately-vscode) or with [XState's CLI](https://github.com/statelyai/xstate-tools/tree/master/apps/cli).
+
+Typegen is an opt-in that needs to be allowed on each machine.
+
+```ts
+// appMachine.ts
+import { createMachine } from "xstate";
+
+const appMachine = createMachine({
+  tsTypes: {},
+});
+```
+
+Once activated by creating a `tsTypes` property in the machine definition and saving the file, a tool will generate an `appMachine.typegen.ts` file, which will automatically be referenced in the file where the machine is defined to import the generated types.
+
+```ts
+// appMachine.ts
+import { createMachine } from "xstate";
+
+const appMachine = createMachine({
+  tsTypes: {} as import('./appMachine.typegen.ts').Typegen0,
+});
+```
+
+## The Typegen output
+
+Say we have a small state machine that waits for the `SUBMIT` event to submit data to the server and then returns to the `idle` state.
+
+```ts
+// appMachine.ts
+const appMachine = createMachine({
+  tsTypes: {} as import("./appMachine.typegen").Typegen0,
+  states: {
+    idle: {
+      on: {
+        SUBMIT: "submitting",
+      },
+    },
+    submitting: {
+      invoke: {
+        src: "submitDataToServer",
+        onDone: {
+          target: "idle",
+        },
+      },
+    },
+  },
+});
+```
+
+The Typegen will generate a file with important information that can't be inferred otherwise.
+
+```ts
+// appMachine.typegen.ts
+export interface Typegen0 {
+  "@@xstate/typegen": true;
+  internalEvents: {
+    "done.invoke.(machine).submitting:invocation[0]": {
+      type: "done.invoke.(machine).submitting:invocation[0]";
+      data: unknown;
+      __tip: "See the XState TS docs to learn how to strongly type this.";
+    };
+    "xstate.init": { type: "xstate.init" };
+  };
+  invokeSrcNameMap: {
+    submitDataToServer: "done.invoke.(machine).submitting:invocation[0]";
+  };
+  missingImplementations: {
+    actions: "assignServerResponseToContext";
+    delays: never;
+    guards: never;
+    services: "submitDataToServer";
+  };
+  eventsCausingActions: {
+    assignServerResponseToContext: "done.invoke.(machine).submitting:invocation[0]";
+  };
+  eventsCausingDelays: {};
+  eventsCausingGuards: {};
+  eventsCausingServices: {
+    submitDataToServer: "SUBMIT";
+  };
+  matchesStates: "idle" | "submitting";
+  tags: never;
+}
+```
+
+A few things can be said about the content of this file.
+
+### `matchesStates`
+
+`matchesStates` is a type union of all states in the machine. It's used to strongly type the parameter taken by `state.matches()`. If the state machine had compound states — that is, states with child states — it would generate string *paths* for them, too: `submitting.firstStep`.
+
+### `eventsCausingActions`, `eventsCausingDelays`, `eventsCausingGuards`, and `eventsCausingServices`
+
+`eventsCausingActions`, `eventsCausingDelays`, `eventsCausingGuards`, and `eventsCausingServices` are objects describing which events trigger actions, delays, guards, and services defined as strings in the machine. This allows XState to type the `event` parameter they receive correctly. For this machine, it means that if the `SUBMIT` event had a payload, the `submitDataToServer` service would be able to access it:
+
+```ts hl_lines="4 5 6 7 11 12 13 14 15 16"
+// appMachine.ts
+const appMachine = createMachine({
+  schema: {
+    events: {} as {
+      type: "SUBMIT";
+      data: string;
+    }
+  }
+}, {
+  services: {
+    submitDataToServer: (context, event) => {
+      // This is strongly typed 👇
+      event.type === "SUBMIT";
+      // This is too 👇
+      typeof event.data === "string";
+    },
+  },
+});
+```
+
+### `invokeSrcNameMap`
+
+`invokeSrcNameMap` is also a map of services, but the attached type union is the identifier of the transitions the service can lead to, especially when a promise service terminates.
+
+### `internalEvents`
+
+`internalEvents` holds the internal events triggered automatically by XState. When a promise service terminates or throws, internal events will be triggered by XState. [Delayed transitions](https://stately.ai/docs/delayed-transitions) also trigger internal events to notify the state machine when a timer ends. These events will be listed in `internalEvents`. 
+
+As stated by the comment in the `__tip` property, the output of promise services can be explicitly typed in machines to make these internal events more powerful:
+
+```ts hl_lines="4 5 6 7 8 9 10"
+// appMachine.ts
+const appMachine = createMachine({
+  tsTypes: {} as import("./appMachine.typegen").Typegen0,
+  schema: {
+    services: {} as {
+      submitDataToServer: {
+        data: { status: number };
+      };
+    },
+  },
+  // ...
+});
+```
+
+### `missingImplementations`
+
+Finally, the Typegen generates a type for all the named actions, delays, guards, and services referenced but not implemented: `missingImplementations`.
+
+To reference them, we can pass an option object as the second parameter of the `createMachine` function:
+
+```ts hl_lines="7 8 9 10 11 12 13 14"
+// appMachine.ts
+const appMachine = createMachine(
+  {
+    tsTypes: {} as import("./appMachine.typegen").Typegen0,
+    // ...
+  },
+  {
+    actions: {
+      assignServerResponseToContext: assign({}),
+    },
+    services: {
+      submitDataToServer: async () => {},
+    },
+  }
+);
+```
+
+If you don't configure the named actions, delays, guards, and services in your machine, XState will force you to by erroring when using the machine at the end, either with the `interpret` function or from the `useMachine` hook for React library.
+
+![VS Code screenshot showing TypeScript yelling at me](https://assets.buttondown.email/images/41a2353c-caaa-400c-aac6-1eef21af7ea4.png?w=1900&fit=max) 
+
+You will have to provide the definitions before being able to use the machine. You can use the `.withConfig()` function to augment the configuration of the state machine and provide the missing definitions:
+
+```ts
+import { interpret } from "xstate";
+
+interpret(
+  appMachine.withConfig({
+    actions: {
+      assignServerResponseToContext: assign({}),
+    },
+    services: {
+      submitDataToServer: async () => {},
+    },
+  })
+).start();
+```
+
+## Favor naming instead of inlining code
+
+For the Typegen to work, you must name your actions, delays, guards, and services instead of writing their implementation inline:
+
+```ts
+// appMachine.ts
+const appMachine = createMachine({
+  states: {
+    submitting: {
+      invoke: {
+        // Does not work well with the Typegen ❌ 
+        src: async (context, event) => { /** */ },
+        // Perfect! ✅
+        src: "submitDataToServer",
+      },
+    },
+  },
+});
+```
+
+It also makes working with Stately Studio easier, so go for it!
+
+## Hide generated files from the File Tree in VS Code
+
+After installing Stately's VS Code extension, you will be asked whether you want to hide generated files from the File Tree View in VS Code. It will hide the file by default and allow you to unfold the source file as a directory.
+
+![VS Code screenshot showing one can hide Typegen files](https://assets.buttondown.email/images/4d08d05d-5ecc-46a5-971d-4325b0d42cb5.png?w=960&fit=max) 
+
+These autogenerated files should not be committed to your Git repository. Instead, you should *gitignore* them and generate them when needed. During development, let the VS Code extension generate Typegen files for you. Use [XState's CLI](https://github.com/statelyai/xstate-tools/tree/master/apps/cli) to generate them for production builds.
+
+## Wrap up
+
+XState support of TypeScript has gotten so much better with the Typegen. It's a tool you should use!
+
+I hope you were able to find my explanation useful to you.
+
+In the next post, you will learn how to invoke and spawn actors!
+
+Best,  
+Baptiste
