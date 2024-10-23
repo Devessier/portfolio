@@ -1,0 +1,56 @@
+---
+title: The journey to learning XState
+description: Learn XState efficiently by exploring its documentation, taking courses, studying examples, and practicing with real projects to enhance your understanding and coding skills.
+datetime: 2024-10-23T20:53:03.010Z
+tags: ['XState', 'Newsletter']
+---
+
+---
+
+Hey there!
+
+Coding with XState feels like a different activity compared to what you might be used to as a developer. Crafting a JSON object or dragging arrows and boxes in Stately Studio is not a common way to code.
+
+Also, XState's underlying patterns may sound obscure to developers like me who didn't earn a formal computer science degree. I discovered state machines with XState, and since then, I've adopted them.
+
+## Learn XState efficiently
+
+Whether you are learning XState as part of your job or for a hobby project, learning XState efficiently will help you stay engaged with the technology and prevent you from giving up.
+
+Knowing how best to teach XState to newcomers is a vital team topic. According to the results of my survey, pre-existing knowledge of XState is optional for most companies, as they are willing to teach it in-house.
+
+## Learn through courses
+
+The [new XState documentation](https://stately.ai/docs) is an excellent resource for getting used to XState. The Stately team is working hard to make the XState documentation perfect.
+
+David Khourshid gave two courses on Frontend Masters about XState:
+
+- [State Machines in JavaScript with XState](https://frontendmasters.com/courses/xstate-v2/) is an excellent way to discover state machines and to understand why XState has the API we all know now. David Khourshid goes through the steps to create a minimal state machine library in JavaScript.
+- In [State Modeling in React with XState](https://frontendmasters.com/courses/xstate-react/), David Khourshid builds a little application with React and XState. This course is an exciting resource to learn how to combine XState with a framework like React.
+
+The Stately team is also doing [streams in which they build actual features of the Stately Editor with Stately Editor itself](https://youtube.com/playlist?list=PLvWgkXBB3dd5UEJZCk4C3Wn1Ys8WRMDbi). Watching other people use XState is an excellent way to learn.
+
+## Learn by example
+
+I work on a project called [XState by Example](https://xstatebyexample.com). It's a collection of state machines with interactive and visual demos. I learn best *by example*, and I hope that if you do so, it will help you to learn XState.
+
+XState by Example is inspired by [XState Catalogue](https://xstate-catalogue.com/) and tries to go one step further by showcasing real examples using React. The project's code is public [on GitHub](https://github.com/Devessier/xstatebyexample) and uses XState 5, the latest version of XState.
+
+## Learn by practice
+
+After having watched courses and read XState documentation, it will be time for you to experiment with XState by yourself.
+
+If your company already uses XState or is considering adopting XState, building a new minor feature with XState, or refactoring an existing part of the codebase to use it would be great.
+
+If you are discovering XState on your own, create a little video game with it, like a Tetris or a Snake game. XState shines for interactive applications. After that, you'll better understand how it can be used everywhere and what are its natural benefits.
+
+I like to say that XState is nothing more than a better way to code: everything you do without XState can be done with XState, and vice-versa.
+
+XState is not magic; it remains JavaScript code.
+
+The hard part is to stick with it long enough to understand how things can be modeled to extract the logic from your components and how it can drastically improve the quality of your code – and even make you a better developer!
+
+In the next post, you will learn how to model a task queue with XState!
+
+Best,  
+Baptiste
