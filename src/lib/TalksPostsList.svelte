@@ -36,7 +36,7 @@
 						{description}
 					</p>
 
-					<div class="flex mt-4">
+					<div class="flex mt-4 gap-2">
 						{#each tags as tag, index}
 							<AppBadge href={undefined} class={index === 0 ? 'ml-0' : 'ml-2'}>
 								{tag}

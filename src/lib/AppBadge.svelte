@@ -4,7 +4,9 @@
 	let className: string | undefined = undefined;
 	export { className as class };
 
-	$: rootClasses = `border-gray-300 mb-2 border text-gray-600 bg-white hover:bg-gray-50 transition-colors duration-100 ease-out font-normal text-xs px-3 py-1 rounded-2xl flex-shrink-0 mx-1 ${className}`;
+	$: rootClasses = `border-gray-300 border text-gray-600 bg-white hover:bg-gray-50 transition-colors duration-100 ease-out font-normal text-xs px-3 py-1 rounded-2xl flex-shrink-0 ${
+		className ?? ''
+	}`;
 </script>
 
 {#if href !== undefined}
