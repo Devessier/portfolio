@@ -25,7 +25,7 @@
 					{formattedDatetime}
 				</time>
 
-				<h2 class="text-2xl leading-8 font-semibold hover:underline">
+				<h2 class="text-2xl leading-8 font-semibold hover:underline mt-2">
 					<a
 						href={external === true ? url : `/writing/${slug}/`}
 						rel={external === true ? 'external' : undefined}
