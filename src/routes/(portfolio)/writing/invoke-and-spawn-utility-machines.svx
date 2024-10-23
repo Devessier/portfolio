@@ -2,7 +2,7 @@
 title: Invoke and spawn utility machines
 description: Rely on XState’s Actor model to manage concurrency by invoking or spawning actors. Invoke for guaranteed actors and spawn for dynamic ones like worker pools. Actors communicate through events, ensuring modular and scalable systems.
 datetime: 2024-10-23T21:14:09.662Z
-tags: ['XState', 'Newsletter']
+tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
 ---
@@ -323,7 +323,7 @@ Spawning is an advanced tool you'll use less often than invoking, but having it 
 
 I hope invoking and spawning actors holds no secrets for you anymore! [An example app of all these state machines](https://xstate-email-course-app.baptiste.devessier.fr) is live, and the code is on [GitHub](https://xstate-email-course-app.baptiste.devessier.fr/code).
 
-In the next post, for the last course of the series, you will learn how to unit test your state machines!
+[In the next post](/writing/unit-test-a-state-machine/), for the last course of the series, you will learn how to unit test your state machines!
 
 Best,  
 Baptiste

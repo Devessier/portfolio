@@ -1,0 +1,243 @@
+---
+title: Unit test a state machine
+description: Unit test state machines by leveraging their deterministic nature. Complete the coverage with integration and e2e testing.
+datetime: 2024-10-23T21:18:57.494Z
+tags: ['XState', 'XState Course', 'Newsletter']
+---
+
+---
+
+Hey there!
+
+According to the survey results, 37% of the respondents unit test their machines. State machines are pleasant to unit test as they are *deterministic* – a state machine will always behave the same when receiving the same sequence of events – and state transitions are synchronous, meaning that tests will complete fast.
+
+State machines are configurable. Services, actions, guards, and delays can easily be mocked in tests, provided that they are referenced in the state machine definition instead of being inlined:
+
+```ts
+const machine = createMachine({
+  on: {
+    ADD_TO_CART: {
+      // Can easily be mocked ✅
+      actions: "assignItemToCart",
+      // Hard to mock ❌
+      actions: assign({
+        cart: (context, event) => context.cart.concat(event.item)
+      }),
+    },
+  },
+});
+```
+
+In the previous courses, we have created state machines around a task queue that processes tasks sequentially. In this lesson, we'll unit-test it.
+
+[![State machine for a task queue](https://assets.buttondown.email/images/d9f20f81-50af-47d8-9a27-77d4ff5a9924.png?w=1900&fit=max)](https://stately.ai/registry/editor/f868185e-44c6-414a-940a-1682548db37e?mode=design&machineId=f964c99a-68ca-45bb-a850-506ecdcdd58b)
+
+## Assert the initial state
+
+For the unit tests, I use Vitest. You can use Jest, Japa, or any other testing framework. XState machines can easily be unit tested as they are *just* JavaScript code that doesn’t rely on browser APIs.
+
+We'll assert that the state machine waits for tasks to come in an `Idle` state. We start by mocking the `Process task` service:
+
+```ts
+import { createMachine, interpret } from "xstate";
+import { taskQueue } from "./taskQueue";
+import { expect, test, vi } from "vitest";
+
+test("Waits for tasks", () => {
+  const mockedTaskQueue = taskQueue.withConfig({
+    services: {
+      "Process task": vi.fn().mockResolvedValue(undefined),
+    },
+  });
+});
+```
+
+We are mocking the service because we want to test how we come to invoke it. What the service actually does doesn't matter here. The service could be unit-tested separately as a usual JavaScript function.
+
+Then, we must create a wrapper machine that invokes the `mockedTaskQueue`. The `taskQueue` machine uses the `sendParent()` action, which sends an event to the state machine that invoked or spawned it.
+
+```ts
+// taskQueue.ts
+actions: {
+  "Report task pending to parent": sendParent((context) => ({
+    type: "Update task status",
+    taskId: context.tasks[0].id,
+    status: "pending",
+  }))
+}
+```
+
+If a state machine uses the `sendParent()` action while not having been invoked or spawned, XState will throw. Furthermore, we want to assert that the parent state machine receives the expected events, keeping us posted about the updates to the status of tasks.
+
+We update the test to wrap the `mockedTaskQueue` machine:
+
+```ts
+test("Waits for tasks", () => {
+  const mockedTaskQueue = taskQueue.withConfig({
+    services: {
+      "Process task": vi.fn().mockResolvedValue(undefined),
+    },
+  });
+
+  const rootMachine = createMachine({
+    invoke: {
+      src: mockedTaskQueue,
+      id: "taskQueue",
+    },
+  });
+
+  const rootService = interpret(rootMachine).start();
+  const taskQueueService = rootService.getSnapshot().children["taskQueue"];
+
+  expect(taskQueueService.getSnapshot()!.matches("Idle")).toBe(true);
+});
+```
+
+We start a live instance of the machine with the `interpret()` function. Be sure to call the `.start()` method; otherwise, the machine won't process any event and will remain in its initial state.
+
+We get the current state of the machine after it has been started with `rootService.getSnapshot()` function. Then, we can get the reference to the invoked task queue under the `children` property.
+
+Once we have a reference to the task queue actor, we can get a snapshot and check whether the current state is `Idle`.
+
+## Assert the processing of a task
+
+Testing the machine's initial state is great, but it is more interesting to check if it processes tasks, which is its true goal.
+
+```ts
+test("Waits for task, processes it, and then goes back to Idle state", async () => {
+  const processTaskFn = vi.fn().mockResolvedValue(undefined);
+
+  const mockedTaskQueue = taskQueue.withConfig({
+    services: {
+      "Process task": processTaskFn,
+    },
+  });
+
+  const rootMachine = createMachine({
+    invoke: {
+      src: mockedTaskQueue,
+      id: "taskQueue",
+    },
+  });
+
+  const rootService = interpret(rootMachine).start();
+  const taskQueueService = rootService.getSnapshot().children.taskQueue;
+
+  taskQueueService.send({
+    type: "Add task to queue",
+    task: {
+      id: "1",
+      payload: { fileContent: "" },
+    },
+  });
+
+  await vi.waitFor(() => {
+    expect(processTaskFn).toHaveBeenCalledOnce();
+  });
+
+  await vi.waitFor(() => {
+    expect(taskQueueService.getSnapshot()!.matches("Idle")).toBe(true);
+  });
+});
+```
+
+We use the `vi.waitFor()` function to wait for the `processTaskFn()` mocked function to be called by the state machine. Finally, we assert the state machine returned to the `Idle` state.
+
+It's pretty straightforward. XState unit-testing and Vitest are a great mix!
+
+## Assert parent machine receives updates
+
+A critical feature of the `taskQueue` machine is that it should notify its parent machine when the status of a task is updated. For instance, the status becomes `pending` when the processing of the task starts.
+
+We create another test to assert that behavior. We'll leverage the wrapper machine `rootMachine` to detect whether the child sends an event to its parent.
+
+```ts
+test("Forwards pending status to the parent machine", async () => {
+  const processTaskFn = vi.fn().mockResolvedValue(undefined);
+
+  const mockedTaskQueue = taskQueue.withConfig({
+    services: {
+      "Process task": processTaskFn,
+    },
+  });
+
+  const onUpdateTaskStatusFn = vi.fn();
+
+  const rootMachine = createMachine({
+    invoke: {
+      src: mockedTaskQueue,
+      id: "taskQueue",
+    },
+    on: {
+      "Update task status": {
+        actions: onUpdateTaskStatusFn,
+      },
+    },
+  });
+
+  const rootService = interpret(rootMachine).start();
+  const taskQueueService = rootService.getSnapshot().children.taskQueue;
+
+  taskQueueService.send({
+    type: "Add task to queue",
+    task: {
+      id: "1",
+      payload: { fileContent: ""},
+    },
+  });
+
+  await vi.waitFor(() => {
+    expect(onUpdateTaskStatusFn).toHaveBeenNthCalledWith(
+      1,
+      undefined, // The empty context of the wrapper machine.
+      {
+        type: "Update task status",
+        taskId: "1",
+        status: "pending",
+      },
+      expect.any(Object) // The `state` (3rd) parameter of the action.
+    );
+  });
+});
+```
+
+When the `rootMachine` receives an `Update task status` event, we call a mocked function – `onUpdateTaskStatusFn`.
+
+We send a task to the queue, then wait for `onUpdateTaskStatusFn` to be called by the `Update task status` event. XState calls `onUpdateTaskStatusFn` with the usual parameters of an action: 1. the context, 2. the event, 3. the state. What matters to us is the shape of the event, which should indicate that the task's status is now `pending`.
+
+## Stop the machine at the end of assertions
+
+Ideally, we should call `rootService.stop()` at the end of each test. This doesn't really matter for our use case because state machines will be garbage-collected as we don't hold references to them after the tests end. However, if the state machine ran timers in the background or performed long actions, it would be a problem and could lead to memory leaks.
+
+To ensure the `rootService` is stopped after each test, we could do:
+
+```ts
+import { test, afterEach } from "vitest";
+
+let rootService;
+
+afterEach(() => {
+  rootService.stop();
+})
+
+test("Waits for tasks", () => {
+  // ...
+
+  rootService = interpret(rootMachine).start();
+
+  // ...
+});
+```
+
+## Wrap up
+
+Unit testing is useful for machines that contain complex logic. This is beneficial to test edge cases or error cases. While unit testing is a good testing strategy, ensuring a state machine performs well does not guarantee that it will perform well in its natural environment. That's why **71%** of the respondents to my survey do integration and e2e testing.
+
+Integration, e2e, and unit tests can be combined to ensure extensive and valuable code coverage. [Kent C. Dodds’ Testing Trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications) is a great pattern to apply to have meaningful code coverage.
+
+I published a [demo app](https://xstate-email-course-app.baptiste.devessier.fr) that uses the `taskQueue` machine. The code is live [on GitHub](https://xstate-email-course-app.baptiste.devessier.fr/code) too.
+
+This was the last chapter of my mini-course about XState. I hope you liked it and learned from it. Feel free to share your feelings with me.
+
+Best,  
+Baptiste

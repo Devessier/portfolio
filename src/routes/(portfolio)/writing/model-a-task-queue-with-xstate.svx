@@ -2,7 +2,7 @@
 title: Model a task queue with XState
 description: Implement a task queue in XState by processing tasks individually, queuing new tasks while busy, automatically triggering the next task with eventless transitions, and simplifying the design by globally handling task addition across all states.
 datetime: 2024-10-23T21:02:02.953Z
-tags: ['XState', 'Newsletter']
+tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
 ---
