@@ -1,0 +1,14 @@
+---
+title: '#0 The State of XState Report'
+description: My report is now public! Read it online now.
+datetime: 2024-10-23T19:53:03.010Z
+tags: ['XState', 'XState Course', 'Newsletter']
+---
+
+---
+
+Hey there!
+
+You can now read my State of XState report without subscribing first to my newsletter. [It's hosted on GitHub.](https://github.com/Devessier/xstate-report/blob/main/XState%20Report.pdf)
+
+The survey was conducted with XState v4 in mind, but the main principles remain with the v5 and I assume that most habits haven't changed that much.
