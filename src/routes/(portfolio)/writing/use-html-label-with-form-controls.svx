@@ -1,0 +1,157 @@
+---
+title: Use HTML label with form controls
+description: 
+datetime: 2024-10-24T20:23:27.883Z
+tags: ['HTML', 'Accessibility']
+---
+
+- Use <label> to attach a semantic label to an input; assistive technologies will use the content of the label to describe the input; focusing the <label> will give the focus to the input
+- Several ways to use <label>; 1. <label><input></label>, 2. <label for="id" /> <input id="id" />, 3. Both of them (example: build a toggle component)
+- Sometimes <label> can not be used, for instance, with a <div contenteditable>; could have aria-labelledby + focus management (see https://ariakit.org/reference/form-label)
+
+---
+
+Chances are you know `<input>` HTML elements should be accompanied by a `<label>`. That's part of *semantic HTML*. I learned about that when I built my first HTML forms using vanilla PHP in 2015—understand hand-made procedural PHP 😅.
+
+At that time, I had to write quite evolved HTML code to submit forms to my backend.
+
+```html
+<form method="POST" action="/user/signup">
+    <input type="hidden" name="csrf" value="..." />
+
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" />
+
+    <button type="submit">Submit</button>
+</form>
+```
+
+Nowadays, when you build a website using JavaScript-first frameworks, it feels less necessary to write semantic HTML. Few people use actual `<form>` elements to build forms because that's not required when inputs' states are managed with JavaScript.
+
+[Frameworks are going back to more native solutions](https://remix.run/docs/en/main/discussion/progressive-enhancement) and the new React documentation does a great job for [promotic semantic HTML](https://react.dev/reference/react-dom/components/input#reading-the-input-values-when-submitting-a-form).
+
+If I would like people to re-discover an HTML element, it would be the `<label>` tag. It's one of these HTML elements that convey meaning by themselves and were given superpowers by the browsers.
+
+A `<label>` must be linked to an `<input>`. When the `<label>` is focused or clicked on, the focus moves to the input. Screen readers will use the content of the `<label>` to describe the input. Simple. Let's see how these two elements can be wired together.
+
+## Link a `<label>` and an `<input>` with an id
+
+The first and most common way to attach a `<label>` to an `<input>` is to use a unique `id`.
+
+```html
+<!-- ✅ Perfect! -->
+<label for="unique-identifier">Username</label>
+<input id="unique-identifier" />
+```
+
+The `<label>` and the `<input>` can appear in one order or the other. It should work the same. However, reading the `<label>` before the `<input>` is [more understandable and should be favored](https://stackoverflow.com/a/43040995).
+
+```html
+<!-- ⚠️ Works but isn't recommended -->
+<input id="unique-identifier" />
+<label for="unique-identifier">Username</label>
+```
+
+Please note that many `<label>` elements can refer to a single `<input>`. On the [document page about the `<label>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label), the mdn gives this example:
+
+```html
+<!-- ✅ Also valid! -->
+<label for="username">Enter your username:</label>
+<input id="username" name="username" type="text" />
+<label for="username">Forgot your username?</label>
+```
+
+### In React world
+
+If you use React, I recommend you to use the new [`useId`](https://react.dev/reference/react/useId) hook, if you don't have to set a specific id.
+
+```tsx
+import { useId } from 'react';
+
+function Form() {
+    const inputId = useId();
+
+    return (
+        <>
+            <label htmlFor={inputId}>Username</label>
+            <input id={inputId} />
+        </>
+    );
+}
+```
+
+You may have several inputs in the same component and calling the `useId` hook many times might feel redundant. That can be solved by using the generated id as the prefix for all ids.
+
+```tsx
+import { useId } from 'react';
+
+function Form() {
+    const inputRootId = useId();
+
+    return (
+        <>
+            <label htmlFor={`${inputRootId}-username`}>Username</label>
+            <input id={`${inputRootId}-username`} />
+
+            <label htmlFor={`${inputRootId}-password`}>Password</label>
+            <input id={`${inputRootId}-password`} />
+        </>
+    );
+}
+```
+
+## Wrap the `<input>` inside the `<label>`
+
+That may seem a bit strange, but that's totally valid HTML. Doing so removes the need to wire elements with a unique identifier.
+
+```html
+<!-- ✅ Great and even shorter -->
+<label>
+    Username
+
+    <input />
+</label>
+```
+
+You will have to adapt your CSS code but that's totally a great solution that works without much effort.
+
+## Combine both solutions
+
+I don't think you'll need to use this option often, but I recently found a use case. At Twenty, we had a `<Toggle />` component that was visually working but couldn't be used without a mouse. [I suggested a change](https://github.com/twentyhq/twenty/pull/7761/files), based on the code of the [`<Switch />` component of Chakra UI](https://v2.chakra-ui.com/docs/components/switch/usage#usage).
+
+Basically, the component creates an invisible `<input>` element and wraps it inside a `<label>`, which also contains the required elements to give it a *switch* look. If you give an `id` to the input, you can have other `<label>` elements targetting the input!
+
+```html
+<!-- ✅ HTML has no limits -->
+<label for="toggle-notifications">Notifications</label>
+
+<label>
+    <input id="toggle-notifications" type="checkbox" class="sr-only" />
+
+    <span>
+        <!-- Visual elements to give a *switch* look -->
+    </span>
+</label>
+```
+
+This trick inspired me to write this article in honour to the `<label>` element. However, I must be honest and confess that [Chakra UI no longer uses this trick in the recent v3](https://www.chakra-ui.com/docs/components/switch). Instead, the text label is put inside the direct input's label to have a single `<label>` element.
+
+```html
+<!-- ✅ Make the HTML smaller -->
+<label>
+    <input type="checkbox" class="sr-only" />
+
+    <span>
+        <!-- Visual elements to give a *switch* look -->
+    </span>
+
+    <span>Notifications</span>
+</label>
+```
+
+I didn't find differences between these two implementations with VoiceOver. I think that we can keep our version at Twenty and don't worry about switching to the new Chakra's implementation!
+
+Semantic HTML is cool, don't be afraid to use it!
