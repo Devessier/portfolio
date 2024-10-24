@@ -11,9 +11,6 @@ targetPort = 5173
 port = 8888
 publish = "dist/"
 
-[functions."schedule-rebuild"]
-schedule = "@daily"
-
 [[redirects]]
 from = "/my-way"
 to = "/about"
