@@ -7,7 +7,8 @@
 	import '../../../shiki.css';
 	import Seo from '$lib/SEO.svelte';
 
-	export let writing: PageData;
+	export let data: PageData;
+	$: writing = data;
 	$: Content = writing.content;
 
 	$: canonical = `/writing/${writing.slug}/`;

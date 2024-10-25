@@ -6,7 +6,8 @@
 	import type { PageData } from './$types';
 	import Seo from '$lib/SEO.svelte';
 
-	export let note: PageData;
+	export let data: PageData;
+	$: note = data;
 	$: Content = note.content;
 
 	$: formattedDatetime = formatDate(note.datetime);
