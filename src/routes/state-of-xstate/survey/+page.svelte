@@ -9,30 +9,13 @@
 
 	export let data: PageData;
 	$: code = data.code;
-
-	const title = 'State of XState Survey';
-	const description =
-		"Participate in State of XState Survey and get insider insights into XStaters' practices.";
-	const canonical = 'https://baptiste.devessier.fr/state-of-xstate/survey/';
-	const schemas: any[] = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter: any[] = [];
 </script>
 
-<Seo {title} {description} {canonical} {schemas} {facebook} {twitter} />
+<Seo
+	title="State of XState Survey"
+	description="Participate in State of XState Survey and get insider insights into XStaters' practices."
+	canonical="/state-of-xstate/survey/"
+/>
 
 <div class="bg-white">
 	<main>

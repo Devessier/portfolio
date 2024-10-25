@@ -1,30 +1,20 @@
 <script>
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import Page from '$lib/Page.svelte';
+	import Seo from '$lib/SEO.svelte';
 
-	const title = 'Baptiste Devessier | About';
-	// Using description pattern of https://kentcdodds.com/about
-	const description = 'Get to know Baptiste Devessier.';
-	const canonical = 'https://baptiste.devessier.fr/about/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/about/'
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
+	/**
+	 * The HTML description of the page comes from https://kentcdodds.com/about.
+	 */
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo
+	title="Baptiste Devessier | About"
+	description="Get to know Baptiste Devessier."
+	canonical="/about/"
+/>
+
+<Page>
 	<h1 class="text-5xl font-cursive">About</h1>
 
 	<div class="prose mt-10">

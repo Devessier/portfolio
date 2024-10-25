@@ -2,32 +2,19 @@
 	import Page from '$lib/Page.svelte';
 	import BlogPostsList from '$lib/BlogPostsList.svelte';
 	import type { PageData } from './$types';
+	import Seo from '$lib/SEO.svelte';
 
 	export let data: PageData;
 	$: articles = data.articles;
-
-	const title = 'Baptiste Devessier | Writing';
-	const description = 'My articles about Web Development';
-	const canonical = 'https://baptiste.devessier.fr/writing/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo
+	title="Baptiste Devessier | Writing"
+	description="My articles about Web Development."
+	canonical="/writing/"
+/>
+
+<Page>
 	<BlogPostsList {articles}>
 		<svelte:fragment slot="title">Writing</svelte:fragment>
 

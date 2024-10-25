@@ -1,26 +1,7 @@
 <script lang="ts">
 	import Page from '$lib/Page.svelte';
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
-
-	const title = 'Baptiste Devessier | Projects';
-	const description = 'My code projects about web development and XState.';
-	const canonical = 'https://baptiste.devessier.fr/projects/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/projects/'
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
+	import Seo from '$lib/SEO.svelte';
 
 	type LinkType = 'GitHub' | 'Website' | 'Article series' | 'Article' | 'Talk';
 
@@ -180,7 +161,13 @@
 	}));
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo
+	title="Baptiste Devessier | Projects"
+	description="My side projects, mostly websites."
+	canonical="/projects/"
+/>
+
+<Page>
 	<h1 class="text-5xl font-cursive">Projects</h1>
 
 	<section class="grid grid-cols-1 gap-16 md:gap-24 lg:gap-48 mt-16">

@@ -5,6 +5,7 @@
 	import { slugify } from '$lib/slugify';
 	import type { PageData } from './$types';
 	import '../../../shiki.css';
+	import Seo from '$lib/SEO.svelte';
 
 	export let data: PageData;
 	$: title = data.title;
@@ -16,23 +17,7 @@
 
 	$: sluggifiedTitle = slugify(title);
 
-	$: canonical = `https://baptiste.devessier.fr/writing/${sluggifiedTitle}/`;
-	const schemas = [];
-	$: facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
+	$: canonical = `/writing/${sluggifiedTitle}/`;
 
 	$: formattedTags = tags.map((tag) => ({
 		title: tag,
@@ -43,6 +28,8 @@
 	$: formattedLastUpdatedDatetime =
 		last_updated_datetime === undefined ? undefined : formatDate(last_updated_datetime);
 </script>
+
+<Seo {title} {description} {canonical} />
 
 <Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
 	<div class="max-w-prose text-lg mx-auto">

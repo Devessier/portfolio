@@ -1,6 +1,7 @@
 <script lang="ts">
 	import BlogPostsList from '$lib/BlogPostsList.svelte';
 	import Page from '$lib/Page.svelte';
+	import Seo from '$lib/SEO.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -11,26 +12,12 @@
 	$: formattedTag = prettyTagName ?? tag;
 	$: title = `Baptiste Devessier | Writing about ${formattedTag}`;
 	$: description = `My articles about ${formattedTag}`;
-	$: canonical = `https://baptiste.devessier.fr/tags/${tag}/`;
-	const schemas = [];
-	$: facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
+	$: canonical = `/tags/${tag}/`;
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo {title} {description} {canonical} />
+
+<Page>
 	<BlogPostsList {articles}>
 		<svelte:fragment slot="title">
 			Writing about {formattedTag}

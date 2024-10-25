@@ -5,6 +5,7 @@
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import slugify from 'slugify';
 	import type { PageData } from './$types';
+	import Seo from '$lib/SEO.svelte';
 
 	export let data: PageData;
 	$: title = data.title;
@@ -19,26 +20,12 @@
 
 	$: pageTitle = title;
 	const description = '';
-	$: canonical = `https://baptiste.devessier.fr/note/${sluggifiedTitle}/`;
-	const schemas = [];
-	$: facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: pageTitle
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
+	$: canonical = `/note/${sluggifiedTitle}/`;
 </script>
 
-<Page title={pageTitle} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo title={pageTitle} {description} {canonical} />
+
+<Page>
 	<div class="max-w-prose text-lg mx-auto w-full">
 		<time {datetime} class="block mb-4 text-red-700 text-center italic font-medium text-sm">
 			{formattedDatetime}
