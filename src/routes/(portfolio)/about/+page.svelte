@@ -2,11 +2,9 @@
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import Page from '$lib/Page.svelte';
 	import Seo from '$lib/SEO.svelte';
-
-	/**
-	 * The HTML description of the page comes from https://kentcdodds.com/about.
-	 */
 </script>
+
+<!-- The HTML description of the page comes from https://kentcdodds.com/about. -->
 
 <Seo
 	title="Baptiste Devessier | About"

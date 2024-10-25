@@ -34,7 +34,7 @@
 
 <Seo
 	title="Baptiste Devessier | Talks"
-	description="The live talks I gave in meetups."
+	description="The talks I gave in meetups."
 	canonical="/talks/"
 />
 
