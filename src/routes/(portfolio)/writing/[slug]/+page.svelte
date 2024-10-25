@@ -37,10 +37,20 @@
 			{/each}
 		</div>
 
-		<div class="mb-4 text-center italic text-sm flex flex-col">
-			<time datetime={writing.datetime} class="text-red-700 font-medium mb-1">
-				{formattedDate}
-			</time>
+		<h1
+			class="text-4xl text-center text-balance font-extrabold tracking-tight text-gray-900 md:text-5xl md:leading-tight mb-4"
+		>
+			{writing.title}
+		</h1>
+
+		<div class="text-center italic text-sm flex flex-col gap-y-1">
+			<p class="text-red-700 font-medium">
+				Published on
+
+				<time datetime={writing.datetime}>
+					{formattedDate}
+				</time>
+			</p>
 
 			{#if writing.last_updated_datetime !== undefined}
 				<p class="text-gray-500">
@@ -51,14 +61,8 @@
 			{/if}
 		</div>
 
-		<h1
-			class="text-4xl text-center text-balance font-extrabold tracking-tight text-gray-900 md:text-5xl md:leading-tight"
-		>
-			{writing.title}
-		</h1>
-
 		{#if writing.description}
-			<p class="text-pretty text-gray-600 text-xl max-w-none leading-relaxed mt-6">
+			<p class="text-pretty text-gray-600 text-xl leading-relaxed mt-6">
 				{writing.description}
 			</p>
 		{/if}
