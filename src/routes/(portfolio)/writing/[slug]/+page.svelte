@@ -31,8 +31,8 @@
 
 <Seo {title} {description} {canonical} />
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
-	<div class="max-w-prose text-lg mx-auto">
+<Page class="space-y-12">
+	<div class="max-w-5xl text-lg mx-auto">
 		<div class="flex items-center justify-center flex-wrap mb-4 gap-2">
 			{#each formattedTags as { title, slug }}
 				<AppBadge href="/tags/{slug}/">
@@ -56,15 +56,19 @@
 		</div>
 
 		<h1
-			class="text-3xl text-center font-cursive leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
+			class="text-4xl text-center text-balance font-extrabold tracking-tight text-gray-900 md:text-5xl md:leading-tight"
 		>
 			{title}
 		</h1>
+
+		<p class="text-pretty text-gray-600 text-xl max-w-none leading-relaxed mt-6">
+			{description}
+		</p>
 	</div>
 
-	<div class="mt-6 prose prose-red prose-lg mx-auto break-words">
-		<p>{description}</p>
+	<hr class="max-w-md w-full mx-auto" />
 
+	<div class="prose prose-red prose-lg break-words mx-auto">
 		<svelte:component this={Content} />
 	</div>
 </Page>

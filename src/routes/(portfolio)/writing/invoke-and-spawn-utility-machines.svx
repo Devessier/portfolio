@@ -5,8 +5,6 @@ datetime: 2024-10-23T21:14:09.662Z
 tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
----
-
 Hey there!
 
 One of the greatest strengths of XState is its compliance with the Actor model. With the Actor model, pieces of logic can not mutate each other's state; they must communicate with *events*.

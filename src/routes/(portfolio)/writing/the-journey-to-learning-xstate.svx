@@ -5,8 +5,6 @@ datetime: 2024-10-23T20:53:03.010Z
 tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
----
-
 Hey there!
 
 Coding with XState feels like a different activity compared to what you might be used to as a developer. Crafting a JSON object or dragging arrows and boxes in Stately Studio is not a common way to code.

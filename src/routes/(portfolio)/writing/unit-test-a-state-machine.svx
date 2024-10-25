@@ -5,8 +5,6 @@ datetime: 2024-10-23T21:18:57.494Z
 tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
----
-
 Hey there!
 
 According to the survey results, 37% of the respondents unit test their machines. State machines are pleasant to unit test as they are *deterministic* – a state machine will always behave the same when receiving the same sequence of events – and state transitions are synchronous, meaning that tests will complete fast.
