@@ -7,29 +7,24 @@
 	import '../../../shiki.css';
 	import Seo from '$lib/SEO.svelte';
 
-	export let data: PageData;
-	$: title = data.title;
-	$: description = data.description;
-	$: datetime = data.datetime;
-	$: last_updated_datetime = data.last_updated_datetime;
-	$: tags = data.tags;
-	$: Content = data.content;
+	export let writing: PageData;
+	$: Content = writing.content;
 
-	$: sluggifiedTitle = slugify(title);
+	$: canonical = `/writing/${writing.slug}/`;
 
-	$: canonical = `/writing/${sluggifiedTitle}/`;
-
-	$: formattedTags = tags.map((tag) => ({
+	$: formattedTags = writing.tags.map((tag) => ({
 		title: tag,
 		slug: slugify(tag)
 	}));
 
-	$: formattedDate = formatDate(datetime);
+	$: formattedDate = formatDate(writing.datetime);
 	$: formattedLastUpdatedDatetime =
-		last_updated_datetime === undefined ? undefined : formatDate(last_updated_datetime);
+		writing.last_updated_datetime === undefined
+			? undefined
+			: formatDate(writing.last_updated_datetime);
 </script>
 
-<Seo {title} {description} {canonical} />
+<Seo title={writing.title} description={writing.description} {canonical} />
 
 <Page class="space-y-12">
 	<div class="max-w-5xl text-lg mx-auto">
@@ -42,13 +37,13 @@
 		</div>
 
 		<div class="mb-4 text-center italic text-sm flex flex-col">
-			<time {datetime} class="text-red-700 font-medium mb-1">
+			<time datetime={writing.datetime} class="text-red-700 font-medium mb-1">
 				{formattedDate}
 			</time>
 
-			{#if last_updated_datetime !== undefined}
+			{#if writing.last_updated_datetime !== undefined}
 				<p class="text-gray-500">
-					Last modified on <time datetime={last_updated_datetime}>
+					Last modified on <time datetime={writing.last_updated_datetime}>
 						{formattedLastUpdatedDatetime}
 					</time>
 				</p>
@@ -58,12 +53,14 @@
 		<h1
 			class="text-4xl text-center text-balance font-extrabold tracking-tight text-gray-900 md:text-5xl md:leading-tight"
 		>
-			{title}
+			{writing.title}
 		</h1>
 
-		<p class="text-pretty text-gray-600 text-xl max-w-none leading-relaxed mt-6">
-			{description}
-		</p>
+		{#if writing.description}
+			<p class="text-pretty text-gray-600 text-xl max-w-none leading-relaxed mt-6">
+				{writing.description}
+			</p>
+		{/if}
 	</div>
 
 	<hr class="max-w-md w-full mx-auto" />
