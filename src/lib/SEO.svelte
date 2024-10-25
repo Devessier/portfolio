@@ -10,7 +10,7 @@
 	interface Twitter {}
 
 	export let title: string;
-	export let description: string | undefined;
+	export let description: string | undefined = undefined;
 	export let canonical: string;
 	export let facebook: Facebook = {};
 	export let twitter: Twitter = {};
