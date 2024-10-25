@@ -14,9 +14,9 @@ type GetResult = {
 
 const WritingPostMetadata = z.object({
 	title: z.string(),
-	description: z.string(),
+	description: z.string().optional(),
 	datetime: z.string(),
-	last_updated_datetime: z.string(),
+	last_updated_datetime: z.string().optional(),
 	tags: z.string().array()
 });
 
