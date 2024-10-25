@@ -62,7 +62,7 @@
 		</div>
 
 		{#if writing.description}
-			<p class="text-pretty text-gray-600 text-xl leading-relaxed mt-6">
+			<p class="text-pretty text-gray-600 text-xl leading-relaxed mt-6 text-center">
 				{writing.description}
 			</p>
 		{/if}
