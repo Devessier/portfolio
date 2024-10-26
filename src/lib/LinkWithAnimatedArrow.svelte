@@ -8,7 +8,7 @@
 	{href}
 	{rel}
 	{target}
-	class="group text-red-600 hover:text-red-700 transition-colors duration-300 font-medium"
+	class="group text-red-700 hover:text-red-600 transition-colors duration-300 font-medium"
 >
 	<slot />
 
