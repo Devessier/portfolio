@@ -1,6 +1,6 @@
 ---
 title: 'Go back to fundamentals: HTML label'
-description: 'Rediscover the power of the HTML label element by looking at the ways we can use it and the impact on accessibility.'
+description: 'Rediscover the power of the HTML label element by looking at how we can use it and its impact on accessibility.'
 datetime: 2024-10-24T20:23:27.883Z
 tags: ['HTML', 'Accessibility']
 ---
