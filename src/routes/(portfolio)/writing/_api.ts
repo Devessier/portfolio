@@ -1,7 +1,7 @@
 import type { WritingPreview } from '$lib/types';
 import { basename } from 'path';
-import RssParser from 'rss-parser';
 import * as cheerio from 'cheerio';
+import { z } from 'zod';
 
 export function getSvxBlogPosts(): WritingPreview[] {
 	const svxFiles = import.meta.glob('./*.svx', { eager: true });
@@ -34,28 +34,41 @@ export function getSvxBlogPosts(): WritingPreview[] {
 	return importedFiles;
 }
 
-const rssParser = new RssParser();
+/**
+ * I can hard-code that list because I'm not going to publish articles there anymore.
+ */
+const newsletterBlogPostsUrl: Array<string> = [
+	'https://newsletter.baptiste.devessier.fr/archive/my-first-impressions-of-panda-css/',
+	'https://newsletter.baptiste.devessier.fr/archive/create-videos-as-react-apps-with-remotion/',
+	'https://newsletter.baptiste.devessier.fr/archive/expressive-code-my-go-to-code-syntax-highlighter/',
+	'https://newsletter.baptiste.devessier.fr/archive/astro-goes-full-on-view-transitions/'
+];
+
+const NewsletterPostJsonLd = z.object({
+	url: z.string().url(),
+	headline: z.string(),
+	description: z.string(),
+	datePublished: z.string().datetime({ offset: true })
+});
 
 async function getNewsletterBlogPosts(): Promise<WritingPreview[]> {
-	const newsletterRssFeed = await rssParser.parseURL(
-		'https://newsletter.baptiste.devessier.fr/rss.xml'
-	);
-
 	return Promise.all(
-		newsletterRssFeed.items.map(async (item) => {
-			const pageRes = await fetch(item.link!);
+		newsletterBlogPostsUrl.map(async (url) => {
+			const pageRes = await fetch(url);
 
 			const $ = cheerio.load(await pageRes.text());
 
-			const description = $('h2.description').text();
+			const rawJsonLd = $('script[type=application/ld+json]').text();
+
+			const jsonLd = NewsletterPostJsonLd.parse(JSON.parse(rawJsonLd));
 
 			return {
 				external: true,
-				title: item.title!,
-				description,
-				datetime: item.isoDate!,
+				title: jsonLd.headline,
+				description: jsonLd.description,
+				datetime: jsonLd.datePublished,
 				tags: [],
-				url: item.link!
+				url
 			};
 		})
 	);

@@ -11,26 +11,7 @@
 		VideoCameraIcon,
 		MailIcon
 	} from '$lib/Icons';
-
-	const title = 'Baptiste Devessier | Contact';
-	const description = 'Contact me so that we can meet to work on your projects';
-	const canonical = 'https://baptiste.devessier.fr/contact/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/contact/'
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
+	import Seo from '$lib/SEO.svelte';
 
 	const FORM_NAME = 'contact';
 
@@ -110,7 +91,13 @@
 	];
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo
+	title="Baptiste Devessier | Contact"
+	description="Contact me so we can meet to work on your projects."
+	canonical="/contact/"
+/>
+
+<Page>
 	<h1 class="text-5xl font-cursive">Contact</h1>
 
 	<div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-y-8">

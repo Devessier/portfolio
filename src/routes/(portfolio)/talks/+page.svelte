@@ -2,6 +2,7 @@
 	import Page from '$lib/Page.svelte';
 	import type { TalkPreview } from '$lib/types';
 	import TalksPostsList from '$lib/TalksPostsList.svelte';
+	import Seo from '$lib/SEO.svelte';
 
 	const talks: TalkPreview[] = [
 		{
@@ -29,29 +30,15 @@
 			link: 'https://www.youtube.com/watch?v=GpbOkDjpeYU&t=1615s'
 		}
 	];
-
-	const title = 'Baptiste Devessier | Talks';
-	const description = 'My talks about Web Development';
-	const canonical = 'https://baptiste.devessier.fr/talks/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo
+	title="Baptiste Devessier | Talks"
+	description="The talks I gave in meetups."
+	canonical="/talks/"
+/>
+
+<Page>
 	<TalksPostsList {talks}>
 		<svelte:fragment slot="title">Talks</svelte:fragment>
 

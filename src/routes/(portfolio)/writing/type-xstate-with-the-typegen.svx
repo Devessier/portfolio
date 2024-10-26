@@ -5,9 +5,15 @@ datetime: 2024-10-23T21:06:51.194Z
 tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
----
+<script>
+  import AppAlert from '$lib/AppAlert.svelte';
+</script>
 
-**Note: The Typegen was designed for XState v4 and is no longer necessary for XState v5. See the new official [recommendation about TypeScript](https://stately.ai/docs/typescript).**
+<AppAlert type="note">
+
+The Typegen was designed for XState v4 and is no longer necessary for XState v5. See the new official [recommendation about TypeScript](https://stately.ai/docs/typescript).
+
+</AppAlert>
 
 Hey there!
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDate } from '$lib/format-date';
 	import Page from '$lib/Page.svelte';
+	import Seo from '$lib/SEO.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -12,28 +13,12 @@
 		formattedDatetime: formatDate(datetime)
 	}));
 
-	const title = 'Baptiste Devessier | Notes';
 	const description = 'The things I discover daily about web development.';
-	const canonical = 'https://baptiste.devessier.fr/notes/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: canonical
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo title="Baptiste Devessier | Notes" {description} canonical="/notes/" />
+
+<Page>
 	<h1 class="text-5xl font-cursive">Notes</h1>
 
 	<h2 class="mt-3 text-xl text-gray-500 sm:mt-4">{description}</h2>

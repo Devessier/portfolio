@@ -1,1 +1,1 @@
-export type AppAlertType = 'warning' | 'error';
+export type AppAlertType = 'warning' | 'error' | 'note';

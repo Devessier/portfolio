@@ -5,8 +5,6 @@ datetime: 2024-10-23T19:53:03.010Z
 tags: ['XState', 'XState Course', 'Newsletter']
 ---
 
----
-
 Hey there!
 
 You can now read my State of XState report without subscribing first to my newsletter. [It's hosted on GitHub.](https://github.com/Devessier/xstate-report/blob/main/XState%20Report.pdf)

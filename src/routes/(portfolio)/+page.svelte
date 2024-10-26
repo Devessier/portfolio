@@ -5,35 +5,21 @@
 	import LinkWithAnimatedArrow from '$lib/LinkWithAnimatedArrow.svelte';
 	import type { PageData } from './$types';
 	import YouTubePlayer from '$lib/YouTubePlayer.svelte';
+	import Seo from '$lib/SEO.svelte';
 
 	export let data: PageData;
 	$: latestArticles = data.latestArticles;
 
-	const title = 'Baptiste Devessier | Full stack web and XState freelance consultant';
-	const description =
-		'Baptiste Devessier is a full stack web and XState freelance consultant. He also publishes screencasts on YouTube and writes articles.';
-	const canonical = 'https://baptiste.devessier.fr/';
-	const schemas = [];
-	const facebook = [
-		{
-			name: 'og:url',
-			content: 'https://baptiste.devessier.fr/'
-		},
-		{
-			name: 'og:title',
-			content: title
-		},
-		{
-			name: 'og:description',
-			content: description
-		}
-	];
-	const twitter = [];
-
 	const youtubeChannelUrl = 'https://youtube.com/@baptistedevessier';
 </script>
 
-<Page {title} {description} {canonical} {schemas} {facebook} {twitter}>
+<Seo
+	title="Baptiste Devessier | Full stack web and XState freelance consultant"
+	description="Baptiste Devessier is a full stack web and XState freelance consultant. He also publishes screencasts on YouTube and writes articles."
+	canonical="/"
+/>
+
+<Page>
 	<div>
 		<h1 class="text-5xl font-bold lowercase flex items-center flex-wrap font-cursive">
 			Baptiste
