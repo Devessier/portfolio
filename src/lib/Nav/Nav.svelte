@@ -18,16 +18,16 @@
 			text: 'About'
 		},
 		{
-			href: '/projects/',
-			text: 'Projects'
-		},
-		{
 			href: '/writing/',
 			text: 'Writing'
 		},
 		{
 			href: '/talks/',
 			text: 'Talks'
+		},
+		{
+			href: '/projects/',
+			text: 'Projects'
 		},
 		{
 			href: '/contact/',
