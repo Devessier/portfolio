@@ -21,6 +21,8 @@
 	<ul class="grid grid-cols-1 gap-y-16">
 		{#each formattedArticles as { title, description, external, slug, url, datetime, formattedDatetime, tags }}
 			<li class="flex flex-col items-start max-w-prose">
+				<span class="sr-only">Published on</span>
+
 				<time {datetime} class="text-red-700 italic font-medium text-sm">
 					{formattedDatetime}
 				</time>
