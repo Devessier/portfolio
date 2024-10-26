@@ -44,13 +44,15 @@
 					</p>
 				{/if}
 
-				<div class="flex mt-4 gap-2 flex-wrap">
-					{#each tags as { title, slug }}
-						<AppBadge href="/tags/{slug}/">
-							{title}
-						</AppBadge>
-					{/each}
-				</div>
+				{#if tags.length > 0}
+					<div class="flex mt-4 gap-2 flex-wrap">
+						{#each tags as { title, slug }}
+							<AppBadge href="/tags/{slug}/">
+								{title}
+							</AppBadge>
+						{/each}
+					</div>
+				{/if}
 			</li>
 		{/each}
 	</ul>
