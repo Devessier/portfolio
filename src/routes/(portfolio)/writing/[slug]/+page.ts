@@ -1,6 +1,6 @@
+import { WritingPostMetadata } from '$lib/types';
 import type { PageLoad } from './$types';
 import type { ComponentType } from 'svelte';
-import { z } from 'zod';
 
 type GetResult = {
 	title: string;
@@ -11,14 +11,6 @@ type GetResult = {
 	tags: string[];
 	content: ComponentType;
 };
-
-const WritingPostMetadata = z.object({
-	title: z.string(),
-	description: z.string().optional(),
-	datetime: z.string(),
-	last_updated_datetime: z.string().optional(),
-	tags: z.string().array()
-});
 
 export const load: PageLoad<GetResult> = async ({ params: { slug } }) => {
 	const allWritings = import.meta.glob('../*.svx');

@@ -21,6 +21,8 @@
 	<ul class="grid grid-cols-1 gap-y-16">
 		{#each formattedArticles as { title, description, external, slug, url, datetime, formattedDatetime, tags }}
 			<li class="flex flex-col items-start max-w-prose">
+				<span class="sr-only">Published on</span>
+
 				<time {datetime} class="text-red-700 italic font-medium text-sm">
 					{formattedDatetime}
 				</time>
@@ -42,13 +44,15 @@
 					</p>
 				{/if}
 
-				<div class="flex mt-4 gap-2 flex-wrap">
-					{#each tags as { title, slug }}
-						<AppBadge href="/tags/{slug}/">
-							{title}
-						</AppBadge>
-					{/each}
-				</div>
+				{#if tags.length > 0}
+					<div class="flex mt-4 gap-2 flex-wrap">
+						{#each tags as { title, slug }}
+							<AppBadge href="/tags/{slug}/">
+								{title}
+							</AppBadge>
+						{/each}
+					</div>
+				{/if}
 			</li>
 		{/each}
 	</ul>

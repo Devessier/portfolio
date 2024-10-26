@@ -5,6 +5,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { VideoCamera, Rss, Mail } from '@steeze-ui/heroicons';
 	import { MenuIcon, LogoIcon } from '$lib/Icons';
+	import { clsx } from 'clsx';
 
 	import NavLink from './NavLink.svelte';
 
@@ -17,10 +18,6 @@
 			text: 'About'
 		},
 		{
-			href: '/projects/',
-			text: 'Projects'
-		},
-		{
 			href: '/writing/',
 			text: 'Writing'
 		},
@@ -29,8 +26,8 @@
 			text: 'Talks'
 		},
 		{
-			href: '/notes/',
-			text: 'Notes'
+			href: '/projects/',
+			text: 'Projects'
 		},
 		{
 			href: '/contact/',
@@ -91,7 +88,7 @@
 			<LogoIcon class="w-20 h-20" title="Accueil" />
 		</a>
 
-		<div class="items-center hidden md:flex space-x-6">
+		<div class="items-center hidden md:flex gap-x-4">
 			{#each textLinks as { href, external, text }}
 				<NavLink {href} {external} active={$page.url.pathname === href}>
 					{text}
@@ -103,18 +100,19 @@
 					{href}
 					rel={external === true ? 'external' : undefined}
 					target={external === true ? '_blank' : undefined}
-					title={text}
-					class="transition-colors duration-300 ease-in-out {$page.url.pathname === href
-						? 'text-red-600'
-						: ''}"
+					class={clsx('transition-colors duration-300 ease-in-out p-1.5', {
+						'text-red-600': $page.url.pathname === href
+					})}
 				>
+					<span class="sr-only">{text}</span>
+
 					<Icon src={icon} class="w-6 h-6" />
 				</a>
 			{/each}
 		</div>
 
 		<div class="z-30 flex items-center md:hidden">
-			<button on:click={toggle}>
+			<button type="button" on:click={toggle}>
 				<span class="sr-only">
 					{showNavBar ? 'Close drawer' : 'Open drawer'}
 				</span>
@@ -126,7 +124,7 @@
 
 	{#if showNavBar}
 		<div
-			class="fixed inset-0 px-10 pt-20 bg-white md:hidden z-20 flex flex-col items-start"
+			class="fixed inset-0 px-10 pt-20 bg-white md:hidden z-20 flex flex-col items-start gap-y-1"
 			transition:fade={{ duration: 200 }}
 		>
 			{#each links as { href, text, external }}

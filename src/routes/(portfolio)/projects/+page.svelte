@@ -163,7 +163,6 @@
 
 <Seo
 	title="Baptiste Devessier | Projects"
-	description="My side projects, mostly websites."
 	canonical="/projects/"
 />
 

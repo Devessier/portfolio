@@ -34,3 +34,15 @@ from = "/note/catch-javascript-errors-in-react-applications-with-error-boundarie
 to = "/note/catch-javascript-errors-in-react-applications-with-an-error-boundary/"
 status = 301
 force = true
+
+[[redirects]]
+from = "/notes/"
+to = "/writing/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/note/*"
+to = "/writing/:splat"
+status = 301
+force = true
