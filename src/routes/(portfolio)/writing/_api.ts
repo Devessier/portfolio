@@ -1,4 +1,4 @@
-import type { WritingPreview } from '$lib/types';
+import { WritingPostMetadata, type WritingPreview } from '$lib/types';
 import { basename } from 'path';
 import * as cheerio from 'cheerio';
 import { z } from 'zod';
@@ -13,8 +13,9 @@ export function getSvxBlogPosts(): WritingPreview[] {
 
 			return shouldKeepFile === true;
 		})
-		.map(([path, data]) => {
-			const { metadata } = data as { metadata: Omit<WritingPreview, 'slug'> };
+		.map(([path, rawData]) => {
+			const data = rawData as { metadata: unknown };
+			const metadata = WritingPostMetadata.parse(data.metadata);
 
 			const { title, description, datetime, tags } = metadata;
 

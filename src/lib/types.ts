@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /**
  * Can be made globally available by placing this
  * inside `global.d.ts` and removing `export` keyword
@@ -75,3 +77,11 @@ export type NotePreview = {
 	slug: string;
 	datetime: string;
 };
+
+export const WritingPostMetadata = z.object({
+	title: z.string(),
+	description: z.string().optional(),
+	datetime: z.string(),
+	last_updated_datetime: z.string().optional(),
+	tags: z.string().array().optional().default([])
+});
